@@ -1,6 +1,9 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
-import { connectDatabase } from "./infrastructure/data/dbConfig.ts";
+import { connectDatabase, registerShutdownHandlers } from "./data/config/db.ts";
+import { scopePerRequest } from "awilix-express";
+import container from "./container.ts";
+import { errorHandlerMiddleware } from "./middleware/errorHandlerMiddleware.ts";
 
 dotenv.config();
 
@@ -9,8 +12,10 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
+app.use(scopePerRequest(container))
 
 
+registerShutdownHandlers();
 
 
 const PORT = process.env.PORT || 5000;
@@ -27,6 +32,11 @@ app.get('/', (req, res) => {
     });
 });
 
+
+
+
+// Global error handler
+app.use(errorHandlerMiddleware);
 
 
 async function startServer() {
