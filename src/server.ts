@@ -2,8 +2,9 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import { connectDatabase, registerShutdownHandlers } from "./data/config/db.ts";
 import { scopePerRequest } from "awilix-express";
-import container from "./container.ts";
 import { errorHandlerMiddleware } from "./middleware/errorHandlerMiddleware.ts";
+import container from "./container.ts";
+import authRoutes from "./routes/core/authRoutes.ts";
 
 dotenv.config();
 
@@ -21,9 +22,6 @@ registerShutdownHandlers();
 const PORT = process.env.PORT || 5000;
 
 
-
-
-
 app.get('/', (req, res) => {
     res.json({
         message: 'Hello, Express with Prisma!',
@@ -32,6 +30,7 @@ app.get('/', (req, res) => {
     });
 });
 
+app.use('/api/v1/auth', authRoutes);
 
 
 
