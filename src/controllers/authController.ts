@@ -8,15 +8,15 @@ export class AuthController {
     constructor(private authService: AuthService) {
     }
 
-    async register(req: Request, res: Response, next: NextFunction){
-        const { email, password, firstName, lastName } = req.body;
+    register = async (req: Request, res: Response, next: NextFunction) => {
+        const {email, password, firstName, lastName} = req.body;
 
         if (!email || !password) {
             throw new BadRequestError('Email and password are required');
         }
 
         try {
-            const registerDto : RegisterDto = {
+            const registerDto: RegisterDto = {
                 email,
                 password,
                 firstName: firstName || '',
@@ -31,8 +31,8 @@ export class AuthController {
         }
     }
 
-    async login(req: Request, res: Response, next: NextFunction){
-        const { email, password } = req.body;
+    login = async (req: Request, res: Response, next: NextFunction) => {
+        const {email, password} = req.body;
 
         if (!email || !password) {
             throw new BadRequestError('Email and password are required');
@@ -55,9 +55,29 @@ export class AuthController {
                 ...(process.env.NODE_ENV === 'production' && {domain: '.ezduonline.com'})
             })
 
-            return res.status(200).json({ token });
+            return res.status(200).json({token});
         } catch (error) {
             next(error);
         }
     }
+
+    logout = async (req: Request, res: Response, next: NextFunction) =>{
+        try {
+            res.cookie('token', '', {
+                path: '/',
+                httpOnly: true,
+                // expires: new Date(0),
+                maxAge: 0,
+                sameSite: 'none',
+                secure: true,
+                ...(process.env.NODE_ENV === 'production' && {domain: '.ezduonline.com'})
+            });
+
+            return res.status(200).json({message: 'Logged out successfully'});
+        } catch (error) {
+            next(error);
+        }
+    }
+
+
 }

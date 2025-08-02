@@ -7,8 +7,9 @@ const router = Router()
 const authController = container.resolve<AuthController>('authController');
 
 
-router.post("/register", authController.register.bind(authController));
-router.post("/login", authController.login.bind(authController));
+router.post("/register", authController.register);
+router.post("/login", authController.login);
+router.post("/logout", authController.logout);
 
 
 export default router;

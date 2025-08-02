@@ -13,10 +13,12 @@ interface EnvConfig {
     NODE_ENV: 'development' | 'production' | 'test';
     EMAIL:{
         MAILJET:{
+            HOST: string;
             API_KEY: string;
             API_SECRET: string;
             SENDER_EMAIL: string;
             SENDER_NAME: string;
+            NO_REPLY_EMAIL?: string;
         },
         SENDGRID:{
             API_KEY: string;
@@ -68,10 +70,12 @@ const envConfig: EnvConfig = {
 
     EMAIL: {
         MAILJET: {
+            HOST: process.env.MAILJET_HOST || 'in-v3.mailjet.com',
             API_KEY: process.env.MAILJET_API_KEY || '',
             API_SECRET: process.env.MAILJET_API_SECRET || '',
             SENDER_EMAIL: process.env.MAILJET_SENDER_EMAIL || '',
             SENDER_NAME: process.env.MAILJET_SENDER_NAME || '',
+            NO_REPLY_EMAIL: process.env.MAILJET_NO_REPLY_EMAIL || ''
         },
         SENDGRID: {
             API_KEY: process.env.SENDGRID_API_KEY || '',
