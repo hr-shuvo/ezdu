@@ -4,3 +4,8 @@ export interface RegisterDto {
     firstName?: string;
     lastName?: string;
 }
+
+export interface LoginDto {
+    email: string;
+    password: string;
+}

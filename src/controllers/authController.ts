@@ -30,4 +30,34 @@ export class AuthController {
             next(error);
         }
     }
+
+    async login(req: Request, res: Response, next: NextFunction){
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            throw new BadRequestError('Email and password are required');
+        }
+
+        try {
+            const loginDto = {
+                email,
+                password
+            }
+
+            const token = await this.authService.login(loginDto);
+
+            res.cookie('token', token, {
+                path: '/',
+                httpOnly: true,
+                expires: new Date(Date.now() + 1000 * 86400 * 7), // 7 day
+                sameSite: 'none',
+                secure: true,
+                ...(process.env.NODE_ENV === 'production' && {domain: '.ezduonline.com'})
+            })
+
+            return res.status(200).json({ token });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
