@@ -80,4 +80,20 @@ export class AuthController {
     }
 
 
+
+    sendVerificationEmail = async (req: Request, res: Response, next: NextFunction) => {
+
+        try {
+
+            const {email} = req.params;
+            await this.authService.sendVerificationEmail(email);
+
+            return res.status(200).json({message: 'Verification email sent successfully'});
+        } catch (error) {
+            next(error);
+        }
+    }
+
+
+
 }

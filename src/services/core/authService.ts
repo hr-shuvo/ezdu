@@ -58,4 +58,20 @@ export class AuthService {
 
         return token;
     }
+
+
+    // Placeholder for sending verification email
+    async sendVerificationEmail(email: string) {
+        if(!email) {
+            throw new BadRequestError('Email is required');
+        }
+
+        const user = await this.userService.findByEmail(email);
+        if (!user) {
+            throw new NotFoundError('User not found');
+        }
+
+        
+
+    }
 }

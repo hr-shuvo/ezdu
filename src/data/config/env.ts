@@ -30,6 +30,7 @@ interface EnvConfig {
             PORT: number;
             USER: string;
             PASS: string;
+            SECURE?: boolean; // true for 465, false for other ports
         }
     },
 
@@ -87,6 +88,7 @@ const envConfig: EnvConfig = {
             PORT: parseInt(process.env.SMTP_PORT || '587', 10),
             USER: process.env.SMTP_USER || '',
             PASS: process.env.SMTP_PASS || '',
+            SECURE: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
         }
     },
 
