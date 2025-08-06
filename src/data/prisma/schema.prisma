@@ -31,4 +31,19 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([username])
+  @@index([email])
+}
+
+model UserAuthToken {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  verifyToken String   @unique @db.VarChar(255)
+  resetToken  String?  @unique @db.VarChar(255)
+  loginToken  String?  @unique @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+
+  @@index([userId])
 }

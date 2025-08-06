@@ -16,25 +16,27 @@ interface SendEmailOptions {
 
 export class EmailProvider{
     private transporter: nodemailer.Transporter = nodemailer.createTransport({
-        host: envConfig.EMAIL.SMTP.HOST,
+        host: envConfig.EMAIL.MAILJET.HOST,
         port: envConfig.EMAIL.SMTP.PORT,
         secure: envConfig.EMAIL.SMTP.SECURE, // true for 465, false for other ports
         auth: {
-            user: envConfig.EMAIL.SMTP.USER || '', // SMTP username / email / API key
-            pass: envConfig.EMAIL.SMTP.PASS || '' // SMTP password / app password / API secret
+            user: envConfig.EMAIL.MAILJET.API_KEY || '', // SMTP username / email / API key
+            pass: envConfig.EMAIL.MAILJET.API_SECRET || '' // SMTP password / app password / API secret
         },
     });
 
 
+
+
     async sendEmail(options: SendEmailOptions): Promise<void> {
         const mailOptions: nodemailer.SendMailOptions = {
-            from: options.from,
+            from: options.from ?? envConfig.EMAIL.MAILJET.SENDER_EMAIL,
             to: options.to,
             subject: options.subject,
             html: options.html,
             cc: options.cc?.join(', '),
             bcc: options.bcc?.join(', '),
-            replyTo: options.replyTo,
+            replyTo: options.replyTo ?? envConfig.EMAIL.MAILJET.NO_REPLY_EMAIL,
             attachments: options.attachments?.map(att => ({
                 filename: att.filename,
                 content: att.content,

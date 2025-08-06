@@ -9,7 +9,8 @@ interface EnvConfig {
     JWT :{
         SECRET: string;
         EXPIRATION: '1d' | '2d' | '7d' | '30d' | '365d';
-    }
+    },
+    ENCRYPTION_KEY: string;
     NODE_ENV: 'development' | 'production' | 'test';
     EMAIL:{
         MAILJET:{
@@ -67,6 +68,7 @@ const envConfig: EnvConfig = {
         SECRET: process.env.JWT_SECRET || 'super-secret-key',
         EXPIRATION: process.env.JWT_EXPIRATION as '1d' | '2d' | '7d' | '30d' | '365d' || '1d',
     },
+    ENCRYPTION_KEY: process.env.ENCRYPTION_KEY || 's3cr3t-Encrypti0n-key',
     NODE_ENV: process.env.NODE_ENV as 'development' | 'production' | 'test' || 'development',
 
     EMAIL: {

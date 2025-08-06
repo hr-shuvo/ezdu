@@ -6,6 +6,8 @@ import { UserRepository } from "./repositories/core/userRepository.ts";
 import { AuthRepository } from "./repositories/core/authRepository.ts";
 import { UserService } from "./services/core/userService.ts";
 import { UserController } from "./controllers/userController.ts";
+import { EmailService } from "./shared/services/emailService.ts";
+import { EmailProvider } from "./shared/provider/emailProvider.ts";
 
 
 
@@ -16,6 +18,10 @@ const container = createContainer({
 container.register({
     prisma: asValue(prisma),
 
+    // Registering Providers or Dependencies
+
+    emailProvider: asClass(EmailProvider).scoped(),
+
 
 
     // Registering Repositories
@@ -25,9 +31,11 @@ container.register({
 
 
 
+
     // Registering Services
     authService: asClass(AuthService).scoped(),
     userService: asClass(UserService).scoped(),
+    emailService: asClass(EmailService).singleton(),
 
 
 
