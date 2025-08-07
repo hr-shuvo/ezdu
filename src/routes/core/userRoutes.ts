@@ -16,7 +16,7 @@ router.get("/me", authenticateUser, userController.getCurrentUser);
 // router.get("/me/notifications", getUserNotifications);
 // router.get("/me/notifications/read", markAllNotificationsAsRead);
 
-// router.get("/:id", userController.getUser); // always use later after static routes
+router.get("/:id", userController.getUser); // always use later after static routes
 // router.put("/update/:id", authenticateUser, userController.updateUser);
 // router.delete("/delete/:id", authenticateUser, userController.deleteUser);
 

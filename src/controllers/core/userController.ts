@@ -33,7 +33,15 @@ export class UserController {
     });
 
     getUser = asyncHandler(async (req: Request, res: Response) => {
-        throw new Error("Method not implemented.");
+
+        const { id } = req.params;
+        if (!id) {
+            throw new UnauthorizedError("User ID is required");
+        }
+
+        const user = await this.userService.getUser(id);
+
+        res.status(200).json(user);
     });
 
     updateUser = asyncHandler(async (req: Request, res: Response) => {
