@@ -8,12 +8,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Enums
+
 enum UserRole {
   SUPER_ADMIN
   ADMIN
   MODERATOR
   USER
 }
+
+enum Segment {
+  JUNIOR
+  SSC
+  HSC
+  ADMISSION
+  JOB
+}
+
+enum LessonType {
+  VIDEO
+  PDF
+  IMAGE
+  TEXT
+}
+
+// Models
 
 model User {
   id               String   @id @default(cuid())
@@ -46,4 +65,171 @@ model UserAuthToken {
   expiresAt   DateTime
 
   @@index([userId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   @db.VarChar(50)
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model UserProgress {
+  id             String    @id @default(cuid())
+  userId         String    @unique
+  username       String
+  userAvatar     String?
+  xp             Float     @default(0)
+  level          Int       @default(1)
+  rank           Int       @default(0)
+  totalQuizzes   Int       @default(0)
+  lastStreakDate DateTime?
+  currentStreak  Int       @default(0)
+  longestStreak  Int       @default(0)
+  badges         String? // e.g., '["badge1", "badge2"]'
+  weeklyXp       String? // e.g., '{"2023-10-01": 100, "2023-10-02": 150}'
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model LearningProgress {
+  id     String @id @default(cuid())
+  userId String
+}
+
+// Academy
+
+model AcademyClass {
+  id          String   @id @default(cuid())
+  slug        String   @unique @db.VarChar(100)
+  title       String   @db.VarChar(250)
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  segment     Segment
+  groups      String? // ['SCIENCE', 'COMMERCE', 'ARTS'] as string[], check validation in application logic
+  hasBatch    Boolean  @default(false)
+
+  @@index([slug])
+}
+
+model Subject {
+  id               String             @id @default(cuid())
+  slug             String             @unique @db.VarChar(100)
+  title            String             @db.VarChar(250)
+  description      String?            @db.Text
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  hasSubjectPaper  Boolean            @default(false)
+  subjectId        String? // For subjects that are part of a class, e.g., 'maths' in 'HSC Science'
+  classId          String             @unique
+  groups           String? // ['SCIENCE', 'COMMERCE', 'ARTS'] as string[], check validation in application logic
+  segment          Segment?
+  AdmissionSubject AdmissionSubject[]
+
+  @@index([slug])
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  slug        String   @unique @db.VarChar(100)
+  title       String   @db.VarChar(250)
+  description String?  @db.Text
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  subjectId   String
+  lessonId    String? // For lessons that are part of a subject, e.g., 'algebra' in 'HSC Science Maths'
+  classId     String?
+  segment     Segment?
+
+  @@index([slug, id])
+}
+
+model LessonContent {
+  id             String     @id @default(cuid())
+  lessonId       String
+  title          String     @db.VarChar(250)
+  description    String?    @db.Text
+  contentType    LessonType @default(TEXT) // e.g., 'VIDEO', 'PDF', 'IMAGE', 'TEXT'
+  contentFileUrl String?    @db.Text
+  order          Int        @default(0)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@index([lessonId, id])
+}
+
+// Quiz and MCQ
+
+model Mcq {
+  id            String   @id @default(cuid())
+  question      String   @db.VarChar(255)
+  options       String   @db.Text // array of options, e.g., '["Option 1", "Option 2", "Option 3", "Option 4"]'
+  subjectId     String
+  lessonId      String?
+  topicId       String?
+  passage       String?
+  imageUrl      String?  @db.VarChar(255)
+  imagePublicId String?  @db.VarChar(255)
+  description   String?  @db.VarChar(255)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  isActive      Boolean  @default(true)
+  institutes    String? // e.g., '[{ "name": "Institute A", "id": "inst1" }, { "name": "Institute B", "id": "inst2" }]'
+
+  @@index([id, lessonId, topicId, subjectId])
+}
+
+model Quiz {
+  id          String    @id @default(cuid())
+  userId      String
+  duration    Int
+  score       Float?
+  startedAt   DateTime
+  completedAt DateTime?
+  subjectId   String
+  questions   String    @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  isSubmitted Boolean   @default(false)
+}
+
+// Admission
+model AdmissionCategory {
+  id               String             @id @default(cuid())
+  slug             String             @unique @db.VarChar(100)
+  title            String             @db.VarChar(250) // e.g., 'Engineering', 'Medical'
+  description      String?            @db.Text
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  AdmissionSubject AdmissionSubject[]
+
+  @@index([slug])
+}
+
+model AdmissionUnit {
+  id               String             @id @default(cuid())
+  slug             String             @unique @db.VarChar(100)
+  title            String             @db.VarChar(250) // e.g., A Unit, B Unit, etc.
+  description      String?            @db.VarChar(250)
+  AdmissionSubject AdmissionSubject[]
+
+  @@index([slug])
+}
+
+model AdmissionSubject {
+  id         String             @id @default(cuid())
+  subjectId  String
+  categoryId String?
+  unitId     String?
+  subject    Subject            @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  category   AdmissionCategory? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  unit       AdmissionUnit?     @relation(fields: [unitId], references: [id], onDelete: Cascade)
+
+  @@unique([subjectId, categoryId, unitId])
 }
