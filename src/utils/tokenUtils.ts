@@ -1,27 +1,34 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import Cryptr from 'cryptr';
 import envConfig from "../data/config/env.ts";
 
 
 const cryptr = new Cryptr(envConfig.ENCRYPTION_KEY);
 
-export const createJWT = (payload:any):string => {
+interface TokenPayload extends JwtPayload {
+    userId: string;
+    role: string;
+}
+
+export const createJWT = (payload: TokenPayload): string => {
     // return token
     return jwt.sign(payload, envConfig.JWT.SECRET, {
         expiresIn: envConfig.JWT.EXPIRATION
     });
 }
 
-export const verifyJWT = (token:string) => {
-    return jwt.verify(token, envConfig.JWT.SECRET);
+export const verifyJWT = (token: string): TokenPayload => {
+    const result = jwt.verify(token, envConfig.JWT.SECRET);
+
+    return result as TokenPayload;
 }
 
-export const encryptByCryptr = (token:string):string => {
+export const encryptByCryptr = (token: string): string => {
 
     return cryptr.encrypt(token);
 }
 
-export const decryptByCryptr = (encryptedToken:string):string => {
+export const decryptByCryptr = (encryptedToken: string): string => {
 
     try {
         return cryptr.decrypt(encryptedToken);

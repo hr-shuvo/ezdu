@@ -14,6 +14,16 @@ export class UserService{
         }
     }
 
+    async findById(id: string) {
+        try {
+            return await this.userRepository.findById(id);
+        } catch (error) {
+            console.error('Error finding user by ID:', error);
+            throw error;
+        }
+    }
+
+
 
 
 
