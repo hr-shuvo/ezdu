@@ -1,6 +1,6 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
-import { connectDatabase, registerShutdownHandlers } from "./data/config/db.ts";
+import { connectDatabase, getDbHealth, registerShutdownHandlers } from "./data/config/db.ts";
 import { scopePerRequest } from "awilix-express";
 import { errorHandlerMiddleware } from "./middleware/errorHandlerMiddleware.ts";
 import container from "./container.ts";
@@ -29,7 +29,11 @@ app.get('/', (req, res) => {
         timestamp: new Date().toISOString()
     });
 });
+app.get('/api/health', getDbHealth);
 
+
+
+// Registering Application Routes
 app.use('/api/v1/auth', authRoutes);
 
 

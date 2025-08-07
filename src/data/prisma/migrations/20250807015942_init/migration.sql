@@ -228,12 +228,3 @@ CREATE TABLE `AdmissionSubject` (
     UNIQUE INDEX `AdmissionSubject_subjectId_categoryId_unitId_key`(`subjectId`, `categoryId`, `unitId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- AddForeignKey
-ALTER TABLE `AdmissionSubject` ADD CONSTRAINT `AdmissionSubject_subjectId_fkey` FOREIGN KEY (`subjectId`) REFERENCES `Subject`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `AdmissionSubject` ADD CONSTRAINT `AdmissionSubject_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `AdmissionCategory`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `AdmissionSubject` ADD CONSTRAINT `AdmissionSubject_unitId_fkey` FOREIGN KEY (`unitId`) REFERENCES `AdmissionUnit`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

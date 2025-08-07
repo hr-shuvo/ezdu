@@ -4,8 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "foreignKeys"
 }
 
 // Enums
@@ -51,8 +52,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([username])
-  @@index([email])
+  @@index([username, email])
 }
 
 model UserAuthToken {
@@ -71,7 +71,7 @@ model Notification {
   id        String   @id @default(cuid())
   userId    String
   type      String   @db.VarChar(50)
-  message   String   @db.Text
+  message   String   @db.VarChar(250)
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
 
@@ -125,10 +125,12 @@ model Subject {
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   hasSubjectPaper  Boolean            @default(false)
-  subjectId        String? // For subjects that are part of a class, e.g., 'maths' in 'HSC Science'
+  subjectId        String?
   classId          String             @unique
   groups           String? // ['SCIENCE', 'COMMERCE', 'ARTS'] as string[], check validation in application logic
   segment          Segment?
+  imageUrl         String?            @db.VarChar(255)
+  imagePublicId    String?            @db.VarChar(255)
   AdmissionSubject AdmissionSubject[]
 
   @@index([slug])
@@ -143,11 +145,11 @@ model Lesson {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   subjectId   String
-  lessonId    String? // For lessons that are part of a subject, e.g., 'algebra' in 'HSC Science Maths'
+  lessonId    String?
   classId     String?
   segment     Segment?
 
-  @@index([slug, id])
+  @@index([slug])
 }
 
 model LessonContent {
@@ -156,12 +158,12 @@ model LessonContent {
   title          String     @db.VarChar(250)
   description    String?    @db.Text
   contentType    LessonType @default(TEXT) // e.g., 'VIDEO', 'PDF', 'IMAGE', 'TEXT'
-  contentFileUrl String?    @db.Text
+  contentFileUrl String?    @db.VarChar(250)
   order          Int        @default(0)
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 
-  @@index([lessonId, id])
+  @@index([lessonId])
 }
 
 // Quiz and MCQ
