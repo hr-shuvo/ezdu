@@ -15,7 +15,7 @@ export const authenticateUser = (req: Request, res:Response, next:NextFunction) 
         console.log('Auth (jwt) verification successful:', userId, role);
 
         req.user = {
-            id: userId,
+            userId: userId,
             role: role
         };
         next();

@@ -1,11 +1,11 @@
 import { asClass, asValue, createContainer, InjectionMode } from "awilix";
 import { prisma } from "./data/config/db.ts";
-import { AuthController } from "./controllers/authController.ts";
+import { AuthController } from "./controllers/core/authController.ts";
 import { AuthService } from "./services/core/authService.ts";
 import { UserRepository } from "./repositories/core/userRepository.ts";
 import { AuthRepository } from "./repositories/core/authRepository.ts";
 import { UserService } from "./services/core/userService.ts";
-import { UserController } from "./controllers/userController.ts";
+import { UserController } from "./controllers/core/userController.ts";
 import { EmailService } from "./shared/services/emailService.ts";
 import { EmailProvider } from "./shared/provider/emailProvider.ts";
 

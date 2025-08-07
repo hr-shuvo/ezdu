@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { AuthService } from "../services/core/authService.ts";
-import { BadRequestError } from "../middleware/errorHandlerMiddleware.ts";
-import { RegisterDto } from "../domain/dtos/authDto.ts";
+import { AuthService } from "../../services/core/authService.ts";
+import { BadRequestError } from "../../middleware/errorHandlerMiddleware.ts";
+import { RegisterDto } from "../../domain/dtos/authDto.ts";
 
 
 export class AuthController {

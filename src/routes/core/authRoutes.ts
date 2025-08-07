@@ -1,6 +1,6 @@
 import { Router } from "express";
 import container from "../../container.ts";
-import { AuthController } from "../../controllers/authController.ts";
+import { AuthController } from "../../controllers/core/authController.ts";
 
 
 const router = Router()

@@ -5,7 +5,7 @@ declare global {
         interface Request {
             // customField?: string;
             user?: {
-                id: string;
+                userId: string;
                 role: string;
             };
         }

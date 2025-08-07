@@ -33,7 +33,7 @@ export class UnauthorizedError extends AppError {
 }
 
 
-export const errorHandlerMiddleware = (err: unknown, req: Request, res: Response, next: NextFunction) => {
+export const errorHandlerMiddleware = (err: unknown, _req: Request, res: Response, _next: NextFunction) => {
     console.error(`[ERROR]`, err);
 
     let statusCode = 500;
