@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { AuthService } from "../../services/core/authService.ts";
 import { BadRequestError } from "../../middleware/errorHandlerMiddleware.ts";
 import { RegisterDto } from "../../domain/dtos/authDto.ts";
+import asyncHandler from "express-async-handler";
 
 
 export class AuthController {
@@ -61,7 +62,7 @@ export class AuthController {
         }
     }
 
-    logout = async (req: Request, res: Response, next: NextFunction) =>{
+    logout = async (req: Request, res: Response, next: NextFunction) => {
         try {
             res.cookie('token', '', {
                 path: '/',
@@ -73,27 +74,31 @@ export class AuthController {
                 ...(process.env.NODE_ENV === 'production' && {domain: '.ezduonline.com'})
             });
 
-            return res.status(200).json({message: 'Logged out successfully'});
+            res.status(200).json({message: 'Logged out successfully'});
         } catch (error) {
             next(error);
         }
     }
 
-
-
-    sendVerificationEmail = async (req: Request, res: Response, next: NextFunction) => {
-
+    sendVerificationEmail = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
         try {
 
             const {email} = req.params;
             await this.authService.sendVerificationEmail(email);
 
-            return res.status(200).json({message: 'Verification email sent successfully'});
+            res.status(200).json({message: 'Verification email sent successfully'});
         } catch (error) {
             next(error);
         }
-    }
+    });
 
+    verifyVerificationCode = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const {email, code} = req.body;
+
+        await this.authService.verifyVerificationCode(email, code);
+
+        res.status(200).json({message: 'Verification successful'});
+    });
 
 
 }

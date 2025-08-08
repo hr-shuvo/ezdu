@@ -103,4 +103,42 @@ export class AuthService {
 
         await this.emailService.sendEmail(emailContent);
     }
+
+    async verifyVerificationCode(email: string, code: string) {
+        if (!email || !code) {
+            throw new BadRequestError('Email and code are required');
+        }
+
+        const user = await this.userService.findByEmail(email);
+        if (!user) {
+            throw new NotFoundError('User not found');
+        }
+
+        if(user.isVerified){
+            throw new BadRequestError('User already verified');
+        }
+
+        const token = await this.authRepository.getAuthToken(user.id);
+        if (!token || !token.verifyToken) {
+            throw new BadRequestError('Invalid or expired verification token');
+        }
+
+        const decryptedCode = decryptByCryptr(token.verifyToken);
+        if (decryptedCode !== code) {
+            throw new UnauthorizedError('Invalid verification code');
+        }
+
+        // Mark user as verified
+        const userDto: Partial<UserDto> = {
+            id: user.id,
+            isVerified: true
+        }
+        await this.userService.updateUserPartial(user.id, userDto);
+
+        // // Optionally delete the token after successful verification
+        // await this.authRepository.deleteAuthToken(token.id);
+
+        return {message: 'Email verified successfully'};
+
+    }
 }

@@ -1,3 +1,4 @@
+import { UserRole } from "@prisma/client";
 
 
 export interface UserDto {
@@ -7,7 +8,7 @@ export interface UserDto {
     email: string;
     avatar?: string | null;
     avatarPublicId?: string | null;
-    role?: 'SUPER_ADMIN' | 'ADMIN' | 'MODERATOR' | 'USER';
+    role?: UserRole
     isActive?: boolean;
     isVerified?: boolean;
     hasNotifications?: boolean;

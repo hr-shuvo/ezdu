@@ -9,15 +9,14 @@ const userController = container.resolve<UserController>("userController");
 
 router.get("/", userController.loadUser);
 router.get("/me", authenticateUser, userController.getCurrentUser);
-// router.put("/me", authenticateUser, userController.updateCurrentUser);
+router.put("/me", authenticateUser, userController.updateCurrentUser);
 // router.delete("/me", authenticateUser, userController.deleteCurrentUser);
-
 
 // router.get("/me/notifications", getUserNotifications);
 // router.get("/me/notifications/read", markAllNotificationsAsRead);
 
+router.put("/update", authenticateUser, userController.updateUser);
 router.get("/:id", userController.getUser); // always use later after static routes
-// router.put("/update/:id", authenticateUser, userController.updateUser);
 // router.delete("/delete/:id", authenticateUser, userController.deleteUser);
 
 

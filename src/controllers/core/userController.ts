@@ -45,7 +45,13 @@ export class UserController {
     });
 
     updateUser = asyncHandler(async (req: Request, res: Response) => {
-        throw new Error("Method not implemented.");
+        const {userId, role} = req.user!;
+
+        const userModel = req.body;
+        const updatedUser = await this.userService.updateUser(userId, userModel, role);
+
+        res.status(200).json(updatedUser);
+        return;
     });
 
     deleteUser = asyncHandler(async (req: Request, res: Response) => {

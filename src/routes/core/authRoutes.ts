@@ -12,6 +12,7 @@ router.post("/login", authController.login);
 router.post("/logout", authController.logout);
 
 router.get('/sendVerificationCode/:email', authController.sendVerificationEmail);
+router.post('/verifyVerificationCode', authController.verifyVerificationCode);
 
 
 export default router;

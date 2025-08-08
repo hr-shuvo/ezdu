@@ -28,7 +28,12 @@ export class AuthRepository {
 
 
     // handle token creation and validation
-
+    /**
+     * Get the auth token for a user
+     * @param userId - The ID of the user
+     * @returns The auth token for the user if it exists and is not expired, otherwise null
+     * @throws Error if there is an issue retrieving the token from the database
+     */
     async getAuthToken(userId: string){
         try{
             return await this.prisma.userAuthToken.findUnique({
