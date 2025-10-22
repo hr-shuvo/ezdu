@@ -4,6 +4,9 @@ import 'package:ezdu/features/auth/domain/repositories/auth_repository.dart';
 import 'package:fpdart/src/either.dart';
 
 class AuthRepositoryImpl implements AuthRepository{
+  // final Dio apiClient;
+
+
   @override
   Future<Either<Failure, User>> getCurrentUser() {
     // TODO: implement getCurrentUser

@@ -1,8 +1,8 @@
+import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../app/di/injector.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -38,6 +38,10 @@ class _LoginViewState extends State<LoginView> {
 
   void _onLoginPressed() {
     if (_formKey.currentState?.validate() ?? false) {
+
+      // print('Email: ${_emailController.text.trim()}');
+      // print('Password: ${_passwordController.text}');
+
       context.read<AuthBloc>().add(
         LoginRequested(
           email: _emailController.text.trim(),
@@ -45,6 +49,8 @@ class _LoginViewState extends State<LoginView> {
         ),
       );
     }
+
+
 
     Navigator.of(context).pushReplacementNamed('/home');
   }

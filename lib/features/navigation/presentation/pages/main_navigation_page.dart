@@ -1,7 +1,9 @@
+import 'package:ezdu/features/feed/presentation/pages/feed_page.dart';
+import 'package:ezdu/features/home/presentation/pages/home_page.dart';
 import 'package:ezdu/features/leaderboard/presentation/pages/leaderboard_page.dart';
+import 'package:ezdu/features/quest/presentation/pages/quest_page.dart';
 import 'package:flutter/material.dart';
 
-import '../../../home/presentation/pages/home_page.dart';
 
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});
@@ -15,10 +17,10 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
 
   final List<Widget> _pages = [
     const HomePage(),
+    const QuestPage(),
     const LeaderboardPage(),
     const LeaderboardPage(),
-    const LeaderboardPage(),
-    const LeaderboardPage(),
+    const FeedPage(),
   ];
 
   void _onItemTapped(int index) async {
