@@ -53,7 +53,7 @@ class DailyQuizCard extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orangeAccent,
+                    backgroundColor: Color.fromARGB(160, 67, 30, 3),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

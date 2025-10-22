@@ -2,6 +2,7 @@ import 'package:ezdu/features/feed/presentation/pages/feed_page.dart';
 import 'package:ezdu/features/home/presentation/pages/home_page.dart';
 import 'package:ezdu/features/leaderboard/presentation/pages/leaderboard_page.dart';
 import 'package:ezdu/features/quest/presentation/pages/quest_page.dart';
+import 'package:ezdu/features/quiz/presentation/pages/quiz_page.dart';
 import 'package:flutter/material.dart';
 
 
@@ -18,7 +19,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   final List<Widget> _pages = [
     const HomePage(),
     const QuestPage(),
-    const LeaderboardPage(),
+    const QuizPage(),
     const LeaderboardPage(),
     const FeedPage(),
   ];
