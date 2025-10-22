@@ -13,7 +13,13 @@ class MainNavigationPage extends StatefulWidget {
 class _MainNavigationPageState extends State<MainNavigationPage> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [const HomePage(), const LeaderboardPage()];
+  final List<Widget> _pages = [
+    const HomePage(),
+    const LeaderboardPage(),
+    const LeaderboardPage(),
+    const LeaderboardPage(),
+    const LeaderboardPage(),
+  ];
 
   void _onItemTapped(int index) async {
     if (index == 5) {
@@ -77,8 +83,8 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                     Container(
                       decoration: BoxDecoration(
                         border: Border(
-                          bottom: BorderSide(color: colorScheme.outlineVariant)
-                        )
+                          bottom: BorderSide(color: colorScheme.outlineVariant),
+                        ),
                       ),
                       child: ListTile(
                         leading: const Icon(Icons.history),
@@ -93,7 +99,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                       decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(color: colorScheme.outlineVariant),
-                        )
+                        ),
                       ),
                       child: ListTile(
                         leading: const Icon(Icons.archive_outlined),
@@ -137,18 +143,18 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
             label: 'Quest',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.emoji_events_outlined),
-            activeIcon: Icon(Icons.emoji_events),
-            label: 'Leaderboard',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.quiz_outlined),
             activeIcon: Icon(Icons.quiz),
             label: 'Quiz',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.auto_awesome_outlined),
-            activeIcon: Icon(Icons.auto_awesome),
+            icon: Icon(Icons.emoji_events_outlined),
+            activeIcon: Icon(Icons.emoji_events),
+            label: 'Leaderboard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dynamic_feed_outlined),
+            activeIcon: Icon(Icons.dynamic_feed),
             label: 'Feed',
           ),
           BottomNavigationBarItem(
