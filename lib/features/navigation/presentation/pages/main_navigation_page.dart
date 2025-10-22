@@ -18,73 +18,102 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   void _onItemTapped(int index) async {
     if (index == 5) {
       final RenderBox bar = context.findRenderObject() as RenderBox;
-      final Offset position = bar.localToGlobal(Offset.zero);
-      await _showMoreMenu(context, position);
+      await _showMoreMenu(context);
       return;
     }
 
     setState(() => _currentIndex = index);
   }
 
-  Future<void> _showMoreMenu(BuildContext context, Offset position) async {
+  Future<void> _showMoreMenu(BuildContext context) async {
+    final overlay = Overlay.of(context);
     final colorScheme = Theme.of(context).colorScheme;
+    late OverlayEntry entry;
 
-    final overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-    final overlaySize = overlay.size;
+    entry = OverlayEntry(
+      builder: (context) => Stack(
+        children: [
+          // Background tap dismiss
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: () => entry.remove(),
+              behavior: HitTestBehavior.translucent,
+            ),
+          ),
 
-    final selected = await showMenu<String>(
-      context: context,
-      position: RelativeRect.fromLTRB(
-        overlaySize.width -180,
-        overlaySize.height - 150,
-        16,
-        0,
+          // Floating popup just above bottom nav
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 80, // 👈 Adjust for your BottomNavigationBar height
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                // padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainer,
+                  borderRadius: BorderRadius.zero,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: colorScheme.outlineVariant),
+                          top: BorderSide(color: colorScheme.outlineVariant),
+                        ),
+                      ),
+                      child: ListTile(
+                        leading: const Icon(Icons.person_outline),
+                        title: const Text('Profile'),
+                        onTap: () {
+                          entry.remove();
+                          Navigator.pushNamed(context, '/profile');
+                        },
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: colorScheme.outlineVariant)
+                        )
+                      ),
+                      child: ListTile(
+                        leading: const Icon(Icons.history),
+                        title: const Text('History'),
+                        onTap: () {
+                          entry.remove();
+                          Navigator.pushNamed(context, '/history');
+                        },
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: colorScheme.outlineVariant),
+                        )
+                      ),
+                      child: ListTile(
+                        leading: const Icon(Icons.archive_outlined),
+                        title: const Text('Archive'),
+                        onTap: () {
+                          entry.remove();
+                          Navigator.pushNamed(context, '/archive');
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      color: Theme.of(context).cardColor,
-      items: [
-        PopupMenuItem<String>(
-          value: 'profile',
-          child: Row(
-            children: const [
-              Icon(Icons.person_outline, size: 20),
-              SizedBox(width: 8),
-              Text('Profile'),
-            ],
-          ),
-        ),
-        PopupMenuItem<String>(
-          value: 'history',
-          child: Row(
-            children: const [
-              Icon(Icons.history, size: 20),
-              SizedBox(width: 8),
-              Text('History'),
-            ],
-          ),
-        ),
-        PopupMenuItem<String>(
-          value: 'archive',
-          child: Row(
-            children: const [
-              Icon(Icons.archive_outlined, size: 20),
-              SizedBox(width: 8),
-              Text('Archive'),
-            ],
-          ),
-        )
-      ],
     );
 
-    if (selected == 'profile') {
-      Navigator.pushNamed(context, '/profile');
-    } else if (selected == 'history') {
-      Navigator.pushNamed(context, '/history');
-    } else if (selected == 'archive') {
-      Navigator.pushNamed(context, '/archive');
-    }
+    overlay.insert(entry);
   }
 
   @override
@@ -103,14 +132,14 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.card_giftcard_outlined),
+            activeIcon: Icon(Icons.card_giftcard),
+            label: 'Quest',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.emoji_events_outlined),
             activeIcon: Icon(Icons.emoji_events),
             label: 'Leaderboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.auto_awesome_outlined),
-            activeIcon: Icon(Icons.auto_awesome),
-            label: 'Quest',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.quiz_outlined),
@@ -118,9 +147,9 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
             label: 'Quiz',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.workspace_premium_outlined),
-            activeIcon: Icon(Icons.workspace_premium),
-            label: 'Premium',
+            icon: Icon(Icons.auto_awesome_outlined),
+            activeIcon: Icon(Icons.auto_awesome),
+            label: 'Feed',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.more_horiz),

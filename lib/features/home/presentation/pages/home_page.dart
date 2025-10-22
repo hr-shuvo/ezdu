@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -11,21 +10,44 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('EzDu'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              // todo: open notification
-            },
-            icon: const Icon(Icons.notifications_none),
-          ),
-          IconButton(
-            icon: const Icon(Icons.person_outline),
-            onPressed: () {
-              Navigator.pushNamed(context, '/profile');
-            },
-          ),
-        ],
+        automaticallyImplyLeading: false,
+
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: const [
+                Icon(Icons.local_fire_department_outlined, size: 24),
+                SizedBox(width: 4),
+                Text('75', style: TextStyle(fontSize: 14)),
+              ],
+            ),
+
+            Row(
+              children: const [
+                Icon(Icons.star_outline, size: 24),
+                SizedBox(width: 4),
+                Text('20', style: TextStyle(fontSize: 14)),
+              ],
+            ),
+            Row(
+              children: const [
+                Icon(Icons.diamond_outlined, size: 24),
+                SizedBox(width: 4),
+                Text('12', style: TextStyle(fontSize: 14)),
+              ],
+            ),
+
+            Row(
+              children: const [
+                Icon(Icons.workspace_premium_outlined, size: 24),
+                SizedBox(width: 4),
+                Text('Pro', style: TextStyle(fontSize: 14)),
+              ],
+            ),
+
+          ],
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
