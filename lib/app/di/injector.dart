@@ -1,9 +1,3 @@
-import 'package:ezdu/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:ezdu/features/auth/domain/repositories/auth_repository.dart';
-import 'package:ezdu/features/auth/domain/usecases/login_user.dart';
-import 'package:ezdu/features/auth/domain/usecases/logout_user.dart';
-import 'package:ezdu/features/auth/domain/usecases/register_user.dart';
-import 'package:ezdu/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ezdu/features/feed/data/repositories/feed_repository_impl.dart';
 import 'package:ezdu/features/feed/domain/repositories/feed_repository.dart';
 import 'package:ezdu/features/feed/domain/usecases/get_feed.dart';
@@ -25,14 +19,6 @@ import 'package:get_it/get_it.dart';
 final sl = GetIt.instance;
 
 Future<void> initializeDependencies() async {
-  // auth
-  sl.registerFactory(
-    () => AuthBloc(loginUser: sl(), registerUser: sl(), logoutUser: sl()),
-  );
-  sl.registerLazySingleton(() => LoginUser(sl()));
-  sl.registerLazySingleton(() => RegisterUser(sl()));
-  sl.registerLazySingleton(() => LogoutUser(sl()));
-  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl());
 
   // leaderboard
   sl.registerFactory(() => LeaderboardBloc(getLeaderboard: sl()));
