@@ -1,4 +1,4 @@
-import 'package:ezdu/features/feed/domain/entities/feed.dart';
+import 'package:ezdu/features/feed/entities/feed.dart';
 import 'package:flutter/material.dart';
 
 class AnnouncementCard extends StatelessWidget {

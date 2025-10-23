@@ -1,4 +1,4 @@
-import 'package:ezdu/features/profile/domain/entities/progress.dart';
+import 'package:ezdu/features/profile/entities/progress.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 

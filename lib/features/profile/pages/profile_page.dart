@@ -1,9 +1,6 @@
-import 'package:ezdu/app/di/injector.dart';
-import 'package:ezdu/features/profile/domain/entities/achievement.dart';
-import 'package:ezdu/features/profile/domain/entities/progress.dart';
-import 'package:ezdu/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:ezdu/features/profile/entities/achievement.dart';
+import 'package:ezdu/features/profile/entities/progress.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../widgets/xp_bar_chart.dart';
 
@@ -12,12 +9,7 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<ProfileBloc>()
-        ..add(const LoadProfile())
-        ..add(const LoadProgress()),
-      child: const ProfileView(),
-    );
+    return const ProfileView();
   }
 }
 
@@ -38,99 +30,45 @@ class ProfileView extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocBuilder<ProfileBloc, ProfileState>(
-        builder: (context, state) {
-          String loadingText = '';
+      body: RefreshIndicator(
+        onRefresh: () async {
+        },
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Overview Card
+              _ProgressOverviewCard(progress: progress!),
+              const SizedBox(height: 16),
 
-          if (state.isProfileLoading && state.isProgressLoading) {
-            loadingText = 'Loading profile and progress...';
-          } else if (state.isProfileLoading) {
-            loadingText = 'Loading profile...';
-          } else if (state.isProgressLoading) {
-            loadingText = 'Loading progress...';
-          }
-          if (state.isProfileLoading || state.isProgressLoading) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(),
-                  Text(loadingText),
-                ],
-              ),
-            );
-          }
-
-          if (state.error != null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.grey[400]),
-                  const SizedBox(height: 16),
-                  Text(state.error!),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () {
-                      context.read<ProfileBloc>().add(const LoadProgress());
-                    },
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          if (state.progress != null) {
-            final progress = state.progress;
-
-            return RefreshIndicator(
-              onRefresh: () async {
-                context.read<ProfileBloc>().add(const LoadProgress());
-                await Future.delayed(const Duration(seconds: 1));
-              },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Overview Card
-                    _ProgressOverviewCard(progress: progress!),
-                    const SizedBox(height: 16),
-
-                    // Weekly Stats
-                    const Text(
-                      'Weekly Activity',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    XPBarChart(data: progress.weeklyData),
-                    const SizedBox(height: 24),
-                    // Achievements
-                    const Text(
-                      'Recent Achievements',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ...progress.achievements.map((achievement) {
-                      return _AchievementTile(achievement: achievement);
-                    }),
-                  ],
+              // Weekly Stats
+              const Text(
+                'Weekly Activity',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            );
-          }
-
-          return const SizedBox.shrink();
-        },
+              const SizedBox(height: 16),
+              XPBarChart(data: progress.weeklyData),
+              const SizedBox(height: 24),
+              // Achievements
+              const Text(
+                'Recent Achievements',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ...progress.achievements.map((achievement) {
+                return _AchievementTile(achievement: achievement);
+              }),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -289,3 +227,52 @@ class _AchievementTile extends StatelessWidget {
     );
   }
 }
+
+
+
+final progress = Progress(
+  totalXP: 4233,
+  currentStreak: 27,
+  weeklyData: [
+    DailyProgress(day: '21/07/25', xp: 32),
+    DailyProgress(day: '24/07/25', xp: 58),
+  ],
+  achievements: [
+    Achievement(
+      id: 1,
+      title: 'First Step',
+      description: 'Complete your first lesson',
+      xp: 50,
+      unlockedAt: DateTime.utc(2025, 1, 1),
+    ),
+    Achievement(
+      id: 2,
+      title: 'Quiz Master',
+      description: 'Score 100% in a quiz',
+      xp: 100,
+      unlockedAt: DateTime.utc(2025, 2, 10),
+    ),
+    Achievement(
+      id: 3,
+      title: "title",
+      description: "description",
+      xp: 66,
+      unlockedAt: DateTime.utc(2025, 2, 10),
+    ),
+    Achievement(
+      id: 4,
+      title: 'Daily Streak',
+      description: 'Maintain a 7-day streak',
+      xp: 150,
+      unlockedAt: DateTime.utc(2025, 3, 5),
+    ),
+    Achievement(
+      id: 5,
+      title: 'XP Collector',
+      description: 'Earn over 1000 XP total',
+      xp: 200,
+      unlockedAt: DateTime.utc(2025, 3, 15),
+    ),
+  ],
+
+);

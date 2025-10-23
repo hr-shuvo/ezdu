@@ -1,9 +1,8 @@
 import 'package:ezdu/core/errors/failures.dart';
-import 'package:ezdu/features/feed/domain/entities/feed.dart';
-import 'package:ezdu/features/feed/domain/repositories/feed_repository.dart';
+import 'package:ezdu/features/feed/entities/feed.dart';
 import 'package:fpdart/src/either.dart';
 
-class FeedRepositoryImpl implements FeedRepository {
+class FeedRepositoryImpl {
   @override
   Future<Either<Failure, List<FeedEntry>>> getFeedItems() async {
     try {

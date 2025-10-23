@@ -1,8 +1,8 @@
 import 'package:ezdu/features/auth/pages/login_page.dart';
 import 'package:ezdu/features/auth/pages/register_page.dart';
-import 'package:ezdu/features/leaderboard/presentation/pages/leaderboard_page.dart';
-import 'package:ezdu/features/navigation/presentation/pages/main_navigation_page.dart';
-import 'package:ezdu/features/profile/presentation/pages/profile_page.dart';
+import 'package:ezdu/features/leaderboard/pages/leaderboard_page.dart';
+import 'package:ezdu/features/navigation/main_navigation_page.dart';
+import 'package:ezdu/features/profile/pages/profile_page.dart';
 import 'package:ezdu/features/quiz/presentation/pages/quiz_page.dart';
 import 'package:ezdu/features/shop/presentation/shop_page.dart';
 import 'package:ezdu/features/splash/presentation/pages/splash_page.dart';
