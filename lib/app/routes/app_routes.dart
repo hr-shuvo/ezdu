@@ -1,5 +1,6 @@
 import 'package:ezdu/features/auth/presentation/pages/login_page.dart';
 import 'package:ezdu/features/auth/presentation/pages/register_page.dart';
+import 'package:ezdu/features/leaderboard/presentation/pages/leaderboard_page.dart';
 import 'package:ezdu/features/navigation/presentation/pages/main_navigation_page.dart';
 import 'package:ezdu/features/profile/presentation/pages/profile_page.dart';
 import 'package:ezdu/features/quiz/presentation/pages/quiz_page.dart';
@@ -27,6 +28,9 @@ class AppRoutes {
 
       case '/quiz':
         return MaterialPageRoute(builder: (_) => const QuizPage());
+
+      case '/leaderboard':
+        return MaterialPageRoute(builder: (_) => const LeaderboardPage());
 
       case '/profile':
         return MaterialPageRoute(builder: (_) => const ProfilePage());

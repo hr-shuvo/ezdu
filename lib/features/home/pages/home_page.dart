@@ -1,9 +1,9 @@
-import 'package:ezdu/features/home/presentation/widgets/daily_quiz_card.dart';
-import 'package:ezdu/features/home/presentation/widgets/home_grid_section.dart';
-import 'package:ezdu/features/home/presentation/widgets/mini_leaderboard.dart';
-import 'package:ezdu/features/home/presentation/widgets/quic_challenge_card.dart';
-import 'package:ezdu/features/home/presentation/widgets/recommended_section.dart';
-import 'package:ezdu/features/home/presentation/widgets/upcoming_quiz_card.dart';
+import 'package:ezdu/features/home/widgets/daily_quiz_card.dart';
+import 'package:ezdu/features/home/widgets/home_grid_section.dart';
+import 'package:ezdu/features/home/widgets/mini_leaderboard.dart';
+import 'package:ezdu/features/home/widgets/quic_challenge_card.dart';
+import 'package:ezdu/features/home/widgets/recommended_section.dart';
+import 'package:ezdu/features/home/widgets/upcoming_quiz_card.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {

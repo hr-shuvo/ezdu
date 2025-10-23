@@ -1,5 +1,5 @@
 import 'package:ezdu/features/feed/presentation/pages/feed_page.dart';
-import 'package:ezdu/features/home/presentation/pages/home_page.dart';
+import 'package:ezdu/features/home/pages/home_page.dart';
 import 'package:ezdu/features/leaderboard/presentation/pages/leaderboard_page.dart';
 import 'package:ezdu/features/quest/presentation/pages/quest_page.dart';
 import 'package:ezdu/features/quiz/presentation/pages/quiz_page.dart';
