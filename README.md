@@ -1,16 +1,37 @@
-# ezdu
+# EzDu
 
-A new Flutter project.
+EzDu is a **gamified e-learning platform** inspired by Duolingo and 10 Minute School. It helps students and job aspirants learn effectively through interactive lessons, quizzes, XP-based progress tracking, and achievement systems.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **Interactive Curriculum**
+    - Covers school-level subjects (Class 6-12) and competitive exam preparation (BCS, bank exams, etc.)
+    - Structured lessons, quizzes, and assignments
 
-A few resources to get you started if this is your first Flutter project:
+- **Gamified Learning**
+    - XP-based progress tracking
+    - Daily streaks and leaderboards
+    - Achievements and badges for milestones
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Personalized Progress**
+    - User profile with detailed learning stats
+    - Progress graphs for last 7 days
+    - Quiz performance tracking
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Discussion & Doubt Clearing**
+    - Hidden forum-like feature named **Jiggasha**
+    - Ask and answer questions within the platform
+
+- **Responsive UI**
+    - Mobile-first design with intuitive navigation
+    - Animated progress charts and visual feedback
+
+## Tech Stack
+
+- **Frontend**: Flutter | React
+- **Backend**: .NET Core
+- **Databases**: MySQL
+- **State Management**: Bloc
+
+## Project Structure
+
