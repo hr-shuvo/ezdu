@@ -2,9 +2,10 @@ import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/features/profile/domain/entities/achievement.dart';
 import 'package:ezdu/features/profile/domain/entities/progress.dart';
 import 'package:ezdu/features/profile/presentation/bloc/profile_bloc.dart';
-import 'package:ezdu/features/profile/presentation/widgets/progress_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../widgets/xp_bar_chart.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -108,9 +109,8 @@ class ProfileView extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    ProgressChart(data: progress.weeklyData),
+                    XPBarChart(data: progress.weeklyData),
                     const SizedBox(height: 24),
-
                     // Achievements
                     const Text(
                       'Recent Achievements',
