@@ -31,19 +31,23 @@ class AchievementCard extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text(
-                            feedItem.userName ?? '',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                          Expanded(
+                            child: Text(
+                              feedItem.userName ?? '',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 8),
-                          Text(
-                            feedItem.timestamp ?? '',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 12,
+                          Expanded(
+                            child: Text(
+                              feedItem.timestamp ?? '',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                              ),
                             ),
                           ),
                         ],

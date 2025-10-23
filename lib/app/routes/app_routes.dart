@@ -3,6 +3,7 @@ import 'package:ezdu/features/auth/presentation/pages/register_page.dart';
 import 'package:ezdu/features/navigation/presentation/pages/main_navigation_page.dart';
 import 'package:ezdu/features/profile/presentation/pages/profile_page.dart';
 import 'package:ezdu/features/quiz/presentation/pages/quiz_page.dart';
+import 'package:ezdu/features/shop/presentation/shop_page.dart';
 import 'package:ezdu/features/splash/presentation/pages/splash_page.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,9 @@ class AppRoutes {
 
       case '/home':
         return MaterialPageRoute(builder: (_) => const MainNavigationPage());
+
+      case '/shop':
+        return MaterialPageRoute(builder: (_) => const ShopPage());
 
       case '/quiz':
         return MaterialPageRoute(builder: (_) => const QuizPage());
