@@ -6,7 +6,6 @@ import 'package:ezdu/features/feed/widgets/feed_notification_card.dart';
 import 'package:ezdu/features/feed/widgets/feed_sentence_shared_card.dart';
 import 'package:ezdu/features/feed/widgets/feed_single_recommended_friend.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});

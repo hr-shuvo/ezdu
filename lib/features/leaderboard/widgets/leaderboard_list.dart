@@ -1,7 +1,5 @@
 import 'package:ezdu/features/leaderboard/entities/leaderboard.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'leaderboard_tile.dart';
 
 class LeaderboardList extends StatelessWidget {

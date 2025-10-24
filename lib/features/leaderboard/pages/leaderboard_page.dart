@@ -1,8 +1,6 @@
-import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/features/leaderboard/entities/leaderboard.dart';
 import 'package:ezdu/features/leaderboard/widgets/leaderboard_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LeaderboardPage extends StatefulWidget {
   const LeaderboardPage({super.key});
