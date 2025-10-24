@@ -1,23 +1,25 @@
 import 'package:ezdu/features/profile/entities/achievement.dart';
 import 'package:ezdu/features/profile/entities/progress.dart';
+import 'package:ezdu/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../widgets/xp_bar_chart.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const ProfileView();
-  }
+  ConsumerState<ConsumerStatefulWidget> createState() => _ProfilePageState();
 }
 
-class ProfileView extends StatelessWidget {
-  const ProfileView({super.key});
+class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider).data;
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Progress'),
@@ -44,8 +46,8 @@ class ProfileView extends StatelessWidget {
               const SizedBox(height: 16),
 
               // Weekly Stats
-              const Text(
-                'Weekly Activity',
+              Text(
+                'Weekly Activity ${authState!.userName}',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

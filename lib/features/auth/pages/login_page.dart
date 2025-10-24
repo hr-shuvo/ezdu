@@ -1,16 +1,18 @@
+import 'package:ezdu/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _emailController = TextEditingController(text: 'member@example.com');
+  final _passwordController = TextEditingController(text: '123456');
   bool _obscurePassword = true;
 
   @override
@@ -20,21 +22,38 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _onLoginPressed() {
-    if (_formKey.currentState?.validate() ?? false) {
-      print('Valid Email: ${_emailController.text.trim()}');
-      print('Valid Password: ${_passwordController.text}');
-    } else {
-      print('Email: ${_emailController.text.trim()}');
-      print('Password: ${_passwordController.text}');
-    }
+  void _onLoginPressed() async {
 
-    Navigator.of(context).pushReplacementNamed('/home');
+    if (_formKey.currentState?.validate() ?? false) {
+      await ref
+          .read(authProvider.notifier)
+          .login(_emailController.text.trim(), _passwordController.text);
+
+      // final authState = ref.watch(authProvider);
+      //
+      // if (authState.data != null) {
+      //   Navigator.of(context).pushReplacementNamed('/home');
+      // }
+    } else {
+      print('Invalid Email: ${_emailController.text.trim()}');
+      print('Invalid Password: ${_passwordController.text}');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = false;
+    final authState = ref.watch(authProvider);
+
+    ref.listen(authProvider, (previous, next) {
+      if (next.data != null) {
+        _emailController.clear();
+        _passwordController.clear();
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Loading Success')));
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    });
 
     return Scaffold(
       body: SafeArea(
@@ -74,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    enabled: !isLoading,
+                    enabled: !authState.isLoading,
                     decoration: InputDecoration(
                       labelText: 'Email',
                       prefixIcon: const Icon(Icons.email_outlined),
@@ -97,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _obscurePassword,
-                    enabled: !isLoading,
+                    enabled: !authState.isLoading,
                     decoration: InputDecoration(
                       labelText: 'Password',
                       prefixIcon: const Icon(Icons.lock_outline),
@@ -127,13 +146,22 @@ class _LoginPageState extends State<LoginPage> {
                       return null;
                     },
                   ),
+
+                  if (authState.error != null && authState.error!.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        authState.error!,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
                   const SizedBox(height: 12),
 
                   // Forgot Password
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: isLoading
+                      onPressed: authState.isLoading
                           ? null
                           : () {
                               // Navigate to forgot password
@@ -145,14 +173,14 @@ class _LoginPageState extends State<LoginPage> {
 
                   // Login Button
                   ElevatedButton(
-                    onPressed: isLoading ? null : _onLoginPressed,
+                    onPressed: authState.isLoading ? null : _onLoginPressed,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: isLoading
+                    child: authState.isLoading
                         ? const SizedBox(
                             height: 20,
                             width: 20,
@@ -176,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                       TextButton(
-                        onPressed: isLoading
+                        onPressed: authState.isLoading
                             ? null
                             : () {
                                 Navigator.of(
