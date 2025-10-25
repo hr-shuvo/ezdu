@@ -2,6 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/data/repositories/auth_repository.dart';
 import 'package:ezdu/features/auth/models/auth_model.dart';
+import 'package:ezdu/services/dio_client.dart';
+import 'package:ezdu/services/storage_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod/legacy.dart';
 
 class AuthState extends Equatable {
@@ -50,8 +53,25 @@ class AuthNotifier extends StateNotifier<AuthState> {
     await _repository.logout();
     state = const AuthState.initial();
   }
+
+  Future<void> restoreSession() async {
+    final storageService = sl<StorageService>();
+    final dioClient = sl<DioClient>();
+
+    final authData = await storageService.getAuthData();
+    final token = await storageService.getToken();
+
+    if (authData != null && token != null) {
+      dioClient.setAuthToken(token);
+      state = state.copyWithSuccess(authData);
+    }
+  }
 }
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>(
   (ref) => AuthNotifier(sl<AuthRepository>()),
 );
+
+final authInitProvider = FutureProvider<void>((ref) async {
+  await ref.read(authProvider.notifier).restoreSession();
+});

@@ -1,13 +1,15 @@
+import 'package:ezdu/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SplashPage extends StatefulWidget {
+class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
 
   @override
-  State<SplashPage> createState() => _SplashPageState();
+  ConsumerState<SplashPage> createState() => _SplashPageState();
 }
 
-class _SplashPageState extends State<SplashPage>
+class _SplashPageState extends ConsumerState<SplashPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -35,8 +37,14 @@ class _SplashPageState extends State<SplashPage>
     _controller.forward();
 
     Future.delayed(const Duration(seconds: 3), () {
+      final authState = ref.read(authProvider);
+
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/login');
+        if (authState.data != null && authState.data!.token.isNotEmpty) {
+          Navigator.of(context).pushReplacementNamed('/home');
+        } else {
+          Navigator.of(context).pushReplacementNamed('/login');
+        }
       }
     });
   }
@@ -69,11 +77,7 @@ class _SplashPageState extends State<SplashPage>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.school,
-                    size: 120,
-                    color: Colors.white,
-                  ),
+                  const Icon(Icons.school, size: 120, color: Colors.white),
                   const SizedBox(height: 24),
                   const Text(
                     'EzDu - Learn & Grow',
@@ -88,7 +92,7 @@ class _SplashPageState extends State<SplashPage>
                     'Master your skills every day',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                     ),
                   ),
                 ],

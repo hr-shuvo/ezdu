@@ -22,6 +22,7 @@ class AuthRepository {
       final auth = await _remoteDataSource.login(email, password);
 
       await _storageService.saveToken(auth.token);
+      await _storageService.saveAuthData(auth);
       _dioClient.setAuthToken(auth.token);
 
       return ApiResponse.success(auth);

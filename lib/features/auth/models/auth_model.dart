@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:ezdu/features/auth/models/auth_user_model.dart';
 
 class AuthModel extends Equatable {
   final int id;
@@ -25,6 +24,15 @@ class AuthModel extends Equatable {
 
       // user: AuthUserModel.toModel(json['user']),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'username': userName,
+      'token': token,
+    };
   }
 
   @override

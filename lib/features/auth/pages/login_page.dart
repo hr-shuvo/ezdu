@@ -23,17 +23,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   void _onLoginPressed() async {
-
     if (_formKey.currentState?.validate() ?? false) {
       await ref
           .read(authProvider.notifier)
           .login(_emailController.text.trim(), _passwordController.text);
-
-      // final authState = ref.watch(authProvider);
-      //
-      // if (authState.data != null) {
-      //   Navigator.of(context).pushReplacementNamed('/home');
-      // }
     } else {
       print('Invalid Email: ${_emailController.text.trim()}');
       print('Invalid Password: ${_passwordController.text}');
@@ -44,13 +37,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
 
-    ref.listen(authProvider, (previous, next) {
+    ref.listen<AuthState>(authProvider, (previous, next) {
       if (next.data != null) {
         _emailController.clear();
         _passwordController.clear();
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Loading Success')));
+
+        // ScaffoldMessenger.of(
+        //   context,
+        // ).showSnackBar(const SnackBar(content: Text('Loading Success')));
+
+        print('-----------------------redirecting');
         Navigator.pushReplacementNamed(context, '/home');
       }
     });
@@ -81,7 +77,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Sign in to continue learning',
+                    authState.data?.userName ?? 'Sign in to continue learning',
                     style: Theme.of(
                       context,
                     ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
