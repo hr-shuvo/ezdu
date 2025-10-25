@@ -1,5 +1,6 @@
-import 'package:ezdu/features/profile/entities/progress.dart';
-import 'package:ezdu/features/profile/pages/settings_page.dart';
+import 'package:ezdu/core/utils/route_helper.dart';
+import 'package:ezdu/features/profile/models/progress.dart';
+import 'package:ezdu/features/settings/pages/settings_page.dart';
 import 'package:ezdu/features/profile/widgets/profile_overview.dart';
 import 'package:ezdu/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,8 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
+  static const String settingsHeroTag = 'settings_button_hero';
+
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider).data;
@@ -42,12 +45,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             icon: const Icon(Icons.settings),
             // Changed to Settings icon
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const SettingsPage(),
-                  fullscreenDialog: true,
-                ),
-              );
+              Navigator.of(
+                context,
+              ).push(SlideUpRoute(page: const SettingsPage()));
             },
           ),
         ],

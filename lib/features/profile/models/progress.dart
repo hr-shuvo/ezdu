@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:ezdu/features/profile/entities/achievement.dart';
+import 'package:ezdu/features/profile/models/achievement.dart';
 
 class Progress extends Equatable {
   final int totalXP;

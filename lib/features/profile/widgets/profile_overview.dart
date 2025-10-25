@@ -1,5 +1,5 @@
-import 'package:ezdu/features/profile/entities/achievement.dart';
-import 'package:ezdu/features/profile/entities/progress.dart';
+import 'package:ezdu/features/profile/models/achievement.dart';
+import 'package:ezdu/features/profile/models/progress.dart';
 import 'package:ezdu/features/profile/widgets/xp_bar_chart.dart';
 import 'package:flutter/material.dart';
 
