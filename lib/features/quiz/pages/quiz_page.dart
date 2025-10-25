@@ -36,13 +36,13 @@ class _QuizPageState extends State<QuizPage>
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Colors.blue[50]!, Colors.indigo[100]!],
-          ),
-        ),
+        // decoration: BoxDecoration(
+        //   gradient: LinearGradient(
+        //     begin: Alignment.topLeft,
+        //     end: Alignment.bottomRight,
+        //     colors: [Theme.of(context).secondaryHeaderColor, Colors.indigo[100]!],
+        //   ),
+        // ),
         child: TabBarView(
           controller: _tabController,
           children: const [

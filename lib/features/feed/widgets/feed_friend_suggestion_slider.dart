@@ -23,31 +23,31 @@ class _FriendSuggestionsSliderState extends State<FriendSuggestionsSlider> {
       'name': 'Jordan Lee',
       'avatar': '👩‍🎓',
       'friends': 3,
-      'language': '🇯🇵 Japanese'
+      'language': '🇯🇵 Japanese',
     },
     {
       'name': 'David Kim',
       'avatar': '👨‍💻',
       'friends': 5,
-      'language': '🇰🇷 Korean'
+      'language': '🇰🇷 Korean',
     },
     {
       'name': 'Sofia Martinez',
       'avatar': '👩‍🎨',
       'friends': 4,
-      'language': '🇪🇸 Spanish'
+      'language': '🇪🇸 Spanish',
     },
     {
       'name': 'Lucas Chen',
       'avatar': '👨‍🏫',
       'friends': 2,
-      'language': '🇨🇳 Mandarin'
+      'language': '🇨🇳 Mandarin',
     },
     {
       'name': 'Anna Mueller',
       'avatar': '👩‍⚕️',
       'friends': 6,
-      'language': '🇩🇪 German'
+      'language': '🇩🇪 German',
     },
   ];
 
@@ -66,9 +66,9 @@ class _FriendSuggestionsSliderState extends State<FriendSuggestionsSlider> {
           children: [
             Text(
               'Recommended Friends',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             SizedBox(
@@ -90,7 +90,7 @@ class _FriendSuggestionsSliderState extends State<FriendSuggestionsSlider> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 suggestedFriends.length,
-                    (index) => GestureDetector(
+                (index) => GestureDetector(
                   onTap: () {
                     widget.pageController.animateToPage(
                       index,
@@ -103,8 +103,9 @@ class _FriendSuggestionsSliderState extends State<FriendSuggestionsSlider> {
                     width: _currentPage == index ? 24 : 8,
                     margin: const EdgeInsets.symmetric(horizontal: 4),
                     decoration: BoxDecoration(
-                      color:
-                      _currentPage == index ? Colors.green[600] : Colors.grey[300],
+                      color: _currentPage == index
+                          ? Colors.green[600]
+                          : Colors.grey[300],
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -125,7 +126,14 @@ class _FriendSuggestionsSliderState extends State<FriendSuggestionsSlider> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Colors.green[50]!, Colors.blue[50]!],
+          colors: [
+            Theme.of(
+              context,
+            ).colorScheme.surfaceContainer.withValues(alpha: .1),
+            Theme.of(
+              context,
+            ).colorScheme.surfaceContainer.withValues(alpha: .8),
+          ],
         ),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey[300]!),
@@ -149,10 +157,7 @@ class _FriendSuggestionsSliderState extends State<FriendSuggestionsSlider> {
                     ),
                     Text(
                       '${friend['friends']} mutual friends',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ],
                 ),

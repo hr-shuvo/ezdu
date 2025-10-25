@@ -41,7 +41,7 @@ class _QuizChallengeTabState extends State<QuizChallengeTab> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.blue[50],
+                    color: Theme.of(context).primaryColor,
                     border: Border.all(color: Colors.blue[200]!, width: 2),
                     borderRadius: BorderRadius.circular(8),
                   ),

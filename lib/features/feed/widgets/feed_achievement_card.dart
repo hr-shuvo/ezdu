@@ -23,7 +23,10 @@ class AchievementCard extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                Text(feedItem.avatar ?? '', style: const TextStyle(fontSize: 40)),
+                Text(
+                  feedItem.avatar ?? '',
+                  style: const TextStyle(fontSize: 40),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -81,7 +84,7 @@ class AchievementCard extends StatelessWidget {
             ),
           ),
           Container(
-            color: Colors.grey[100],
+            color: Theme.of(context).secondaryHeaderColor,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
@@ -89,7 +92,10 @@ class AchievementCard extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   '${feedItem.likeCount} likes',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
               ],
             ),

@@ -39,7 +39,8 @@ class LeaderboardTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        // color: Colors.white,
+        color: Theme.of(context).colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isTopThree ? rankColor.withOpacity(0.3) : Colors.grey.shade200,
@@ -87,7 +88,7 @@ class LeaderboardTile extends StatelessWidget {
           // User Avatar
           CircleAvatar(
             radius: 24,
-            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+            backgroundColor: Theme.of(context).primaryColor.withValues(alpha: .1),
             child: Text(
               entry.userName.isNotEmpty
                   ? entry.userName[0].toUpperCase()
@@ -95,7 +96,7 @@ class LeaderboardTile extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ),

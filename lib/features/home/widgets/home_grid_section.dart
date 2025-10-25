@@ -15,13 +15,13 @@ class HomeGridSection extends StatelessWidget {
       HomeGridItem(
         icon: Icons.local_fire_department,
         title: 'Quick Challenge',
-        route: '/quick-challenge',
+        route: '/quiz',
         color: Colors.orangeAccent,
       ),
       HomeGridItem(
         icon: Icons.quiz,
         title: 'Quiz',
-        route: '/daily-quiz',
+        route: '/quiz',
         color: Colors.greenAccent,
       ),
       HomeGridItem(

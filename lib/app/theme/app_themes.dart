@@ -44,6 +44,10 @@ class AppTheme {
           borderSide: const BorderSide(color: Colors.blue, width: 2),
         ),
       ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        selectedItemColor: Colors.teal,
+        unselectedItemColor: Colors.grey,
+      ),
     );
   }
 
@@ -64,6 +68,10 @@ class AppTheme {
         elevation: 2,
         color: const Color(0xFF1E1E1E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        selectedItemColor: Colors.teal,
+        unselectedItemColor: Colors.grey,
       ),
     );
   }

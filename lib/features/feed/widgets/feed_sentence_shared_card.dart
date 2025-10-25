@@ -23,7 +23,10 @@ class SentenceShareCard extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                Text(feedItem.avatar ?? '', style: const TextStyle(fontSize: 40)),
+                Text(
+                  feedItem.avatar ?? '',
+                  style: const TextStyle(fontSize: 40),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -77,7 +80,7 @@ class SentenceShareCard extends StatelessWidget {
             ),
           ),
           Container(
-            color: Colors.green[50],
+            color: Theme.of(context).colorScheme.surfaceContainer,
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,16 +96,13 @@ class SentenceShareCard extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   feedItem.translation ?? '',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[700],
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[700]),
                 ),
               ],
             ),
           ),
           Container(
-            color: Colors.grey[100],
+            color: Theme.of(context).secondaryHeaderColor,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
@@ -110,7 +110,10 @@ class SentenceShareCard extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   '${feedItem.likeCount} likes',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
               ],
             ),

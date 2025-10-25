@@ -23,7 +23,14 @@ class SingleRecommendedFriend extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.green[50]!, Colors.blue[50]!],
+            colors: [
+              Theme.of(
+                context,
+              ).colorScheme.surfaceContainer.withValues(alpha: .1),
+              Theme.of(
+                context,
+              ).colorScheme.surfaceContainer.withValues(alpha: .8),
+            ],
           ),
         ),
         child: Padding(
@@ -38,19 +45,16 @@ class SingleRecommendedFriend extends StatelessWidget {
                   children: [
                     Text(
                       feedItem.userName ?? '',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                        color: Colors.black87,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '${feedItem.mutualFriends} mutual friends',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                     const SizedBox(height: 4),
                     Text(
