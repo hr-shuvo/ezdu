@@ -1,7 +1,5 @@
 import 'package:ezdu/app/routes/app_routes.dart';
 import 'package:ezdu/app/theme/app_themes.dart';
-import 'package:ezdu/features/auth/pages/login_page.dart';
-import 'package:ezdu/features/home/pages/home_page.dart';
 import 'package:ezdu/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,14 +16,23 @@ class MyApp extends StatelessWidget {
         builder: (context, ref, child) {
           ref.watch(authInitProvider);
 
-          return MaterialApp(
-            title: 'ezdu',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: ThemeMode.light,
-            onGenerateRoute: AppRoutes.generateRoute,
-            initialRoute: '/',
+          return Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.green[50]!, Colors.blue[50]!],
+              ),
+            ),
+            child: MaterialApp(
+              title: 'ezdu',
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: ThemeMode.light,
+              onGenerateRoute: AppRoutes.generateRoute,
+              initialRoute: '/',
+            ),
           );
         },
       ),
