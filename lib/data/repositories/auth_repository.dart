@@ -1,4 +1,4 @@
-import 'package:ezdu/data/models/api_response.dart';
+import 'package:ezdu/core/models/api_response.dart';
 import 'package:ezdu/features/auth/datasources/auth_remote_ds.dart';
 import 'package:ezdu/features/auth/models/auth_model.dart';
 import 'package:ezdu/services/dio_client.dart';

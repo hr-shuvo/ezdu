@@ -1,3 +1,4 @@
+import 'package:ezdu/features/archive/pages/archive_page.dart';
 import 'package:ezdu/features/auth/pages/login_page.dart';
 import 'package:ezdu/features/auth/pages/register_page.dart';
 import 'package:ezdu/features/leaderboard/pages/leaderboard_page.dart';
@@ -22,6 +23,9 @@ class AppRoutes {
 
       case '/home':
         return MaterialPageRoute(builder: (_) => const MainNavigationPage());
+
+      case '/archive':
+        return MaterialPageRoute(builder: (_) => const ArchivePage());
 
       case '/shop':
         return MaterialPageRoute(builder: (_) => const ShopPage());

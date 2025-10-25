@@ -26,7 +26,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
 
   void _onItemTapped(int index) async {
     if (index == 5) {
-      final RenderBox bar = context.findRenderObject() as RenderBox;
+      // final RenderBox bar = context.findRenderObject() as RenderBox;
       await _showMoreMenu(context);
       return;
     }
