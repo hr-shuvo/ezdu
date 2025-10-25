@@ -1,5 +1,6 @@
 import 'package:ezdu/features/profile/entities/achievement.dart';
 import 'package:ezdu/features/profile/entities/progress.dart';
+import 'package:ezdu/features/profile/widgets/profile_overview.dart';
 import 'package:ezdu/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,60 +15,135 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
-
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider).data;
 
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Progress'),
+        automaticallyImplyLeading: false,
+        leadingWidth: double.infinity,
+        leading: Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(
+              authState!.userName,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.calendar_today),
+            icon: const Icon(Icons.output),
             onPressed: () {
               // Show calendar view
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            // Changed to Settings icon
+            onPressed: () {},
+          ),
         ],
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Theme.of(context).primaryColor,
+                Theme.of(context).primaryColor.withValues(alpha: 0.6),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: RefreshIndicator(
-        onRefresh: () async {
-        },
+        onRefresh: () async {},
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Stack(
+                children: [
+                  Container(
+                    height: 120,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Theme.of(context).primaryColor,
+                          Theme.of(context).primaryColor.withValues(alpha: 0.6),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Center(
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 4),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: CircleAvatar(
+                              backgroundImage: AssetImage(
+                                'assets/images/avatars/1.png',
+                              ),
+                              backgroundColor: Colors.grey[300],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               // Overview Card
-              _ProgressOverviewCard(progress: progress!),
-              const SizedBox(height: 16),
+              UserProfileWidget(
+                displayName: authState.name,
+                username: authState.userName,
+                joinedDate: 'Jan 15, 2024',
+                profileImageUrl: 'https://api.dicebear.com/9.x/avataaars/svg?seed=Christopher',
+                followers: 1250,
+                following: 320,
+                totalXP: 15420,
+                currentStreak: 42,
+                level: 18,
+                totalQuizzes: 156,
+                isFollowing: false,
+                isFriend: true,
+                lastQuizzes: [
+                  {'title': 'Spanish Basics', 'date': 'Today', 'score': 95},
+                  {'title': 'French Verbs', 'date': 'Yesterday', 'score': 88},
+                  {
+                    'title': 'German Grammar',
+                    'date': '2 days ago',
+                    'score': 76,
+                  },
+                ],
+                onFollowPressed: () {},
+                onFriendPressed: () {},
+              ),
 
-              // Weekly Stats
-              Text(
-                'Weekly Activity ${authState!.userName}',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              XPBarChart(data: progress.weeklyData),
-              const SizedBox(height: 24),
-              // Achievements
-              const Text(
-                'Recent Achievements',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              ...progress.achievements.map((achievement) {
-                return _AchievementTile(achievement: achievement);
-              }),
+
             ],
           ),
         ),
@@ -158,123 +234,3 @@ class _ProgressOverviewCard extends StatelessWidget {
     );
   }
 }
-
-class _AchievementTile extends StatelessWidget {
-  final Achievement achievement;
-
-  const _AchievementTile({required this.achievement});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.amber.shade50,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(
-              Icons.emoji_events,
-              color: Colors.amber,
-              size: 30,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  achievement.title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  achievement.description,
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.amber.shade50,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              '+${achievement.xp} XP',
-              style: const TextStyle(
-                color: Colors.amber,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-
-
-final progress = Progress(
-  totalXP: 4233,
-  currentStreak: 27,
-  weeklyData: [
-    DailyProgress(day: '21/07/25', xp: 32),
-    DailyProgress(day: '24/07/25', xp: 58),
-  ],
-  achievements: [
-    Achievement(
-      id: 1,
-      title: 'First Step',
-      description: 'Complete your first lesson',
-      xp: 50,
-      unlockedAt: DateTime.utc(2025, 1, 1),
-    ),
-    Achievement(
-      id: 2,
-      title: 'Quiz Master',
-      description: 'Score 100% in a quiz',
-      xp: 100,
-      unlockedAt: DateTime.utc(2025, 2, 10),
-    ),
-    Achievement(
-      id: 3,
-      title: "title",
-      description: "description",
-      xp: 66,
-      unlockedAt: DateTime.utc(2025, 2, 10),
-    ),
-    Achievement(
-      id: 4,
-      title: 'Daily Streak',
-      description: 'Maintain a 7-day streak',
-      xp: 150,
-      unlockedAt: DateTime.utc(2025, 3, 5),
-    ),
-    Achievement(
-      id: 5,
-      title: 'XP Collector',
-      description: 'Earn over 1000 XP total',
-      xp: 200,
-      unlockedAt: DateTime.utc(2025, 3, 15),
-    ),
-  ],
-
-);
