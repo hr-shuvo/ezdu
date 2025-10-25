@@ -10,6 +10,16 @@ class ArchivePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Archive',
+          style: TextStyle(
+            fontSize: 36,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1E293B),
+          ),
+        ),
+      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -25,15 +35,15 @@ class ArchivePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Archive',
-                    style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF1E293B),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+                  // Text(
+                  //   'Archive',
+                  //   style: TextStyle(
+                  //     fontSize: 36,
+                  //     fontWeight: FontWeight.bold,
+                  //     color: Color(0xFF1E293B),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 16),
                   Row(
                     children: [
                       Expanded(
@@ -97,7 +107,7 @@ class ArchivePage extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                              ExamListScreen(subject: subject),
+                                  ExamListScreen(subject: subject),
                             ),
                           );
                         },
