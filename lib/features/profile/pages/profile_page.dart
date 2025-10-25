@@ -1,11 +1,9 @@
-import 'package:ezdu/features/profile/entities/achievement.dart';
 import 'package:ezdu/features/profile/entities/progress.dart';
+import 'package:ezdu/features/profile/pages/settings_page.dart';
 import 'package:ezdu/features/profile/widgets/profile_overview.dart';
 import 'package:ezdu/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../widgets/xp_bar_chart.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
@@ -43,7 +41,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           IconButton(
             icon: const Icon(Icons.settings),
             // Changed to Settings icon
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const SettingsPage(),
+                  fullscreenDialog: true,
+                ),
+              );
+            },
           ),
         ],
         flexibleSpace: Container(
@@ -121,7 +126,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 displayName: authState.name,
                 username: authState.userName,
                 joinedDate: 'Jan 15, 2024',
-                profileImageUrl: 'https://api.dicebear.com/9.x/avataaars/svg?seed=Christopher',
+                profileImageUrl:
+                    'https://api.dicebear.com/9.x/avataaars/svg?seed=Christopher',
                 followers: 1250,
                 following: 320,
                 totalXP: 15420,
@@ -142,8 +148,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 onFollowPressed: () {},
                 onFriendPressed: () {},
               ),
-
-
             ],
           ),
         ),
