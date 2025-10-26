@@ -47,7 +47,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         //   context,
         // ).showSnackBar(const SnackBar(content: Text('Loading Success')));
 
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
       }
     });
 
@@ -199,11 +199,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         onPressed: authState.isLoading
                             ? null
                             : () {
-                                Navigator.of(
-                                  context,
-                                ).pushReplacementNamed('/register');
+                                Navigator.of(context).pop();
                               },
-                        child: const Text('Sign Up'),
+                        child: const Text('Go back'),
                       ),
                     ],
                   ),

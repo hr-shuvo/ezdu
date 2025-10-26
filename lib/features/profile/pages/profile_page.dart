@@ -14,7 +14,6 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
-  static const String settingsHeroTag = 'settings_button_hero';
 
   @override
   Widget build(BuildContext context) {
