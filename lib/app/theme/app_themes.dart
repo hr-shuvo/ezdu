@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class AppTheme {
   // static const ezduColor = Color(0xFF4BC188);
   static const ezduColor = Colors.blue;
+  static const Color darkSurface = Color(0xFF1C1C1E);
+  static const Color darkBackground = Color(0xFF121212);
 
   static ThemeData get lightTheme {
     final colorScheme = ColorScheme.fromSeed(
@@ -58,11 +60,7 @@ class AppTheme {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: ezduColor,
       brightness: Brightness.dark,
-      surface: const Color(0xFF1E1E1E),
-      // Dark background for settings modal
-      onSurface: Colors.white,
-      background: const Color(0xFF121212), // Main app background
-    );
+    ).copyWith(surface: darkSurface, background: darkBackground);
 
     return ThemeData(
       useMaterial3: true,

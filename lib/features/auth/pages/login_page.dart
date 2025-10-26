@@ -36,17 +36,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     ref.listen<AuthState>(authProvider, (previous, next) {
       if (next.data != null) {
         _emailController.clear();
         _passwordController.clear();
-
         // ScaffoldMessenger.of(
         //   context,
         // ).showSnackBar(const SnackBar(content: Text('Loading Success')));
 
-        print('-----------------------redirecting');
         Navigator.pushReplacementNamed(context, '/home');
       }
     });
@@ -62,25 +62,22 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Icon(
-                    Icons.school,
-                    size: 80,
-                    color: Theme.of(context).primaryColor,
-                  ),
+                  Icon(Icons.school, size: 80, color: colorScheme.primary),
                   const SizedBox(height: 24),
                   Text(
                     'Welcome Back!',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: colorScheme.onSurface,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     authState.data?.userName ?? 'Sign in to continue learning',
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 40),
@@ -123,9 +120,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               : Icons.visibility_off_outlined,
                         ),
                         onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
+                          (context as Element).markNeedsBuild();
+                          _obscurePassword = !_obscurePassword;
                         },
                       ),
                       border: OutlineInputBorder(
@@ -148,7 +144,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       padding: const EdgeInsets.only(top: 8),
                       child: Text(
                         authState.error!,
-                        style: const TextStyle(color: Colors.red),
+                        style: TextStyle(color: colorScheme.error),
                       ),
                     ),
                   const SizedBox(height: 12),
@@ -177,13 +173,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       ),
                     ),
                     child: authState.isLoading
-                        ? const SizedBox(
+                        ? SizedBox(
                             height: 20,
                             width: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
+                                colorScheme.onPrimary,
                               ),
                             ),
                           )
@@ -197,7 +193,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     children: [
                       Text(
                         "Don't have an account? ",
-                        style: TextStyle(color: Colors.grey[600]),
+                        style: TextStyle(color: colorScheme.onSurfaceVariant),
                       ),
                       TextButton(
                         onPressed: authState.isLoading
