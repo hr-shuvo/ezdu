@@ -49,7 +49,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
         if (authState.data != null && authState.data!.token.isNotEmpty) {
           Navigator.of(context).pushReplacementNamed('/home');
         } else {
-          Navigator.of(context).pushReplacementNamed('/login');
+          Navigator.of(context).pushReplacementNamed('/welcome');
         }
       }
     });

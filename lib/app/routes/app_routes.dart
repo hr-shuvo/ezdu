@@ -7,7 +7,9 @@ import 'package:ezdu/features/navigation/main_navigation_page.dart';
 import 'package:ezdu/features/profile/pages/profile_page.dart';
 import 'package:ezdu/features/quiz/pages/quiz_page.dart';
 import 'package:ezdu/features/shop/presentation/shop_page.dart';
+import 'package:ezdu/features/splash/presentation/pages/onboarding_page.dart';
 import 'package:ezdu/features/splash/presentation/pages/splash_page.dart';
+import 'package:ezdu/features/splash/presentation/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
 
 class AppRoutes {
@@ -15,6 +17,12 @@ class AppRoutes {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => const SplashPage());
+
+      case '/welcome':
+        return MaterialPageRoute(builder: (_) => const WelcomePage());
+
+      case '/onboarding-flow':
+        return MaterialPageRoute(builder: (_) => const OnboardingFlowPage());
 
       case '/login':
         return MaterialPageRoute(builder: (_) => const LoginPage());
