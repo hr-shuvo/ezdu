@@ -102,6 +102,7 @@ class StepFinal extends ConsumerWidget {
                     ref
                         .read(onboardingSelectionProvider.notifier)
                         .finalizeOnboarding();
+
                     Navigator.of(context).pushReplacementNamed('/home');
                   },
                   child: const Text(

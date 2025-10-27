@@ -105,7 +105,7 @@ class OnboardingSelectionNotifier extends StateNotifier<OnboardingState> {
       _logState('Segment updated to: $segment');
       _logState('Classes updated to: $classList');
 
-      UserOnboardingService.saveSegment(segment);
+      // UserOnboardingService.saveSegment(segment);
     } else {
       state = state.copyWithError(response.message ?? "Failed to fetch data");
     }
@@ -135,12 +135,19 @@ class OnboardingSelectionNotifier extends StateNotifier<OnboardingState> {
   void finalizeOnboarding() {
     // state = state.copyWith(isCompleted: true);
 
+    UserOnboardingService.saveSegment(state.segment!);
+    UserOnboardingService.saveClassId(state.classId!);
+    UserOnboardingService.saveClass(state.className!);
+    UserOnboardingService.saveGroup(state.group!);
+
     _logState('Onboarding Finalized!');
   }
 
   void _logState(String action) {
-    print('--- $action ---');
-    print(state.toString());
+    print('--- onboarding log ---');
+    print(
+      'segment: ${state.segment}, classId: ${state.classId}, className: ${state.className}, group: ${state.group}',
+    );
   }
 }
 
