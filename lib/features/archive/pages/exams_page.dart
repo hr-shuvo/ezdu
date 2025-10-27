@@ -3,7 +3,7 @@ import 'package:ezdu/data/models/subject_model.dart';
 import 'package:flutter/material.dart';
 
 class ExamListScreen extends StatefulWidget {
-  final Subject subject;
+  final SubjectModel subject;
 
   const ExamListScreen({Key? key, required this.subject}) : super(key: key);
 
@@ -140,10 +140,10 @@ class _ExamListScreenState extends State<ExamListScreen> {
                         children: [
                           Row(
                             children: [
-                              Text(
-                                widget.subject.emoji,
-                                style: const TextStyle(fontSize: 28),
-                              ),
+                              // Text(
+                              //   widget.subject.emoji,
+                              //   style: const TextStyle(fontSize: 28),
+                              // ),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(

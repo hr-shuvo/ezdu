@@ -1,6 +1,8 @@
 import 'package:ezdu/data/datasources/class_remote_ds.dart';
+import 'package:ezdu/data/datasources/subject_remote_ds.dart';
 import 'package:ezdu/data/repositories/auth_repository.dart';
 import 'package:ezdu/data/repositories/classRepository.dart';
+import 'package:ezdu/data/repositories/subject_repository.dart';
 import 'package:ezdu/features/auth/datasources/auth_remote_ds.dart';
 import 'package:ezdu/services/dio_client.dart';
 import 'package:ezdu/services/storage_service.dart';
@@ -30,6 +32,14 @@ Future<void> initializeDependencies() async {
   );
   sl.registerLazySingleton<ClassRemoteDataSource>(
     () => ClassRemoteDataSource(sl()),
+  );
+
+  // subject
+  sl.registerLazySingleton<SubjectRepository>(
+    () => SubjectRepository(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton<SubjectRemoteDataSource>(
+    () => SubjectRemoteDataSource(sl()),
   );
 
   print('Dependency Injection initialized.');

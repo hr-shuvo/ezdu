@@ -2,7 +2,7 @@ import 'package:ezdu/data/models/subject_model.dart';
 import 'package:flutter/material.dart';
 
 class SubjectCard extends StatefulWidget {
-  final Subject subject;
+  final SubjectModel subject;
   final VoidCallback onTap;
 
   const SubjectCard({super.key, required this.subject, required this.onTap});
@@ -15,6 +15,7 @@ class _SubjectCardState extends State<SubjectCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  static const String _imageUrl = 'https://picsum.photos/400/200?random=1';
 
   @override
   void initState() {
@@ -23,9 +24,10 @@ class _SubjectCardState extends State<SubjectCard>
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.05,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -36,6 +38,10 @@ class _SubjectCardState extends State<SubjectCard>
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final cardColor = colorScheme.primaryContainer;
+    final contentColor = colorScheme.tertiary;
+
     return GestureDetector(
       onTapDown: (_) => _controller.forward(),
       onTapUp: (_) {
@@ -46,16 +52,18 @@ class _SubjectCardState extends State<SubjectCard>
       child: ScaleTransition(
         scale: _scaleAnimation,
         child: Container(
+          height: 150,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: widget.subject.gradient,
-            ),
             borderRadius: BorderRadius.circular(20),
+            color: cardColor,
+            image: const DecorationImage(
+              image: NetworkImage(_imageUrl),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(Colors.black54, BlendMode.darken),
+            ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.15),
+                color: Colors.black.withValues(alpha: .3),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -69,26 +77,29 @@ class _SubjectCardState extends State<SubjectCard>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      widget.subject.emoji,
-                      style: const TextStyle(fontSize: 40),
+                    Icon(
+                      Icons.subject,
+                      color: contentColor.withValues(alpha: 0.9),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           widget.subject.name,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: contentColor,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                            shadows: const [
+                              Shadow(color: Colors.black, blurRadius: 4),
+                            ],
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${widget.subject.examCount} exams',
+                          '${widget.subject.activeQuizCount} exams',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.8),
+                            color: contentColor.withValues(alpha: .8),
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -103,7 +114,7 @@ class _SubjectCardState extends State<SubjectCard>
                 top: 12,
                 child: Icon(
                   Icons.chevron_right,
-                  color: Colors.white.withOpacity(0.6),
+                  color: contentColor.withOpacity(0.9),
                   size: 24,
                 ),
               ),

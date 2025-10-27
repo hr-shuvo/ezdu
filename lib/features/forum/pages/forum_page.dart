@@ -17,11 +17,11 @@ class ForumHomeScreen extends StatefulWidget {
 
 
 class _ForumHomeScreenState extends State<ForumHomeScreen> {
-  final List<Subject> subjects = [
-    Subject(id: 1, name: 'Mathematics', emoji: '🧮', gradient: [], examCount: 0),
-    Subject(id: 2, name: 'English', emoji: '📖', gradient: [], examCount: 0),
-    Subject(id: 3, name: 'Physics', emoji: '⚛️', gradient: [], examCount: 0),
-    Subject(id: 4, name: 'Chemistry', emoji: '🧪', gradient: [], examCount: 0),
+  final List<SubjectModel> subjects = [
+    SubjectModel(id: 1, name: 'Mathematics', activeQuizCount: 0),
+    SubjectModel(id: 2, name: 'English', activeQuizCount: 0),
+    SubjectModel(id: 3, name: 'Physics', activeQuizCount: 0),
+    SubjectModel(id: 4, name: 'Chemistry', activeQuizCount: 0),
   ];
 
   final Map<int, List<Lesson>> lessons = {
@@ -322,7 +322,7 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
                             return Padding(
                               padding: const EdgeInsets.only(right: 8),
                               child: FilterForumChip(
-                                label: '${subject.emoji} ${subject.name}',
+                                label: '${subject.name}',
                                 isSelected: selectedSubject == subject.id,
                                 onTap: () {
                                   setState(() {

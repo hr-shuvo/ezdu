@@ -30,9 +30,9 @@ class UserOnboardingService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_userClassIdKey, classId);
   }
-  static Future<int> getClassId() async {
+  static Future<int?> getClassId() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_userClassIdKey) ?? 0;
+    return prefs.getInt(_userClassIdKey);
   }
 
   static Future<void> saveClass(String name) async {

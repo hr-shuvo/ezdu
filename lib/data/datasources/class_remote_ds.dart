@@ -1,5 +1,5 @@
 import 'package:ezdu/core/models/api_response.dart';
-import 'package:ezdu/core/models/class_model.dart';
+import 'package:ezdu/data/models/class_model.dart';
 import 'package:ezdu/services/dio_client.dart';
 
 class ClassRemoteDataSource {

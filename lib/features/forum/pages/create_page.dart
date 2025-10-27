@@ -5,7 +5,7 @@ import 'package:ezdu/features/forum/models/forum_model.dart';
 import 'package:flutter/material.dart';
 
 class CreatePostScreen extends StatefulWidget {
-  final List<Subject> subjects;
+  final List<SubjectModel> subjects;
   final Map<int, List<Lesson>> lessons;
   final Map<int, List<Topic>> topics;
   final Function(ForumPost) onPostCreated;

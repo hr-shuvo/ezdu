@@ -1,5 +1,4 @@
-import 'package:ezdu/core/models/class_model.dart';
-import 'package:ezdu/data/repositories/auth_repository.dart';
+import 'package:ezdu/data/models/class_model.dart';
 import 'package:ezdu/data/repositories/classRepository.dart';
 import 'package:ezdu/services/user_onboarding_service.dart';
 import 'package:flutter_riverpod/legacy.dart';
@@ -145,6 +144,7 @@ class OnboardingSelectionNotifier extends StateNotifier<OnboardingState> {
 
   void _logState(String action) {
     print('--- onboarding log ---');
+    print(action);
     print(
       'segment: ${state.segment}, classId: ${state.classId}, className: ${state.className}, group: ${state.group}',
     );

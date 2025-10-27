@@ -1,11 +1,33 @@
+import 'package:ezdu/core/models/api_response.dart';
 import 'package:ezdu/data/models/subject_model.dart';
+import 'package:ezdu/data/repositories/subject_repository.dart';
 import 'package:ezdu/features/archive/pages/exams_page.dart';
 import 'package:ezdu/features/archive/widgets/archive_stat_card.dart';
 import 'package:ezdu/features/archive/widgets/archive_subject_card.dart';
 import 'package:flutter/material.dart';
 
-class ArchivePage extends StatelessWidget {
-  const ArchivePage({super.key});
+class ArchivePage extends StatefulWidget {
+  const ArchivePage({super.key, required this.subjectRepository});
+
+  final SubjectRepository subjectRepository;
+
+  @override
+  State<ArchivePage> createState() => _ArchivePageState();
+}
+
+class _ArchivePageState extends State<ArchivePage> {
+  late Future<ApiResponse<PagedList<SubjectModel>>> _subjectListFuture;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // if (widget.subjectRepository == null) {
+    // } else {
+    //   _subjectListFuture = widget.subjectRepository!.getSubjectList();
+    // }
+    _subjectListFuture = widget.subjectRepository.getSubjectList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +57,6 @@ class ArchivePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Text(
-                  //   'Archive',
-                  //   style: TextStyle(
-                  //     fontSize: 36,
-                  //     fontWeight: FontWeight.bold,
-                  //     color: Color(0xFF1E293B),
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 16),
                   Row(
                     children: [
                       Expanded(
@@ -87,31 +100,71 @@ class ArchivePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
 
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 0.85,
-                        ),
-                    itemCount: subjects.length,
-                    itemBuilder: (context, index) {
-                      final subject = subjects[index];
-                      return SubjectCard(
-                        subject: subject,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ExamListScreen(subject: subject),
+                  FutureBuilder(
+                    future: _subjectListFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(),
+                              Padding(
+                                padding: EdgeInsets.only(top: 16.0),
+                                child: Text('Loading subjects...'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+
+                      if (snapshot.hasError) {
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              'Error loading data: ${snapshot.error}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(color: Colors.red),
                             ),
-                          );
-                        },
-                      );
+                          ),
+                        );
+                      }
+
+                      if (snapshot.hasData &&
+                          snapshot.data!.data!.totalCount > 0) {
+                        final subjects = snapshot.data!.data!.items;
+
+                        return GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                                childAspectRatio: 0.85,
+                              ),
+                          itemCount: subjects.length,
+                          itemBuilder: (context, index) {
+                            final subject = subjects[index];
+                            return SubjectCard(
+                              subject: subject,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ExamListScreen(subject: subject),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      }
+
+                      return const Center(child: Text('No subjects found.'));
                     },
                   ),
                 ],
@@ -124,47 +177,11 @@ class ArchivePage extends StatelessWidget {
   }
 }
 
-const List<Subject> subjects = [
-  Subject(
-    id: 1,
-    name: 'Mathematics',
-    emoji: '🧮',
-    gradient: [const Color(0xFF3B82F6), const Color(0xFF1E40AF)],
-    examCount: 8,
-  ),
-  Subject(
-    id: 2,
-    name: 'English',
-    emoji: '📖',
-    gradient: [const Color(0xFFA855F7), const Color(0xFF6D28D9)],
-    examCount: 6,
-  ),
-  Subject(
-    id: 3,
-    name: 'Physics',
-    emoji: '⚛️',
-    gradient: [const Color(0xFF10B981), const Color(0xFF047857)],
-    examCount: 5,
-  ),
-  Subject(
-    id: 4,
-    name: 'Chemistry',
-    emoji: '🧪',
-    gradient: [const Color(0xFFF97316), const Color(0xFFEA580C)],
-    examCount: 7,
-  ),
-  Subject(
-    id: 5,
-    name: 'BCS',
-    emoji: '💼',
-    gradient: [const Color(0xFFEF4444), const Color(0xFFDC2626)],
-    examCount: 9,
-  ),
-  Subject(
-    id: 6,
-    name: 'IELTS',
-    emoji: '🎤',
-    gradient: [const Color(0xFF06B6D4), const Color(0xFF0891B2)],
-    examCount: 4,
-  ),
-];
+// const List<SubjectModel> subjects = [
+//   SubjectModel(id: 1, name: 'Mathematics', activeQuizCount: 8),
+//   SubjectModel(id: 2, name: 'English', activeQuizCount: 6),
+//   SubjectModel(id: 3, name: 'Physics', activeQuizCount: 5),
+//   SubjectModel(id: 4, name: 'Chemistry', activeQuizCount: 7),
+//   SubjectModel(id: 5, name: 'BCS', activeQuizCount: 9),
+//   SubjectModel(id: 6, name: 'IELTS', activeQuizCount: 4),
+// ];
