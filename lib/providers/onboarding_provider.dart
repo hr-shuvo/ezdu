@@ -1,40 +1,140 @@
-import 'package:ezdu/data/models/onboarding_selection_model.dart';
-import 'package:ezdu/services/app_status_service.dart';
+import 'package:ezdu/core/models/class_model.dart';
+import 'package:ezdu/data/repositories/auth_repository.dart';
+import 'package:ezdu/data/repositories/classRepository.dart';
+import 'package:ezdu/services/user_onboarding_service.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-class OnboardingSelectionNotifier extends StateNotifier<OnboardingSelectionModel> {
-  OnboardingSelectionNotifier()
-    : super(
-        OnboardingSelectionModel(
-          selectedSegment: null,
-          selectedClass: null,
-          selectedGroup: null,
-        ),
-      );
+import '../app/di/injector.dart';
 
-  void updateSegment(String segment) {
-    state = state.copyWith(
-      selectedSegment: segment,
-      selectedClass: null,
-      selectedGroup: null,
+class OnboardingState {
+  final bool isLoading;
+  final int? segment;
+  final int? classId;
+  final String? className;
+  final String? group;
+  final List<ClassModel> classList;
+  final String? error;
+
+  OnboardingState({
+    required this.isLoading,
+    required this.segment,
+    required this.classId,
+    required this.className,
+    required this.group,
+    required this.classList,
+    required this.error,
+  });
+
+  const OnboardingState.initial()
+    : isLoading = false,
+      segment = null,
+      classId = null,
+      className = null,
+      group = null,
+      classList = const [],
+      error = null;
+
+  OnboardingState copyWithLoading() {
+    return OnboardingState(
+      isLoading: true,
+      segment: null,
+      classId: null,
+      className: null,
+      group: null,
+      classList: const [],
+      error: null,
     );
-    _logState('Segment updated to: $segment');
   }
 
-  void updateClass(String classLevel) {
+  OnboardingState copyWithError(String errorMsg) {
+    return OnboardingState(
+      isLoading: false,
+      segment: null,
+      classId: null,
+      className: null,
+      group: null,
+      classList: const [],
+      error: errorMsg,
+    );
+  }
+
+  OnboardingState copyWith({
+    bool? isLoading,
+    int? segment,
+    int? classId,
+    String? className,
+    List<ClassModel>? classList,
+    String? error,
+    String? selectedGroup,
+  }) {
+    return OnboardingState(
+      isLoading: isLoading ?? this.isLoading,
+      segment: segment ?? this.segment,
+      classId: classId ?? this.classId,
+      className: className ?? this.className,
+      classList: classList ?? this.classList,
+      group: selectedGroup ?? this.group,
+      error: error ?? this.error,
+    );
+  }
+}
+
+class OnboardingSelectionNotifier extends StateNotifier<OnboardingState> {
+  OnboardingSelectionNotifier(this._classRepository)
+    : super(const OnboardingState.initial());
+  final ClassRepository _classRepository;
+
+  void updateSegment(int segment) async {
+    state = state.copyWithLoading();
+
+    final response = await _classRepository.getOnboardingClassList(segment);
+
+    if (response.success) {
+      final classList = response.data!.items;
+
+      state = state.copyWith(
+        isLoading: false,
+        segment: segment,
+        classList: classList,
+        classId: null,
+        className: null,
+        selectedGroup: null,
+        error: null,
+      );
+
+      _logState('Segment updated to: $segment');
+      _logState('Classes updated to: $classList');
+
+      UserOnboardingService.saveSegment(segment);
+    } else {
+      state = state.copyWithError(response.message ?? "Failed to fetch data");
+    }
+  }
+
+  void updateClass(int classId) {
+    var selectedClassName = state.classList
+        .firstWhere((x) => x.id == classId)
+        .name;
+
     state = state.copyWith(
-        selectedClass: classLevel,
-        selectedGroup: null);
-    _logState('Class updated to: $classLevel');
+      isLoading: false,
+      classId: classId,
+      className: selectedClassName,
+      selectedGroup: null,
+    );
+
+    _logState('Class updated to: $selectedClassName');
   }
 
   void updateGroup(String? group) {
-    state = state.copyWith(selectedGroup: group);
+    state = state.copyWith(isLoading: false, selectedGroup: group);
+
     _logState('Group updated to: $group');
   }
 
   void finalizeOnboarding() {
-    state = state.copyWith(isCompleted: true);
+    // state = state.copyWith(isCompleted: true);
+
     _logState('Onboarding Finalized!');
   }
 
@@ -45,9 +145,6 @@ class OnboardingSelectionNotifier extends StateNotifier<OnboardingSelectionModel
 }
 
 final onboardingSelectionProvider =
-    StateNotifierProvider<
-      OnboardingSelectionNotifier,
-      OnboardingSelectionModel
-    >((ref) {
-      return OnboardingSelectionNotifier();
+    StateNotifierProvider<OnboardingSelectionNotifier, OnboardingState>((ref) {
+      return OnboardingSelectionNotifier(sl<ClassRepository>());
     });

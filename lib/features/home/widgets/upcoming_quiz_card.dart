@@ -1,66 +1,84 @@
+import 'package:ezdu/features/auth/pages/login_page.dart';
+import 'package:ezdu/features/auth/pages/register_page.dart';
+import 'package:ezdu/features/quiz/pages/quiz_page.dart';
 import 'package:flutter/material.dart';
 
 class UpcomingQuizCard extends StatelessWidget {
-  const UpcomingQuizCard({super.key});
+  const UpcomingQuizCard({super.key, required this.isLoggedIn});
+
+  final bool isLoggedIn;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
-      shadowColor: Colors.black26,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            colors: theme.brightness == Brightness.dark
-                ? [
-                    Colors.indigo.shade700,
-                    Colors.indigo.shade500,
-                  ] // dark mode soothing
-                : [Colors.lightBlue.shade200, Colors.lightBlue.shade100],
-            // light mode pastel
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+
+        border: Border.all(
+          color: colorScheme.onPrimaryContainer.withValues(alpha: 0.2),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.onPrimaryContainer.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ListTile(
+        // Ensure splash color is visible over the surface color
+        splashColor: colorScheme.onSurface.withOpacity(0.1),
+
+        leading: Icon(
+          Icons.schedule,
+          size: 32,
+          // Use a contrasting color, like secondary or tertiary, for icons
+          color: colorScheme.secondary,
+        ),
+        title: Text(
+          'Next Quiz: General Knowledge',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            // Text color readable ON the surface color
+            color: colorScheme.onSurface,
           ),
         ),
-        child: ListTile(
-          leading: Icon(
-            Icons.schedule,
-            size: 32,
-            color: theme.brightness == Brightness.dark
-                ? Colors.tealAccent
-                : Colors.blueAccent,
+        subtitle: Text(
+          'Starts in 2h 30m',
+          style: theme.textTheme.bodyMedium?.copyWith(
+            // Subtler color, using onSurface with opacity
+            color: colorScheme.onSurface.withOpacity(0.8),
           ),
-          title: Text(
-            'Next Quiz: General Knowledge',
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: theme.brightness == Brightness.dark
-                  ? Colors.white
-                  : Colors.black87,
-            ),
-          ),
-          subtitle: Text(
-            'Starts in 2h 30m',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.brightness == Brightness.dark
-                  ? Colors.white70
-                  : Colors.black54,
-            ),
-          ),
-          trailing: Icon(
-            Icons.arrow_forward_ios,
-            color: theme.brightness == Brightness.dark
-                ? Colors.tealAccent
-                : Colors.blueAccent,
-            size: 20,
-          ),
-          onTap: () {},
         ),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          // Match the leading icon color
+          color: colorScheme.secondary,
+          size: 20,
+        ),
+        onTap: () {
+          final navigator = Navigator.of(context);
+
+          if (isLoggedIn) {
+            navigator.push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    const QuizPage(),
+              ),
+            );
+          } else {
+            navigator.push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    const RegisterPage(),
+              ),
+            );
+          }
+        },
       ),
     );
   }

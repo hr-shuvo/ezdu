@@ -44,3 +44,49 @@ class ApiResponse<T> extends Equatable {
   @override
   List<Object?> get props => [success, data, message, statusCode];
 }
+
+
+
+class PagedList<T> extends Equatable {
+  final List<T> items;
+  final int currentPage;
+  final int totalPage;
+  final int pageSize;
+  final int totalCount;
+
+  const PagedList({
+    required this.items,
+    required this.currentPage,
+    required this.totalPage,
+    required this.pageSize,
+    required this.totalCount,
+  });
+
+  @override
+  List<Object?> get props => [
+    items,
+    currentPage,
+    totalPage,
+    pageSize,
+    totalCount,
+  ];
+
+  factory PagedList.toModel(
+      Map<String, dynamic> json,
+      T Function(Map<String, dynamic>) fromJsonT,
+      ) {
+    final itemsJson = json['items'] as List? ?? [];
+
+    final itemsList =
+    itemsJson.map((e) => fromJsonT(e as Map<String, dynamic>)).toList();
+
+    return PagedList<T>(
+      items: itemsList,
+      currentPage: json['currentPage'] ?? 1,
+      totalPage: json['totalPage'] ?? 1,
+      pageSize: json['pageSize'] ?? 0,
+      totalCount: json['totalCount'] ?? 0,
+    );
+  }
+}
+

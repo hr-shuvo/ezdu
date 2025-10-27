@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class HomeGridSection extends StatelessWidget {
-  const HomeGridSection({super.key});
+  const HomeGridSection({super.key, required this.isLoggedIn});
+
+  final bool isLoggedIn;
 
   @override
   Widget build(BuildContext context) {
@@ -100,31 +102,6 @@ class HomeGridSection extends StatelessWidget {
     );
   }
 
-  Widget _buildHomeButton2(
-    BuildContext context,
-    IconData icon,
-    String title,
-    String route,
-  ) {
-    return InkWell(
-      onTap: () => Navigator.pushNamed(context, route),
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceVariant,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 32, color: Theme.of(context).colorScheme.primary),
-            const SizedBox(height: 8),
-            Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class HomeGridItem {

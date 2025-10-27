@@ -28,6 +28,10 @@ class AuthState extends Equatable {
     return AuthState(isLoading: false, data: data, error: errorMsg);
   }
 
+  bool isLoggedIn() {
+    return data != null;
+  }
+
   @override
   List<Object?> get props => [];
 }

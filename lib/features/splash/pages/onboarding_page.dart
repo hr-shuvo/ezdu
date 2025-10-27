@@ -1,27 +1,10 @@
-import 'package:ezdu/features/splash/widgets/onboarding_steps.dart';
+import 'package:ezdu/features/splash/widgets/onboarding_steps_class_selection.dart';
+import 'package:ezdu/features/splash/widgets/onboarding_steps_final_selection.dart';
+import 'package:ezdu/features/splash/widgets/onboarding_steps_group_selection.dart';
+import 'package:ezdu/features/splash/widgets/onboarding_steps_segment_selection.dart';
 import 'package:ezdu/providers/onboarding_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-final Map<String, Map<String, List<String>?>> _onboardingData = {
-  'Student': {
-    'Class 8': null,
-    'Class 9-10': ['Science', 'Arts', 'Commerce'],
-    'Class 11-12': ['Science', 'Humanities', 'Business Studies'],
-    'University': ['Engineering', 'Medical', 'General'],
-  },
-  'Job': {
-    'BCS Exam': ['General Cadre', 'Technical/Professional Cadre'],
-    'Bank Jobs': ['Commercial Bank', 'Specialized Bank', 'Central Bank'],
-    'IT/Software': ['Web Development', 'Mobile Development', 'Data Science'],
-    'Civil Service': ['Administration', 'Foreign Affairs', 'Taxation'],
-  },
-  'International Exam': {
-    'IELTS': ['Academic', 'General Training'],
-    'GRE': ['General Test', 'Subject Test (Physics, Math, etc.)'],
-    'TOEFL': null,
-  },
-};
 
 class OnboardingFlowPage extends ConsumerStatefulWidget {
   const OnboardingFlowPage({super.key});
@@ -36,13 +19,13 @@ class _OnboardingFlowPageState extends ConsumerState<OnboardingFlowPage> {
   final List<String> steps = ['Segment', 'Class', 'Group', 'Final'];
 
   void _onNext() {
-    final selection = ref.read(onboardingSelectionProvider);
-
     if (_currentStep == 1) {
-      final List<String>? groupOptions =
-          _onboardingData[selection.selectedSegment]?[selection.selectedClass];
+      final currentSelection = ref.read(onboardingSelectionProvider);
+      final selectedClass = currentSelection.classList.firstWhere(
+        (x) => x.id == currentSelection.classId,
+      );
 
-      if (groupOptions == null) {
+      if (selectedClass.groups.isEmpty) {
         _pageController.animateToPage(
           3,
           duration: const Duration(milliseconds: 300),
@@ -62,12 +45,13 @@ class _OnboardingFlowPageState extends ConsumerState<OnboardingFlowPage> {
   }
 
   void _onBack() {
-    final selection = ref.read(onboardingSelectionProvider);
     if (_currentStep == 3) {
-      final List<String>? groupOptions =
-          _onboardingData[selection.selectedSegment]?[selection.selectedClass];
+      final currentSelection = ref.read(onboardingSelectionProvider);
+      final selectedClass = currentSelection.classList.firstWhere(
+        (x) => x.id == currentSelection.classId,
+      );
 
-      if (groupOptions == null) {
+      if (selectedClass.groups.isEmpty) {
         _pageController.animateToPage(
           1,
           duration: const Duration(milliseconds: 300),
