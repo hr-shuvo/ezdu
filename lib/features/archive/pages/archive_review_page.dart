@@ -1,6 +1,8 @@
 import 'package:ezdu/core/models/api_response.dart';
+import 'package:ezdu/core/utils/route_helper.dart';
 import 'package:ezdu/data/repositories/archive_repository.dart';
 import 'package:ezdu/features/archive/models/archive_model.dart';
+import 'package:ezdu/features/archive/pages/archive_quiz_start_page.dart';
 import 'package:flutter/material.dart';
 
 class ArchiveReviewPage extends StatefulWidget {
@@ -119,12 +121,31 @@ class _ArchiveReviewPageState extends State<ArchiveReviewPage> {
                           ),
                           ElevatedButton.icon(
                             onPressed: () {
-                              // Navigate to quiz mode
-                              Navigator.pushNamed(
-                                context,
-                                '/quiz',
-                                arguments: examDetails,
-                              );
+
+                              if (snapshot.hasData && snapshot.data!.data == null) {
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text('No Data Found'),
+                                      content: const Text('There’s no information available right now.'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Navigator.of(context).pop(),
+                                          child: const Text('OK'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                });
+                              }
+                              else{
+                                Navigator.push(
+                                    context,
+                                    SlideUpRoute(page: ArchiveQuizStartPage(archivedExam: examDetails,))
+                                );
+                              }
+
                             },
                             icon: const Icon(Icons.play_arrow),
                             label: const Text("Start Quiz"),
@@ -211,11 +232,6 @@ class _ArchiveReviewPageState extends State<ArchiveReviewPage> {
                                               ),
 
                                               const SizedBox(height: 8),
-                                              // Spacing between the title and info row
-
-                                              // ------------------------------------
-                                              // 2. Info Row (Level, Marks, and Related Info)
-                                              // ------------------------------------
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.start,
