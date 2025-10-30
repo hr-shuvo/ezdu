@@ -1,3 +1,4 @@
+import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/core/models/api_response.dart';
 import 'package:ezdu/data/models/subject_model.dart';
 import 'package:ezdu/data/repositories/subject_repository.dart';
@@ -36,7 +37,7 @@ class _ArchivePageState extends State<ArchivePage> {
         title: Text(
           'Archive',
           style: TextStyle(
-            fontSize: 36,
+            fontSize: 28,
             fontWeight: FontWeight.bold,
             color: Color(0xFF1E293B),
           ),
@@ -91,7 +92,7 @@ class _ArchivePageState extends State<ArchivePage> {
                   const SizedBox(height: 28),
 
                   const Text(
-                    '📚 Explore Subjects',
+                    'Explore Subjects',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -154,8 +155,10 @@ class _ArchivePageState extends State<ArchivePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        ExamListScreen(subject: subject),
+                                    builder: (context) => ExamListScreen(
+                                      subject: subject,
+                                      archiveRepository: sl(),
+                                    ),
                                   ),
                                 );
                               },
@@ -176,12 +179,3 @@ class _ArchivePageState extends State<ArchivePage> {
     );
   }
 }
-
-// const List<SubjectModel> subjects = [
-//   SubjectModel(id: 1, name: 'Mathematics', activeQuizCount: 8),
-//   SubjectModel(id: 2, name: 'English', activeQuizCount: 6),
-//   SubjectModel(id: 3, name: 'Physics', activeQuizCount: 5),
-//   SubjectModel(id: 4, name: 'Chemistry', activeQuizCount: 7),
-//   SubjectModel(id: 5, name: 'BCS', activeQuizCount: 9),
-//   SubjectModel(id: 6, name: 'IELTS', activeQuizCount: 4),
-// ];

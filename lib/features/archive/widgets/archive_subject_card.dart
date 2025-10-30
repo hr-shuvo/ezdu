@@ -54,18 +54,22 @@ class _SubjectCardState extends State<SubjectCard>
         child: Container(
           height: 150,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: cardColor,
-            image: const DecorationImage(
-              image: NetworkImage(_imageUrl),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(Colors.black54, BlendMode.darken),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: colorScheme.secondary.withValues(alpha: 0.2),
+              width: 1,
             ),
+            // color: cardColor,
+            // image: const DecorationImage(
+            //   image: NetworkImage(_imageUrl),
+            //   fit: BoxFit.cover,
+            //   colorFilter: ColorFilter.mode(Colors.black54, BlendMode.darken),
+            // ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: .3),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
+                color: colorScheme.secondary.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -79,7 +83,7 @@ class _SubjectCardState extends State<SubjectCard>
                   children: [
                     Icon(
                       Icons.subject,
-                      color: contentColor.withValues(alpha: 0.9),
+                      color: colorScheme.primary.withValues(alpha: .8),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,19 +91,19 @@ class _SubjectCardState extends State<SubjectCard>
                         Text(
                           widget.subject.name,
                           style: TextStyle(
-                            color: contentColor,
+                            color: colorScheme.primary.withValues(),
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            shadows: const [
-                              Shadow(color: Colors.black, blurRadius: 4),
-                            ],
+                            // shadows: const [
+                            //   Shadow(color: Colors.black, blurRadius: 4),
+                            // ],
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           '${widget.subject.activeQuizCount} exams',
                           style: TextStyle(
-                            color: contentColor.withValues(alpha: .8),
+                            color: colorScheme.primary.withValues(alpha: .8),
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -114,7 +118,7 @@ class _SubjectCardState extends State<SubjectCard>
                 top: 12,
                 child: Icon(
                   Icons.chevron_right,
-                  color: contentColor.withOpacity(0.9),
+                  color: colorScheme.primary.withValues(alpha: .8),
                   size: 24,
                 ),
               ),
