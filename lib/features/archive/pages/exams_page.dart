@@ -1,8 +1,9 @@
 import 'package:ezdu/core/models/api_response.dart';
-import 'package:ezdu/data/models/exam_model.dart';
+import 'package:ezdu/core/utils/route_helper.dart';
 import 'package:ezdu/data/models/subject_model.dart';
 import 'package:ezdu/data/repositories/archive_repository.dart';
 import 'package:ezdu/features/archive/models/archive_model.dart';
+import 'package:ezdu/features/archive/pages/archive_review_page.dart';
 import 'package:flutter/material.dart';
 
 class ExamListScreen extends StatefulWidget {
@@ -21,6 +22,7 @@ class ExamListScreen extends StatefulWidget {
 
 class _ExamListScreenState extends State<ExamListScreen> {
   late Future<ApiResponse<PagedList<ArchiveModel>>> archivedExamsFuture;
+
   // late List<ArchiveModel> filteredExams;
 
   String searchQuery = '';
@@ -393,10 +395,10 @@ class _ExamListScreenState extends State<ExamListScreen> {
                       );
                     }
 
-
                     if (snapshot.hasData &&
                         snapshot.data!.data!.totalCount > 0) {
                       final items = snapshot.data!.data!.items;
+
                       return ListView.builder(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         itemCount: items.length,
@@ -408,12 +410,12 @@ class _ExamListScreenState extends State<ExamListScreen> {
 
                           return GestureDetector(
                             onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => ReviewScreen(exam: exam),
-                              //   ),
-                              // );
+                              Navigator.push(
+                                context,
+                                SlideRightToLeftRoute(
+                                  page: ArchiveReviewPage(archivedExam: item),
+                                ),
+                              );
                             },
                             child: Container(
                               margin: const EdgeInsets.only(bottom: 12),
@@ -423,7 +425,7 @@ class _ExamListScreenState extends State<ExamListScreen> {
                                 borderRadius: BorderRadius.circular(16),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.08),
+                                    color: Colors.black.withValues(alpha: .08),
                                     blurRadius: 8,
                                     offset: const Offset(0, 2),
                                   ),
@@ -576,18 +578,14 @@ class _ExamListScreenState extends State<ExamListScreen> {
                                                   style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.bold,
-                                                    color: _getScoreColor(
-                                                      77,
-                                                    ),
+                                                    color: _getScoreColor(77),
                                                   ),
                                                 ),
                                                 Text(
                                                   'Score',
                                                   style: TextStyle(
                                                     fontSize: 10,
-                                                    color: _getScoreColor(
-                                                      77,
-                                                    ),
+                                                    color: _getScoreColor(77),
                                                   ),
                                                 ),
                                               ],
@@ -651,4 +649,3 @@ class _ExamListScreenState extends State<ExamListScreen> {
     );
   }
 }
-

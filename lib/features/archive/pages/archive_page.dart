@@ -1,5 +1,6 @@
 import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/core/models/api_response.dart';
+import 'package:ezdu/core/utils/route_helper.dart';
 import 'package:ezdu/data/models/subject_model.dart';
 import 'package:ezdu/data/repositories/subject_repository.dart';
 import 'package:ezdu/features/archive/pages/exams_page.dart';
@@ -154,8 +155,8 @@ class _ArchivePageState extends State<ArchivePage> {
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ExamListScreen(
+                                  SlideRightToLeftRoute(
+                                    page: ExamListScreen(
                                       subject: subject,
                                       archiveRepository: sl(),
                                     ),
