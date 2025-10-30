@@ -1,3 +1,4 @@
+import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/core/models/api_response.dart';
 import 'package:ezdu/core/utils/route_helper.dart';
 import 'package:ezdu/data/models/subject_model.dart';
@@ -413,7 +414,10 @@ class _ExamListScreenState extends State<ExamListScreen> {
                               Navigator.push(
                                 context,
                                 SlideRightToLeftRoute(
-                                  page: ArchiveReviewPage(archivedExam: item),
+                                  page: ArchiveReviewPage(
+                                    archivedExam: item,
+                                    archiveRepository: sl(),
+                                  ),
                                 ),
                               );
                             },
