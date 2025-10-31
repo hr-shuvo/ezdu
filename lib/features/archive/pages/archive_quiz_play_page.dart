@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:ezdu/data/models/option_model.dart';
+import 'package:ezdu/data/models/sumission_model.dart';
 import 'package:ezdu/features/archive/models/archive_model.dart';
 import 'package:ezdu/features/archive/models/archive_quiz_settings_model.dart';
 import 'package:ezdu/features/archive/pages/archive_congratulation_page.dart';
 import 'package:ezdu/features/archive/widgets/archive_option.dart';
 import 'package:ezdu/features/archive/widgets/archive_question.dart';
-import 'package:ezdu/features/archive/widgets/archive_question_header.dart';
 import 'package:ezdu/features/archive/widgets/archive_question_indicator.dart';
 import 'package:flutter/material.dart';
 
@@ -58,10 +58,11 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
 
   void selectOption(OptionModel option) {
     setState(() {
-      userAnswers[currentQuestionIndex] = option.name.hashCode;
+      final question = widget.archiveModel.questions[currentQuestionIndex];
+
+      userAnswers[question.id] = option.id;
       visitedQuestions[currentQuestionIndex] = true;
 
-      final question = widget.archiveModel.questions[currentQuestionIndex];
       if (option.isCorrect) {
         earnedMarks += question.marks ?? 0;
         correctAnswers++;
@@ -98,19 +99,27 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
     setState(() {
       isSubmitted = true;
     });
+
+    List<SubmissionModel> submissionList = userAnswers.entries.map((entry) {
+      return SubmissionModel(
+          questionId: entry.key, selectedOptionId: entry.value);
+    }).toList();
+
+    // todo: save to user quiz
   }
 
   void calculateTotalMarks() {
     totalMarks = widget.archiveModel.questions.fold<int>(
       0,
-      (sum, q) => sum + (q.marks ?? 0),
+          (sum, q) => sum + (q.marks ?? 0),
     );
   }
 
   String formatTime(int seconds) {
     int minutes = seconds ~/ 60;
     int secs = seconds % 60;
-    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
+    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(
+        2, '0')}';
   }
 
   @override
@@ -135,10 +144,11 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => ArchiveQuizPlayPage(
-                archiveModel: widget.archiveModel,
-                settings: widget.settings,
-              ),
+              builder: (context) =>
+                  ArchiveQuizPlayPage(
+                    archiveModel: widget.archiveModel,
+                    settings: widget.settings,
+                  ),
             ),
           );
         },
@@ -146,14 +156,17 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
     }
 
     final question = widget.archiveModel.questions[currentQuestionIndex];
-    final colorScheme = Theme.of(context).colorScheme;
+    final colorScheme = Theme
+        .of(context)
+        .colorScheme;
     final isTimeRunningOut = remainingSeconds < 300;
 
     return WillPopScope(
       onWillPop: () async {
         return await showDialog<bool>(
-              context: context,
-              builder: (context) => AlertDialog(
+          context: context,
+          builder: (context) =>
+              AlertDialog(
                 title: const Text('Exit Quiz?'),
                 content: const Text('Your progress will be lost.'),
                 actions: [
@@ -170,7 +183,7 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
                   ),
                 ],
               ),
-            ) ??
+        ) ??
             false;
       },
       child: Scaffold(
@@ -200,7 +213,11 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
                   const SizedBox(width: 8),
                   Text(
                     formatTime(remainingSeconds),
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .labelLarge
+                        ?.copyWith(
                       color: isTimeRunningOut
                           ? colorScheme.onError
                           : colorScheme.onPrimaryContainer,
@@ -230,27 +247,27 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ArchiveQuestionHeaderWidget(
-                        questionNumber: currentQuestionIndex + 1,
-                        totalQuestions: widget.archiveModel.questions.length,
-                        marks: question.marks ?? 0,
-                        difficulty: question.difficultyLevel ?? 1,
-                      ),
-                      const SizedBox(height: 24),
+                      // ArchiveQuestionHeaderWidget(
+                      //   questionNumber: currentQuestionIndex + 1,
+                      //   totalQuestions: widget.archiveModel.questions.length,
+                      //   marks: question.marks ?? 0,
+                      //   difficulty: question.difficultyLevel ?? 1,
+                      // ),
+                      // const SizedBox(height: 24),
                       ArchiveQuestionWidget(
                         title: question.name,
-                        passage: question.passage ?? '',
-                        hint: question.hint ?? 'No hint available',
+                        passage: question.passage,
+                        hint: question.hint,
                       ),
                       const SizedBox(height: 24),
                       if (question.options != null &&
                           question.options!.isNotEmpty)
                         ArchiveOptionsWidget(
                           options: question.options!,
-                          selectedOptionName:
-                              userAnswers.containsKey(currentQuestionIndex)
-                              ? userAnswers[currentQuestionIndex].toString()
-                              : null,
+                          selectedOption:
+                          userAnswers.containsKey(question.id)
+                              ? userAnswers[question.id]
+                              : 0,
                           onSelectOption: selectOption,
                         ),
                       const SizedBox(height: 32),
@@ -287,31 +304,31 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
                       const SizedBox(width: 12),
                       ElevatedButton.icon(
                         onPressed:
-                            currentQuestionIndex <
-                                widget.archiveModel.questions.length - 1
+                        currentQuestionIndex <
+                            widget.archiveModel.questions.length - 1
                             ? goToNextQuestion
                             : submitQuiz,
                         icon: Icon(
                           currentQuestionIndex <
-                                  widget.archiveModel.questions.length - 1
+                              widget.archiveModel.questions.length - 1
                               ? Icons.arrow_forward
                               : Icons.done_all,
                         ),
                         label: Text(
                           currentQuestionIndex <
-                                  widget.archiveModel.questions.length - 1
+                              widget.archiveModel.questions.length - 1
                               ? ''
                               : 'Submit',
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              currentQuestionIndex <
-                                  widget.archiveModel.questions.length - 1
+                          currentQuestionIndex <
+                              widget.archiveModel.questions.length - 1
                               ? null
                               : colorScheme.primary,
                           foregroundColor:
-                              currentQuestionIndex <
-                                  widget.archiveModel.questions.length - 1
+                          currentQuestionIndex <
+                              widget.archiveModel.questions.length - 1
                               ? null
                               : colorScheme.onPrimary,
                         ),

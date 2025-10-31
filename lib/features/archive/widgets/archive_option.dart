@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 
 class ArchiveOptionsWidget extends StatelessWidget {
   final List<OptionModel> options;
-  final String? selectedOptionName;
+  final int? selectedOption;
   final Function(OptionModel) onSelectOption;
 
   const ArchiveOptionsWidget({
     Key? key,
     required this.options,
-    required this.selectedOptionName,
+    required this.selectedOption,
     required this.onSelectOption,
   }) : super(key: key);
 
@@ -23,7 +23,7 @@ class ArchiveOptionsWidget extends StatelessWidget {
             (index) => OptionCardWidget(
           option: options[index],
           isSelected:
-          selectedOptionName == options[index].name.hashCode.toString(),
+          selectedOption == options[index].id,
           onTap: () => onSelectOption(options[index]),
         ),
       ),

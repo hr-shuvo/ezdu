@@ -24,7 +24,7 @@ class _ArchiveQuizSettingsDialogState extends State<ArchiveQuizSettingsDialog> {
   @override
   void initState() {
     super.initState();
-    minutes = 30;
+    minutes = 20;
     negativeMarking = false;
     negativeMarkValue = 0.25;
   }
@@ -59,7 +59,7 @@ class _ArchiveQuizSettingsDialogState extends State<ArchiveQuizSettingsDialog> {
                 value: minutes,
                 isExpanded: true,
                 underline: const SizedBox(),
-                items: [15, 20, 30, 45, 60, 90].map((value) {
+                items: [1, 15, 20, 30, 45, 60, 90].map((value) {
                   return DropdownMenuItem(
                     value: value,
                     child: Text('$value minutes'),

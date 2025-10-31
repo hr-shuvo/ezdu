@@ -28,7 +28,8 @@ class HomePage extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  Icon(Icons.local_fire_department_outlined, size: 24),
+                  // Icon(Icons.local_fire_department_outlined, size: 24),
+                  Image.asset('assets/icons/fire.png', height: 24, width: 24),
                   SizedBox(width: 4),
                   Text(isLoggedIn ? '75' : '1', style: TextStyle(fontSize: 14)),
                 ],
@@ -36,22 +37,33 @@ class HomePage extends ConsumerWidget {
 
               Row(
                 children: [
-                  Icon(Icons.star_outline, size: 24),
+                  // Icon(Icons.star_outline, size: 24),
+                  Image.asset('assets/icons/storm.png', height: 24, width: 24),
                   SizedBox(width: 4),
-                  Text(isLoggedIn ? '20' : '10', style: TextStyle(fontSize: 14)),
+                  Text(
+                    isLoggedIn ? '20' : '10',
+                    style: TextStyle(fontSize: 14),
+                  ),
                 ],
               ),
               Row(
                 children: [
-                  Icon(Icons.diamond_outlined, size: 24),
+                  Image.asset(
+                    'assets/icons/diamond.png',
+                    height: 24,
+                    width: 24,
+                  ),
                   SizedBox(width: 4),
-                  Text(isLoggedIn ? '12' : '50', style: TextStyle(fontSize: 14)),
+                  Text(
+                    isLoggedIn ? '12' : '50',
+                    style: TextStyle(fontSize: 14),
+                  ),
                 ],
               ),
 
               Row(
-                children: const [
-                  Icon(Icons.workspace_premium_outlined, size: 24),
+                children: [
+                  Image.asset('assets/icons/medal.png', height: 24, width: 24),
                   SizedBox(width: 4),
                   Text('Pro', style: TextStyle(fontSize: 14)),
                 ],
@@ -76,7 +88,8 @@ class HomePage extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: colorScheme.errorContainer, // Use an attention-grabbing, themed color
+                      color: colorScheme.errorContainer,
+                      // Use an attention-grabbing, themed color
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
