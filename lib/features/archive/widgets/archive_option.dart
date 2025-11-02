@@ -1,5 +1,3 @@
-
-
 import 'package:ezdu/data/models/option_model.dart';
 import 'package:flutter/material.dart';
 
@@ -20,10 +18,9 @@ class ArchiveOptionsWidget extends StatelessWidget {
     return Column(
       children: List.generate(
         options.length,
-            (index) => OptionCardWidget(
+        (index) => OptionCardWidget(
           option: options[index],
-          isSelected:
-          selectedOption == options[index].id,
+          isSelected: selectedOption == options[index].id,
           onTap: () => onSelectOption(options[index]),
         ),
       ),
@@ -31,18 +28,17 @@ class ArchiveOptionsWidget extends StatelessWidget {
   }
 }
 
-
 class OptionCardWidget extends StatelessWidget {
   final OptionModel option;
   final bool isSelected;
   final VoidCallback onTap;
 
   const OptionCardWidget({
-    Key? key,
+    super.key,
     required this.option,
     required this.isSelected,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

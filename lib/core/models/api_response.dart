@@ -29,13 +29,15 @@ class ApiResponse<T> extends Equatable {
     );
   }
 
-  factory ApiResponse.fromJson(
+  factory ApiResponse.toModel(
     Map<String, dynamic> json,
-    T Function(Map<String, dynamic>) fromJson,
+    T Function(Map<String, dynamic>)? fromJson,
   ) {
     return ApiResponse(
       success: json['success'] ?? false,
-      data: json['data'] != null ? fromJson(json['data']) : null,
+      data: json['data'] != null && fromJson != null
+          ? fromJson(json['data'])
+          : null,
       message: json['message'],
       statusCode: json['statusCode'],
     );
@@ -44,8 +46,6 @@ class ApiResponse<T> extends Equatable {
   @override
   List<Object?> get props => [success, data, message, statusCode];
 }
-
-
 
 class PagedList<T> extends Equatable {
   final List<T> items;
@@ -72,13 +72,14 @@ class PagedList<T> extends Equatable {
   ];
 
   factory PagedList.toModel(
-      Map<String, dynamic> json,
-      T Function(Map<String, dynamic>) fromJsonT,
-      ) {
+    Map<String, dynamic> json,
+    T Function(Map<String, dynamic>) fromJsonT,
+  ) {
     final itemsJson = json['items'] as List? ?? [];
 
-    final itemsList =
-    itemsJson.map((e) => fromJsonT(e as Map<String, dynamic>)).toList();
+    final itemsList = itemsJson
+        .map((e) => fromJsonT(e as Map<String, dynamic>))
+        .toList();
 
     return PagedList<T>(
       items: itemsList,
@@ -89,4 +90,3 @@ class PagedList<T> extends Equatable {
     );
   }
 }
-

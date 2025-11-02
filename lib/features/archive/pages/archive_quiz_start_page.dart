@@ -1,3 +1,4 @@
+import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/features/archive/models/archive_model.dart';
 import 'package:ezdu/features/archive/pages/archive_quiz_play_page.dart';
 import 'package:ezdu/features/archive/widgets/archive_exam_header_card.dart';
@@ -29,8 +30,11 @@ class _ArchiveQuizStartPageState extends State<ArchiveQuizStartPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  ArchiveQuizPlayPage(archiveModel: examDetails, settings: settings),
+              builder: (context) => ArchiveQuizPlayPage(
+                archiveModel: examDetails,
+                settings: settings,
+                progressRepository: sl(),
+              ),
             ),
           );
         },
@@ -82,7 +86,7 @@ class _ArchiveQuizStartPageState extends State<ArchiveQuizStartPage> {
                           ).colorScheme.onPrimary,
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

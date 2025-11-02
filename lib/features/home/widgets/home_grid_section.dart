@@ -9,37 +9,61 @@ class HomeGridSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final gridItems = [
       HomeGridItem(
-        icon: Icons.archive_outlined,
+        icon: Image.asset(
+          'assets/icons/paper.png',
+          height: 32,
+          width: 32,
+        ),
         title: 'Archive',
         route: '/archive',
         color: Colors.purpleAccent,
       ),
       HomeGridItem(
-        icon: Icons.local_fire_department,
+        icon: Image.asset(
+          'assets/icons/puzzle.png',
+          height: 32,
+          width: 32,
+        ),
         title: 'Quick Challenge',
         route: '/quiz',
         color: Colors.orangeAccent,
       ),
       HomeGridItem(
-        icon: Icons.quiz,
+        icon: Image.asset(
+          'assets/icons/quiz.png',
+          height: 32,
+          width: 32,
+        ),
         title: 'Quiz',
         route: '/quiz',
         color: Colors.greenAccent,
       ),
       HomeGridItem(
-        icon: Icons.forum_outlined,
+        icon: Image.asset(
+          'assets/icons/chat.png',
+          height: 32,
+          width: 32,
+        ),
         title: 'Forum',
         route: '/forum',
         color: Colors.cyanAccent,
       ),
       HomeGridItem(
-        icon: Icons.emoji_events,
+        icon: Image.asset(
+          'assets/icons/podium.png',
+          height: 32,
+          width: 32,
+        ),
         title: 'Leaderboard',
         route: '/leaderboard',
         color: Colors.amberAccent,
       ),
       HomeGridItem(
-        icon: Icons.storefront_outlined,
+        icon: Image.asset(
+          'assets/icons/seller.png',
+          height: 32,
+          width: 32,
+        ),
         title: 'Shop',
         route: '/shop',
         color: Colors.pinkAccent,
@@ -59,31 +83,18 @@ class HomeGridSection extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         final item = gridItems[index];
-        return _buildHomeButton(
-          context,
-          item.icon,
-          item.title,
-          item.route,
-          item.color,
-        );
+        return _buildHomeButton(context, item);
       },
     );
   }
 
-  Widget _buildHomeButton(
-    BuildContext context,
-    IconData icon,
-    String title,
-    String route,
-    Color color,
-  ) {
-    final colorScheme = Theme.of(context).colorScheme;
+  Widget _buildHomeButton(BuildContext context, HomeGridItem item) {
     final cardBackground = Theme.of(context).brightness == Brightness.dark
-        ? color.withValues(alpha: 0.2)
-        : color.withValues(alpha: 0.15);
+        ? item.color.withOpacity(0.2)
+        : item.color.withOpacity(0.15);
 
     return InkWell(
-      onTap: () => Navigator.pushNamed(context, route),
+      onTap: () => Navigator.pushNamed(context, item.route),
       borderRadius: BorderRadius.circular(16),
       child: Container(
         decoration: BoxDecoration(
@@ -93,19 +104,19 @@ class HomeGridSection extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: color, size: 32),
+            item.icon, // now can be Icon or Image
             const SizedBox(height: 8),
-            Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+            Text(item.title, style: const TextStyle(fontWeight: FontWeight.w500)),
           ],
         ),
       ),
     );
   }
-
 }
 
+
 class HomeGridItem {
-  final IconData icon;
+  final Widget icon;
   final String title;
   final String route;
   final Color color;

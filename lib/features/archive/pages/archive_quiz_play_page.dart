@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:ezdu/app/di/injector.dart';
+import 'package:ezdu/core/constants/app_constants.dart';
 import 'package:ezdu/data/models/option_model.dart';
-import 'package:ezdu/data/models/sumission_model.dart';
+import 'package:ezdu/data/repositories/user_progress_repository.dart';
+import 'package:ezdu/features/play/models/user_quiz_model.dart';
 import 'package:ezdu/features/archive/models/archive_model.dart';
 import 'package:ezdu/features/archive/models/archive_quiz_settings_model.dart';
 import 'package:ezdu/features/archive/pages/archive_congratulation_page.dart';
@@ -14,11 +17,14 @@ class ArchiveQuizPlayPage extends StatefulWidget {
   final ArchiveModel archiveModel;
   final ArchiveQuizSettingsModel settings;
 
+  final UserProgressRepository progressRepository;
+
   const ArchiveQuizPlayPage({
-    Key? key,
+    super.key,
     required this.archiveModel,
     required this.settings,
-  }) : super(key: key);
+    required this.progressRepository,
+  });
 
   @override
   State<ArchiveQuizPlayPage> createState() => _QuizPlayPageState();
@@ -93,33 +99,47 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
     }
   }
 
-  void submitQuiz() {
+  void submitQuiz() async {
+    final questions = widget.archiveModel.questions;
+
+    final totalQuestions = questions.length;
+    final int percentage = totalQuestions > 0
+        ? ((correctAnswers / totalQuestions) * 100).round()
+        : 0;
+
+    print(percentage);
+
+    var quizModel = UserQuizSubmissionModel(
+      quizType: QuizType.Archive,
+      quizId: widget.archiveModel.id,
+      markPercentage: percentage,
+    );
+
+    // submit
+    var result = await widget.progressRepository.submitQuiz(quizModel);
+
     timer.cancel();
-    calculateTotalMarks();
-    setState(() {
-      isSubmitted = true;
-    });
-
-    List<SubmissionModel> submissionList = userAnswers.entries.map((entry) {
-      return SubmissionModel(
-          questionId: entry.key, selectedOptionId: entry.value);
-    }).toList();
-
-    // todo: save to user quiz
+    if (result.success) {
+      calculateTotalMarks();
+      setState(() {
+        isSubmitted = true;
+      });
+    } else {
+      // todo: show notification or redirect somewhere
+    }
   }
 
   void calculateTotalMarks() {
     totalMarks = widget.archiveModel.questions.fold<int>(
       0,
-          (sum, q) => sum + (q.marks ?? 0),
+      (sum, q) => sum + (q.marks ?? 0),
     );
   }
 
   String formatTime(int seconds) {
     int minutes = seconds ~/ 60;
     int secs = seconds % 60;
-    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(
-        2, '0')}';
+    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -144,11 +164,11 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  ArchiveQuizPlayPage(
-                    archiveModel: widget.archiveModel,
-                    settings: widget.settings,
-                  ),
+              builder: (context) => ArchiveQuizPlayPage(
+                archiveModel: widget.archiveModel,
+                settings: widget.settings,
+                progressRepository: sl(),
+              ),
             ),
           );
         },
@@ -156,17 +176,14 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
     }
 
     final question = widget.archiveModel.questions[currentQuestionIndex];
-    final colorScheme = Theme
-        .of(context)
-        .colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
     final isTimeRunningOut = remainingSeconds < 300;
 
     return WillPopScope(
       onWillPop: () async {
         return await showDialog<bool>(
-          context: context,
-          builder: (context) =>
-              AlertDialog(
+              context: context,
+              builder: (context) => AlertDialog(
                 title: const Text('Exit Quiz?'),
                 content: const Text('Your progress will be lost.'),
                 actions: [
@@ -183,7 +200,7 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
                   ),
                 ],
               ),
-        ) ??
+            ) ??
             false;
       },
       child: Scaffold(
@@ -213,11 +230,7 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
                   const SizedBox(width: 8),
                   Text(
                     formatTime(remainingSeconds),
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .labelLarge
-                        ?.copyWith(
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: isTimeRunningOut
                           ? colorScheme.onError
                           : colorScheme.onPrimaryContainer,
@@ -264,8 +277,7 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
                           question.options!.isNotEmpty)
                         ArchiveOptionsWidget(
                           options: question.options!,
-                          selectedOption:
-                          userAnswers.containsKey(question.id)
+                          selectedOption: userAnswers.containsKey(question.id)
                               ? userAnswers[question.id]
                               : 0,
                           onSelectOption: selectOption,
@@ -304,31 +316,31 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
                       const SizedBox(width: 12),
                       ElevatedButton.icon(
                         onPressed:
-                        currentQuestionIndex <
-                            widget.archiveModel.questions.length - 1
+                            currentQuestionIndex <
+                                widget.archiveModel.questions.length - 1
                             ? goToNextQuestion
                             : submitQuiz,
                         icon: Icon(
                           currentQuestionIndex <
-                              widget.archiveModel.questions.length - 1
+                                  widget.archiveModel.questions.length - 1
                               ? Icons.arrow_forward
                               : Icons.done_all,
                         ),
                         label: Text(
                           currentQuestionIndex <
-                              widget.archiveModel.questions.length - 1
+                                  widget.archiveModel.questions.length - 1
                               ? ''
                               : 'Submit',
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                          currentQuestionIndex <
-                              widget.archiveModel.questions.length - 1
+                              currentQuestionIndex <
+                                  widget.archiveModel.questions.length - 1
                               ? null
                               : colorScheme.primary,
                           foregroundColor:
-                          currentQuestionIndex <
-                              widget.archiveModel.questions.length - 1
+                              currentQuestionIndex <
+                                  widget.archiveModel.questions.length - 1
                               ? null
                               : colorScheme.onPrimary,
                         ),

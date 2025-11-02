@@ -103,9 +103,9 @@ class _CongratulationPageState extends State<ArchiveCongratulationPage>
                         isPassed ? 'Excellent!' : 'Good Effort!',
                         style: Theme.of(context).textTheme.headlineMedium
                             ?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: isPassed ? Colors.green : Colors.orange,
-                        ),
+                              fontWeight: FontWeight.bold,
+                              color: isPassed ? Colors.green : Colors.orange,
+                            ),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -133,9 +133,9 @@ class _CongratulationPageState extends State<ArchiveCongratulationPage>
                                   '${widget.score}/${widget.totalMarks}',
                                   style: Theme.of(context).textTheme.titleLarge
                                       ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: colorScheme.primary,
-                                  ),
+                                        fontWeight: FontWeight.bold,
+                                        color: colorScheme.primary,
+                                      ),
                                 ),
                               ],
                             ),
@@ -156,11 +156,11 @@ class _CongratulationPageState extends State<ArchiveCongratulationPage>
                               '$percentage%',
                               style: Theme.of(context).textTheme.headlineSmall
                                   ?.copyWith(
-                                color: isPassed
-                                    ? Colors.green
-                                    : Colors.orange,
-                                fontWeight: FontWeight.bold,
-                              ),
+                                    color: isPassed
+                                        ? Colors.green
+                                        : Colors.orange,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                             const SizedBox(height: 24),
                             Container(
@@ -174,19 +174,19 @@ class _CongratulationPageState extends State<ArchiveCongratulationPage>
                                   ResultRow(
                                     label: 'Correct Answers',
                                     value:
-                                    '${widget.correctAnswers}/${widget.totalQuestions}',
+                                        '${widget.correctAnswers}/${widget.totalQuestions}',
                                   ),
                                   const SizedBox(height: 12),
                                   ResultRow(
                                     label: 'Incorrect',
                                     value:
-                                    '${widget.totalQuestions - widget.correctAnswers}',
+                                        '${widget.totalQuestions - widget.correctAnswers}',
                                   ),
                                   const SizedBox(height: 12),
                                   ResultRow(
                                     label: 'Accuracy',
                                     value:
-                                    '${((widget.correctAnswers / widget.totalQuestions) * 100).toStringAsFixed(1)}%',
+                                        '${((widget.correctAnswers / widget.totalQuestions) * 100).toStringAsFixed(1)}%',
                                   ),
                                 ],
                               ),
@@ -242,7 +242,7 @@ class ResultRow extends StatelessWidget {
   final String value;
 
   const ResultRow({Key? key, required this.label, required this.value})
-      : super(key: key);
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -268,4 +268,3 @@ class ResultRow extends StatelessWidget {
     );
   }
 }
-

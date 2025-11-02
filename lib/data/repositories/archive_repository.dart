@@ -2,14 +2,16 @@ import 'package:ezdu/core/models/api_response.dart';
 import 'package:ezdu/features/archive/datasources/archive_remote_ds.dart';
 import 'package:ezdu/features/archive/models/archive_model.dart';
 
-class ArchiveRepository{
+class ArchiveRepository {
   final ArchiveRemoteDataSource _remoteDataSource;
 
-  ArchiveRepository({required ArchiveRemoteDataSource remoteDataSource}) : _remoteDataSource = remoteDataSource;
+  ArchiveRepository({required ArchiveRemoteDataSource remoteDataSource})
+    : _remoteDataSource = remoteDataSource;
 
-  Future<ApiResponse<PagedList<ArchiveModel>>> getArchivedExamList(subjectId) async {
+  Future<ApiResponse<PagedList<ArchiveModel>>> getArchivedExamList(
+    subjectId,
+  ) async {
     try {
-
       final result = await _remoteDataSource.getArchiveExamList(subjectId);
 
       return ApiResponse.success(result);
@@ -27,5 +29,4 @@ class ArchiveRepository{
       return ApiResponse.error(e.toString());
     }
   }
-
 }
