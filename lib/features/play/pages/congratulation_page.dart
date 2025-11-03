@@ -1,7 +1,7 @@
 import 'package:ezdu/core/widgets/confetti.dart';
 import 'package:flutter/material.dart';
 
-class ArchiveCongratulationPage extends StatefulWidget {
+class CongratulationPage extends StatefulWidget {
   final int score;
   final int totalMarks;
   final int correctAnswers;
@@ -9,7 +9,7 @@ class ArchiveCongratulationPage extends StatefulWidget {
   final VoidCallback onGoBack;
   final VoidCallback onRetry;
 
-  const ArchiveCongratulationPage({
+  const CongratulationPage({
     Key? key,
     required this.score,
     required this.totalMarks,
@@ -20,10 +20,10 @@ class ArchiveCongratulationPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ArchiveCongratulationPage> createState() => _CongratulationPageState();
+  State<CongratulationPage> createState() => _CongratulationPageState();
 }
 
-class _CongratulationPageState extends State<ArchiveCongratulationPage>
+class _CongratulationPageState extends State<CongratulationPage>
     with TickerProviderStateMixin {
   late AnimationController _confettiController;
   late AnimationController _scaleController;

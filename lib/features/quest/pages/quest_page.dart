@@ -3,7 +3,6 @@ import 'package:ezdu/features/quest/widgets/quest_card.dart';
 import 'package:flutter/material.dart';
 
 
-// ============= DUMMY DATA =============
 final List<QuestModel> dailyQuests = [
   QuestModel(
     id: 'd1',

@@ -1,22 +1,22 @@
 import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/features/archive/models/archive_model.dart';
-import 'package:ezdu/features/archive/pages/archive_quiz_play_page.dart';
+import 'package:ezdu/features/play/pages/quiz_play_page.dart';
 import 'package:ezdu/features/archive/widgets/archive_exam_header_card.dart';
 import 'package:ezdu/features/archive/widgets/archive_exam_start_card.dart';
 import 'package:ezdu/features/archive/widgets/archive_question_preview_card.dart';
 import 'package:ezdu/features/archive/widgets/archive_quiz_setting_dialog.dart';
 import 'package:flutter/material.dart';
 
-class ArchiveQuizStartPage extends StatefulWidget {
+class QuizStartPage extends StatefulWidget {
   final ArchiveModel archivedExam;
 
-  const ArchiveQuizStartPage({super.key, required this.archivedExam});
+  const QuizStartPage({super.key, required this.archivedExam});
 
   @override
-  State<ArchiveQuizStartPage> createState() => _ArchiveQuizStartPageState();
+  State<QuizStartPage> createState() => _ArchiveQuizStartPageState();
 }
 
-class _ArchiveQuizStartPageState extends State<ArchiveQuizStartPage> {
+class _ArchiveQuizStartPageState extends State<QuizStartPage> {
   late ArchiveModel examDetails;
   bool isLoading = false;
 
@@ -30,7 +30,7 @@ class _ArchiveQuizStartPageState extends State<ArchiveQuizStartPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ArchiveQuizPlayPage(
+              builder: (context) => QuizPlayPage(
                 archiveModel: examDetails,
                 settings: settings,
                 progressRepository: sl(),

@@ -132,30 +132,30 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
-        items: const [
+        items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
+            activeIcon: Image.asset('assets/icons/house.png', height: 24, width: 24,),
             label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.card_giftcard_outlined),
-            activeIcon: Icon(Icons.card_giftcard),
+            activeIcon: Image.asset('assets/icons/giftbox.png', height: 24, width: 24,),
             label: 'Quest',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.quiz_outlined),
-            activeIcon: Icon(Icons.quiz),
+            activeIcon: Image.asset('assets/icons/reward.png', height: 24, width: 24,),
             label: 'Quiz',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.emoji_events_outlined),
-            activeIcon: Icon(Icons.emoji_events),
+            activeIcon: Image.asset('assets/icons/award.png', height: 24, width: 24,),
             label: 'Leaderboard',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.dynamic_feed_outlined),
-            activeIcon: Icon(Icons.dynamic_feed),
+            activeIcon: Image.asset('assets/icons/chat-balloons.png', height: 24, width: 24,),
             label: 'Feed',
           ),
           BottomNavigationBarItem(

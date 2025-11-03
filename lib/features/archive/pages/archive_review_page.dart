@@ -2,7 +2,7 @@ import 'package:ezdu/core/models/api_response.dart';
 import 'package:ezdu/core/utils/route_helper.dart';
 import 'package:ezdu/data/repositories/archive_repository.dart';
 import 'package:ezdu/features/archive/models/archive_model.dart';
-import 'package:ezdu/features/archive/pages/archive_quiz_start_page.dart';
+import 'package:ezdu/features/play/pages/quiz_start_page.dart';
 import 'package:flutter/material.dart';
 
 class ArchiveReviewPage extends StatefulWidget {
@@ -121,31 +121,38 @@ class _ArchiveReviewPageState extends State<ArchiveReviewPage> {
                           ),
                           ElevatedButton.icon(
                             onPressed: () {
-
-                              if (snapshot.hasData && snapshot.data!.data == null) {
-                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                              if (snapshot.hasData &&
+                                  snapshot.data!.data == null) {
+                                WidgetsBinding.instance.addPostFrameCallback((
+                                  _,
+                                ) {
                                   showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
                                       title: const Text('No Data Found'),
-                                      content: const Text('There’s no information available right now.'),
+                                      content: const Text(
+                                        'There’s no information available right now.',
+                                      ),
                                       actions: [
                                         TextButton(
-                                          onPressed: () => Navigator.of(context).pop(),
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
                                           child: const Text('OK'),
                                         ),
                                       ],
                                     ),
                                   );
                                 });
-                              }
-                              else{
+                              } else {
                                 Navigator.push(
-                                    context,
-                                    SlideUpRoute(page: ArchiveQuizStartPage(archivedExam: examDetails,))
+                                  context,
+                                  SlideUpRoute(
+                                    page: QuizStartPage(
+                                      archivedExam: examDetails,
+                                    ),
+                                  ),
                                 );
                               }
-
                             },
                             icon: const Icon(Icons.play_arrow),
                             label: const Text("Start Quiz"),

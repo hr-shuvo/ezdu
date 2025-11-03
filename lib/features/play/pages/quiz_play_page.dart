@@ -7,19 +7,19 @@ import 'package:ezdu/data/repositories/user_progress_repository.dart';
 import 'package:ezdu/features/play/models/user_quiz_model.dart';
 import 'package:ezdu/features/archive/models/archive_model.dart';
 import 'package:ezdu/features/archive/models/archive_quiz_settings_model.dart';
-import 'package:ezdu/features/archive/pages/archive_congratulation_page.dart';
+import 'package:ezdu/features/play/pages/congratulation_page.dart';
 import 'package:ezdu/features/archive/widgets/archive_option.dart';
 import 'package:ezdu/features/archive/widgets/archive_question.dart';
 import 'package:ezdu/features/archive/widgets/archive_question_indicator.dart';
 import 'package:flutter/material.dart';
 
-class ArchiveQuizPlayPage extends StatefulWidget {
+class QuizPlayPage extends StatefulWidget {
   final ArchiveModel archiveModel;
   final ArchiveQuizSettingsModel settings;
 
   final UserProgressRepository progressRepository;
 
-  const ArchiveQuizPlayPage({
+  const QuizPlayPage({
     super.key,
     required this.archiveModel,
     required this.settings,
@@ -27,10 +27,10 @@ class ArchiveQuizPlayPage extends StatefulWidget {
   });
 
   @override
-  State<ArchiveQuizPlayPage> createState() => _QuizPlayPageState();
+  State<QuizPlayPage> createState() => _QuizPlayPageState();
 }
 
-class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
+class _QuizPlayPageState extends State<QuizPlayPage> {
   late int currentQuestionIndex;
   late Timer timer;
   late int remainingSeconds;
@@ -151,7 +151,7 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
   @override
   Widget build(BuildContext context) {
     if (isSubmitted) {
-      return ArchiveCongratulationPage(
+      return CongratulationPage(
         score: earnedMarks,
         totalMarks: totalMarks,
         correctAnswers: correctAnswers,
@@ -164,7 +164,7 @@ class _QuizPlayPageState extends State<ArchiveQuizPlayPage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => ArchiveQuizPlayPage(
+              builder: (context) => QuizPlayPage(
                 archiveModel: widget.archiveModel,
                 settings: widget.settings,
                 progressRepository: sl(),
