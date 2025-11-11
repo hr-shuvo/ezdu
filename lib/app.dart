@@ -1,6 +1,7 @@
 import 'package:ezdu/app/routes/app_routes.dart';
 import 'package:ezdu/app/theme/app_themes.dart';
 import 'package:ezdu/providers/auth_provider.dart';
+import 'package:ezdu/providers/onboarding_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,10 +11,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ProviderScope(
-      overrides: [authInitProvider],
+      overrides: [authInitProvider, onboardingInitProvider],
       child: Consumer(
         builder: (context, ref, child) {
           ref.watch(authInitProvider);
+          ref.watch(onboardingInitProvider);
 
           return Container(
             decoration: BoxDecoration(

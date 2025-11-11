@@ -15,8 +15,14 @@ class StepClassSelection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentSelection = ref.read(onboardingSelectionProvider);
+    final currentSelection = ref.watch(onboardingSelectionProvider);
     final int? selectedSegment = currentSelection.segment;
+
+    if (currentSelection.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
 
     if (selectedSegment == null) {
       return Center(child: Text("Please go back and select a segment."));

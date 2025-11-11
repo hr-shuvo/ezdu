@@ -1,4 +1,5 @@
 import 'package:ezdu/providers/auth_provider.dart';
+import 'package:ezdu/providers/onboarding_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,6 +16,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
   late AnimationController _scaleController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
+  bool _hasNavigated = false;
 
   @override
   void initState() {
@@ -42,17 +44,6 @@ class _SplashPageState extends ConsumerState<SplashPage>
 
     _fadeController.forward();
     _scaleController.forward();
-    Future.delayed(const Duration(seconds: 3), () {
-      final authState = ref.read(authProvider);
-
-      if (mounted) {
-        if (authState.data != null && authState.data!.token.isNotEmpty) {
-          Navigator.of(context).pushReplacementNamed('/home');
-        } else {
-          Navigator.of(context).pushReplacementNamed('/welcome');
-        }
-      }
-    });
   }
 
   @override
@@ -62,8 +53,47 @@ class _SplashPageState extends ConsumerState<SplashPage>
     super.dispose();
   }
 
+  void _navigateBasedOnAuthState(
+    AuthState authState,
+    OnboardingState onboarding,
+  ) {
+    if (!mounted) return;
+
+    // if (authState.data == null || authState.data!.token.isEmpty) {
+    //   Navigator.pushReplacementNamed(context, '/welcome');
+    //   return;
+    // }
+
+    print('splash-------------- classid: ${onboarding.classId}');
+    if (onboarding.classId == null || onboarding.classId == 0) {
+      Navigator.pushReplacementNamed(context, '/welcome');
+      return;
+    }
+
+    Navigator.pushReplacementNamed(context, '/home');
+  }
+
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider);
+    final onboarding = ref.watch(onboardingSelectionProvider);
+
+    // print('auth - ${authState.data!.userName}');
+    // print('onbr - ${onboarding.classId!}');
+
+    if (!_hasNavigated &&
+        !authState.isLoading &&
+        !onboarding.isLoading &&
+        onboarding.classId != null &&
+        onboarding.classId! > 0) {
+      _hasNavigated = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _navigateBasedOnAuthState(authState, onboarding);
+        }
+      });
+    }
+
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(

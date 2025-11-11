@@ -1,9 +1,10 @@
+import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/data/models/class_model.dart';
 import 'package:ezdu/data/repositories/classRepository.dart';
 import 'package:ezdu/services/user_onboarding_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-import '../app/di/injector.dart';
 
 class OnboardingState {
   final bool isLoading;
@@ -81,6 +82,7 @@ class OnboardingState {
 class OnboardingSelectionNotifier extends StateNotifier<OnboardingState> {
   OnboardingSelectionNotifier(this._classRepository)
     : super(const OnboardingState.initial());
+
   final ClassRepository _classRepository;
 
   void updateSegment(int segment) async {
@@ -101,8 +103,8 @@ class OnboardingSelectionNotifier extends StateNotifier<OnboardingState> {
         error: null,
       );
 
-      _logState('Segment updated to: $segment');
-      _logState('Classes updated to: $classList');
+      // _logState('Segment updated to: $segment');
+      // _logState('Classes updated to: $classList');
 
       // UserOnboardingService.saveSegment(segment);
     } else {
@@ -149,9 +151,33 @@ class OnboardingSelectionNotifier extends StateNotifier<OnboardingState> {
       'segment: ${state.segment}, classId: ${state.classId}, className: ${state.className}, group: ${state.group}',
     );
   }
+
+  Future<void> restoreSession() async {
+    final segment = await UserOnboardingService.getSegment();
+    final classId = await UserOnboardingService.getClassId();
+    final className = await UserOnboardingService.getClass();
+    final group = await UserOnboardingService.getGroup();
+
+    print('onboarding segment >->->->->->->->->->, $segment');
+    print('onboarding class   >->->->->->->->->->, $classId');
+
+    if (segment > 0 && classId != null && classId > 0) {
+      state = state.copyWith(
+        isLoading: false,
+        segment: segment,
+        classId: classId,
+        className: className,
+        selectedGroup: group,
+      );
+    }
+  }
 }
 
 final onboardingSelectionProvider =
     StateNotifierProvider<OnboardingSelectionNotifier, OnboardingState>((ref) {
       return OnboardingSelectionNotifier(sl<ClassRepository>());
     });
+
+final onboardingInitProvider = FutureProvider<void>((ref) async {
+  await ref.read(onboardingSelectionProvider.notifier).restoreSession();
+});

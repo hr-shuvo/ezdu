@@ -11,13 +11,28 @@ class AuthState extends Equatable {
   final bool isLoading;
   final AuthModel? data;
   final String? error;
+  final String? intendedRoute;
 
-  const AuthState({required this.isLoading, this.data, this.error});
+  const AuthState({
+    required this.isLoading,
+    this.data,
+    this.error,
+    this.intendedRoute,
+  });
 
-  const AuthState.initial() : isLoading = false, data = null, error = null;
+  const AuthState.initial()
+    : isLoading = false,
+      data = null,
+      error = null,
+      intendedRoute = null;
 
   AuthState copyWithLoading() {
-    return AuthState(isLoading: true, data: data, error: null);
+    return AuthState(
+      isLoading: true,
+      data: data,
+      error: null,
+      intendedRoute: null,
+    );
   }
 
   AuthState copyWithSuccess(AuthModel authData) {
@@ -26,6 +41,15 @@ class AuthState extends Equatable {
 
   AuthState copyWithError(String errorMsg) {
     return AuthState(isLoading: false, data: data, error: errorMsg);
+  }
+
+  AuthState copyWithRoute(String? route) {
+    return AuthState(
+      isLoading: isLoading,
+      data: data,
+      error: error,
+      intendedRoute: route,
+    );
   }
 
   bool isLoggedIn() {
@@ -59,6 +83,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> restoreSession() async {
+
     final storageService = sl<StorageService>();
     final dioClient = sl<DioClient>();
 
@@ -68,7 +93,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
     if (authData != null && token != null) {
       dioClient.setAuthToken(token);
       state = state.copyWithSuccess(authData);
+      print('->->->->->->->->->-> Authenticated');
     }
+
+  }
+
+  void setIntendedRoute(String route) {
+    state = state.copyWithRoute(route);
+  }
+
+  void clearIntendedRoute() {
+    state = state.copyWithRoute(null);
   }
 }
 

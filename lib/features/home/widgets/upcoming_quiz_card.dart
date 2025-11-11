@@ -1,4 +1,3 @@
-import 'package:ezdu/features/auth/pages/login_page.dart';
 import 'package:ezdu/features/auth/pages/register_page.dart';
 import 'package:ezdu/features/quiz/pages/quiz_page.dart';
 import 'package:flutter/material.dart';

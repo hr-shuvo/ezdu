@@ -15,7 +15,7 @@ class HomeGridSection extends StatelessWidget {
           width: 32,
         ),
         title: 'Archive',
-        route: '/archive',
+        route: isLoggedIn ? '/archive' : '/login',
         color: Colors.purpleAccent,
       ),
       HomeGridItem(
@@ -25,7 +25,7 @@ class HomeGridSection extends StatelessWidget {
           width: 32,
         ),
         title: 'Quick Challenge',
-        route: '/quiz',
+        route: isLoggedIn ? '/quiz' : '/login',
         color: Colors.orangeAccent,
       ),
       HomeGridItem(
@@ -35,7 +35,7 @@ class HomeGridSection extends StatelessWidget {
           width: 32,
         ),
         title: 'Quiz',
-        route: '/quiz',
+        route: isLoggedIn ? '/quiz' : '/login',
         color: Colors.greenAccent,
       ),
       HomeGridItem(
@@ -45,7 +45,7 @@ class HomeGridSection extends StatelessWidget {
           width: 32,
         ),
         title: 'Forum',
-        route: '/forum',
+        route: isLoggedIn ? '/forum' : '/login',
         color: Colors.cyanAccent,
       ),
       HomeGridItem(
@@ -55,7 +55,7 @@ class HomeGridSection extends StatelessWidget {
           width: 32,
         ),
         title: 'Leaderboard',
-        route: '/leaderboard',
+        route: isLoggedIn ? '/leaderboard' : '/login',
         color: Colors.amberAccent,
       ),
       HomeGridItem(
@@ -65,7 +65,7 @@ class HomeGridSection extends StatelessWidget {
           width: 32,
         ),
         title: 'Shop',
-        route: '/shop',
+        route: isLoggedIn ? '/shop' : '/login',
         color: Colors.pinkAccent,
       ),
     ];

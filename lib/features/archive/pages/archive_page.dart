@@ -7,27 +7,24 @@ import 'package:ezdu/features/archive/pages/exams_page.dart';
 import 'package:ezdu/features/archive/widgets/archive_stat_card.dart';
 import 'package:ezdu/features/archive/widgets/archive_subject_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ArchivePage extends StatefulWidget {
+class ArchivePage extends ConsumerStatefulWidget {
   const ArchivePage({super.key, required this.subjectRepository});
 
   final SubjectRepository subjectRepository;
 
   @override
-  State<ArchivePage> createState() => _ArchivePageState();
+  ConsumerState<ArchivePage> createState() => _ArchivePageState();
 }
 
-class _ArchivePageState extends State<ArchivePage> {
+class _ArchivePageState extends ConsumerState<ArchivePage> {
   late Future<ApiResponse<PagedList<SubjectModel>>> _subjectListFuture;
 
   @override
   void initState() {
     super.initState();
 
-    // if (widget.subjectRepository == null) {
-    // } else {
-    //   _subjectListFuture = widget.subjectRepository!.getSubjectList();
-    // }
     _subjectListFuture = widget.subjectRepository.getSubjectList();
   }
 
@@ -134,6 +131,7 @@ class _ArchivePageState extends State<ArchivePage> {
                       }
 
                       if (snapshot.hasData &&
+                          snapshot.data!.data != null &&
                           snapshot.data!.data!.totalCount > 0) {
                         final subjects = snapshot.data!.data!.items;
 

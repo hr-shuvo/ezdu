@@ -551,7 +551,7 @@ class _ExamListScreenState extends State<ExamListScreen> {
                                   ),
 
                                   // Right Section - Score
-                                  if (true)
+                                  if (true) //
                                     Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
