@@ -1,4 +1,3 @@
-import 'package:ezdu/providers/auth_provider.dart';
 import 'package:ezdu/providers/onboarding_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,46 +52,27 @@ class _SplashPageState extends ConsumerState<SplashPage>
     super.dispose();
   }
 
-  void _navigateBasedOnAuthState(
-    AuthState authState,
-    OnboardingState onboarding,
-  ) {
-    if (!mounted) return;
-
-    // if (authState.data == null || authState.data!.token.isEmpty) {
-    //   Navigator.pushReplacementNamed(context, '/welcome');
-    //   return;
-    // }
-
-    print('splash-------------- classid: ${onboarding.classId}');
-    if (onboarding.classId == null || onboarding.classId == 0) {
-      Navigator.pushReplacementNamed(context, '/welcome');
-      return;
-    }
-
-    Navigator.pushReplacementNamed(context, '/home');
-  }
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authProvider);
+    final initAsync = ref.watch(onboardingInitProvider);
     final onboarding = ref.watch(onboardingSelectionProvider);
 
-    // print('auth - ${authState.data!.userName}');
-    // print('onbr - ${onboarding.classId!}');
+    initAsync.whenData((_) {
+      if (!_hasNavigated) {
+        _hasNavigated = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            if (onboarding.classId == null || onboarding.classId == 0) {
+              Navigator.pushReplacementNamed(context, '/welcome');
+            } else {
+              Navigator.pushReplacementNamed(context, '/home');
+            }
+          }
+        });
+      }
+    });
 
-    if (!_hasNavigated &&
-        !authState.isLoading &&
-        !onboarding.isLoading &&
-        onboarding.classId != null &&
-        onboarding.classId! > 0) {
-      _hasNavigated = true;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          _navigateBasedOnAuthState(authState, onboarding);
-        }
-      });
-    }
 
     final colorScheme = Theme.of(context).colorScheme;
 
