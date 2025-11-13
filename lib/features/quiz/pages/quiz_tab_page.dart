@@ -36,22 +36,13 @@ class _QuizPageState extends State<QuizTabPage>
           ],
         ),
       ),
-      body: Container(
-        // decoration: BoxDecoration(
-        //   gradient: LinearGradient(
-        //     begin: Alignment.topLeft,
-        //     end: Alignment.bottomRight,
-        //     colors: [Theme.of(context).secondaryHeaderColor, Colors.indigo[100]!],
-        //   ),
-        // ),
-        child: TabBarView(
-          controller: _tabController,
-          children: [
-            QuizChallengeTab(),
-            QuizMockTab(subjectRepository: sl()),
-            QuizPage(quizRepository: sl(),),
-          ],
-        ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          QuizChallengeTab(),
+          QuizMockTab(subjectRepository: sl()),
+          QuizPage(quizRepository: sl(),),
+        ],
       ),
     );
   }
