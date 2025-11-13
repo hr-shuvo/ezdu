@@ -154,7 +154,7 @@ class _ArchiveQuizSettingsDialogState extends State<ArchiveQuizSettingsDialog> {
             );
             widget.onConfirm(settings);
           },
-          child: const Text('Start Quiz'),
+          child: const Text('Confirm'),
         ),
       ],
     );

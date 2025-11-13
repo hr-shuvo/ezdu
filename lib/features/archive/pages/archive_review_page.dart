@@ -2,7 +2,7 @@ import 'package:ezdu/core/models/api_response.dart';
 import 'package:ezdu/core/utils/route_helper.dart';
 import 'package:ezdu/data/repositories/archive_repository.dart';
 import 'package:ezdu/features/archive/models/archive_model.dart';
-import 'package:ezdu/features/play/pages/quiz_start_page.dart';
+import 'package:ezdu/features/archive/pages/archive_quiz_start_page.dart';
 import 'package:flutter/material.dart';
 
 class ArchiveReviewPage extends StatefulWidget {
@@ -147,7 +147,7 @@ class _ArchiveReviewPageState extends State<ArchiveReviewPage> {
                                 Navigator.push(
                                   context,
                                   SlideUpRoute(
-                                    page: QuizStartPage(
+                                    page: ArchiveQuizStartPage(
                                       archivedExam: examDetails,
                                     ),
                                   ),

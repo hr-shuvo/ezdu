@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/core/constants/app_constants.dart';
 import 'package:ezdu/data/models/option_model.dart';
+import 'package:ezdu/data/models/question_model.dart';
 import 'package:ezdu/data/repositories/user_progress_repository.dart';
 import 'package:ezdu/features/play/models/user_quiz_model.dart';
-import 'package:ezdu/features/archive/models/archive_model.dart';
 import 'package:ezdu/features/archive/models/archive_quiz_settings_model.dart';
 import 'package:ezdu/features/play/pages/congratulation_page.dart';
 import 'package:ezdu/features/archive/widgets/archive_option.dart';
@@ -14,15 +14,21 @@ import 'package:ezdu/features/archive/widgets/archive_question_indicator.dart';
 import 'package:flutter/material.dart';
 
 class QuizPlayPage extends StatefulWidget {
-  final ArchiveModel archiveModel;
+  final int quizType;
+  final int quizId;
+  final String title;
   final ArchiveQuizSettingsModel settings;
+  final List<QuestionModel> questions;
 
   final UserProgressRepository progressRepository;
 
   const QuizPlayPage({
     super.key,
-    required this.archiveModel,
+    required this.quizType,
+    required this.quizId,
+    required this.title,
     required this.settings,
+    required this.questions,
     required this.progressRepository,
   });
 
@@ -46,7 +52,7 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
     super.initState();
     currentQuestionIndex = 0;
     remainingSeconds = widget.settings.timeInMinutes * 60;
-    visitedQuestions = List.filled(widget.archiveModel.questions.length, false);
+    visitedQuestions = List.filled(widget.questions.length, false);
     startTimer();
   }
 
@@ -64,7 +70,7 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
 
   void selectOption(OptionModel option) {
     setState(() {
-      final question = widget.archiveModel.questions[currentQuestionIndex];
+      final question = widget.questions[currentQuestionIndex];
 
       userAnswers[question.id] = option.id;
       visitedQuestions[currentQuestionIndex] = true;
@@ -84,7 +90,7 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
   }
 
   void goToNextQuestion() {
-    if (currentQuestionIndex < widget.archiveModel.questions.length - 1) {
+    if (currentQuestionIndex < widget.questions.length - 1) {
       setState(() {
         currentQuestionIndex++;
       });
@@ -100,18 +106,16 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
   }
 
   void submitQuiz() async {
-    final questions = widget.archiveModel.questions;
+    final questions = widget.questions;
 
     final totalQuestions = questions.length;
     final int percentage = totalQuestions > 0
         ? ((correctAnswers / totalQuestions) * 100).round()
         : 0;
 
-    print(percentage);
-
     var quizModel = UserQuizSubmissionModel(
       quizType: QuizType.Archive,
-      quizId: widget.archiveModel.id,
+      quizId: widget.quizId ?? 0,
       markPercentage: percentage,
     );
 
@@ -130,7 +134,7 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
   }
 
   void calculateTotalMarks() {
-    totalMarks = widget.archiveModel.questions.fold<int>(
+    totalMarks = widget.questions.fold<int>(
       0,
       (sum, q) => sum + (q.marks ?? 0),
     );
@@ -155,7 +159,7 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
         score: earnedMarks,
         totalMarks: totalMarks,
         correctAnswers: correctAnswers,
-        totalQuestions: widget.archiveModel.questions.length,
+        totalQuestions: widget.questions.length,
         onGoBack: () {
           Navigator.pop(context);
         },
@@ -165,8 +169,11 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
             context,
             MaterialPageRoute(
               builder: (context) => QuizPlayPage(
-                archiveModel: widget.archiveModel,
+                questions: widget.questions,
                 settings: widget.settings,
+                quizType: widget.quizType,
+                title: widget.title,
+                quizId: widget.quizId,
                 progressRepository: sl(),
               ),
             ),
@@ -175,7 +182,7 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
       );
     }
 
-    final question = widget.archiveModel.questions[currentQuestionIndex];
+    final question = widget.questions[currentQuestionIndex];
     final colorScheme = Theme.of(context).colorScheme;
     final isTimeRunningOut = remainingSeconds < 300;
 
@@ -205,7 +212,7 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.archiveModel.name),
+          title: Text(widget.title),
           centerTitle: true,
           elevation: 0,
           actions: [
@@ -246,7 +253,7 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
           children: [
             ArchiveQuestionIndicatorBar(
               currentQuestion: currentQuestionIndex + 1,
-              totalQuestions: widget.archiveModel.questions.length,
+              totalQuestions: widget.questions.length,
               answeredCount: userAnswers.length,
               visitedQuestions: visitedQuestions,
               onQuestionSelected: (index) {
@@ -316,31 +323,26 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
                       const SizedBox(width: 12),
                       ElevatedButton.icon(
                         onPressed:
-                            currentQuestionIndex <
-                                widget.archiveModel.questions.length - 1
+                            currentQuestionIndex < widget.questions.length - 1
                             ? goToNextQuestion
                             : submitQuiz,
                         icon: Icon(
-                          currentQuestionIndex <
-                                  widget.archiveModel.questions.length - 1
+                          currentQuestionIndex < widget.questions.length - 1
                               ? Icons.arrow_forward
                               : Icons.done_all,
                         ),
                         label: Text(
-                          currentQuestionIndex <
-                                  widget.archiveModel.questions.length - 1
+                          currentQuestionIndex < widget.questions.length - 1
                               ? ''
                               : 'Submit',
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              currentQuestionIndex <
-                                  widget.archiveModel.questions.length - 1
+                              currentQuestionIndex < widget.questions.length - 1
                               ? null
                               : colorScheme.primary,
                           foregroundColor:
-                              currentQuestionIndex <
-                                  widget.archiveModel.questions.length - 1
+                              currentQuestionIndex < widget.questions.length - 1
                               ? null
                               : colorScheme.onPrimary,
                         ),
