@@ -6,7 +6,7 @@ import 'package:ezdu/features/forum/pages/forum_page.dart';
 import 'package:ezdu/features/leaderboard/pages/leaderboard_page.dart';
 import 'package:ezdu/features/navigation/main_navigation_page.dart';
 import 'package:ezdu/features/profile/pages/profile_page.dart';
-import 'package:ezdu/features/quiz/pages/quiz_page.dart';
+import 'package:ezdu/features/quiz/pages/quiz_tab_page.dart';
 import 'package:ezdu/features/shop/presentation/shop_page.dart';
 import 'package:ezdu/features/splash/pages/onboarding_page.dart';
 import 'package:ezdu/features/splash/pages/splash_page.dart';
@@ -43,7 +43,7 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const ShopPage());
 
       case '/quiz':
-        return MaterialPageRoute(builder: (_) => const QuizPage());
+        return MaterialPageRoute(builder: (_) => const QuizTabPage());
 
       case '/forum':
         return MaterialPageRoute(builder: (_) => const ForumHomeScreen());

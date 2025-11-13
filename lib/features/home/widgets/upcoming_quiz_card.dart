@@ -1,5 +1,5 @@
 import 'package:ezdu/features/auth/pages/register_page.dart';
-import 'package:ezdu/features/quiz/pages/quiz_page.dart';
+import 'package:ezdu/features/quiz/pages/quiz_tab_page.dart';
 import 'package:flutter/material.dart';
 
 class UpcomingQuizCard extends StatelessWidget {
@@ -66,7 +66,7 @@ class UpcomingQuizCard extends StatelessWidget {
             navigator.push(
               MaterialPageRoute(
                 builder: (context) =>
-                    const QuizPage(),
+                    const QuizTabPage(),
               ),
             );
           } else {
