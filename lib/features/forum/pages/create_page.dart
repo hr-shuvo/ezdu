@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 class CreatePostScreen extends StatefulWidget {
   final List<SubjectModel> subjects;
-  final Map<int, List<Lesson>> lessons;
-  final Map<int, List<Topic>> topics;
+  final Map<int, List<LessonModel>> lessons;
+  final Map<int, List<TopicModel>> topics;
   final Function(ForumPost) onPostCreated;
 
   const CreatePostScreen({

@@ -1,6 +1,7 @@
-import 'package:ezdu/features/quiz/pages/quiz_challenge_tab.dart';
+import 'package:ezdu/app/di/injector.dart';
+import 'package:ezdu/features/quiz_challenge/pages/quiz_challenge_tab.dart';
 import 'package:ezdu/features/quiz/pages/quiz_list_tab.dart';
-import 'package:ezdu/features/quiz/pages/quiz_mock_tab.dart';
+import 'package:ezdu/features/quiz_mock/pages/quiz_mock_page.dart';
 import 'package:flutter/material.dart';
 
 class QuizPage extends StatefulWidget {
@@ -45,9 +46,9 @@ class _QuizPageState extends State<QuizPage>
         // ),
         child: TabBarView(
           controller: _tabController,
-          children: const [
+          children: [
             QuizChallengeTab(),
-            QuizMockTab(),
+            QuizMockTab(subjectRepository: sl()),
             AdminQuizTab(),
           ],
         ),

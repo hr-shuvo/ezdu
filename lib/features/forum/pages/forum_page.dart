@@ -24,62 +24,62 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
     SubjectModel(id: 4, name: 'Chemistry', activeQuizCount: 0),
   ];
 
-  final Map<int, List<Lesson>> lessons = {
+  final Map<int, List<LessonModel>> lessons = {
     1: [
-      Lesson(id: 1, name: 'Algebra', subjectId: 1),
-      Lesson(id: 2, name: 'Geometry', subjectId: 1),
-      Lesson(id: 3, name: 'Calculus', subjectId: 1),
+      LessonModel(id: 1, name: 'Algebra', subjectId: 1),
+      LessonModel(id: 2, name: 'Geometry', subjectId: 1),
+      LessonModel(id: 3, name: 'Calculus', subjectId: 1),
     ],
     2: [
-      Lesson(id: 4, name: 'Grammar', subjectId: 2),
-      Lesson(id: 5, name: 'Literature', subjectId: 2),
+      LessonModel(id: 4, name: 'Grammar', subjectId: 2),
+      LessonModel(id: 5, name: 'Literature', subjectId: 2),
     ],
     3: [
-      Lesson(id: 6, name: 'Mechanics', subjectId: 3),
-      Lesson(id: 7, name: 'Thermodynamics', subjectId: 3),
+      LessonModel(id: 6, name: 'Mechanics', subjectId: 3),
+      LessonModel(id: 7, name: 'Thermodynamics', subjectId: 3),
     ],
     4: [
-      Lesson(id: 8, name: 'Organic Chemistry', subjectId: 4),
-      Lesson(id: 9, name: 'Inorganic Chemistry', subjectId: 4),
+      LessonModel(id: 8, name: 'Organic Chemistry', subjectId: 4),
+      LessonModel(id: 9, name: 'Inorganic Chemistry', subjectId: 4),
     ],
   };
 
-  final Map<int, List<Topic>> topics = {
+  final Map<int, List<TopicModel>> topics = {
     1: [
-      Topic(id: 1, name: 'Linear Equations', lessonId: 1),
-      Topic(id: 2, name: 'Quadratic Equations', lessonId: 1),
+      TopicModel(id: 1, name: 'Linear Equations', lessonId: 1),
+      TopicModel(id: 2, name: 'Quadratic Equations', lessonId: 1),
     ],
     2: [
-      Topic(id: 3, name: 'Triangles', lessonId: 2),
-      Topic(id: 4, name: 'Circles', lessonId: 2),
+      TopicModel(id: 3, name: 'Triangles', lessonId: 2),
+      TopicModel(id: 4, name: 'Circles', lessonId: 2),
     ],
     3: [
-      Topic(id: 5, name: 'Derivatives', lessonId: 3),
-      Topic(id: 6, name: 'Integrals', lessonId: 3),
+      TopicModel(id: 5, name: 'Derivatives', lessonId: 3),
+      TopicModel(id: 6, name: 'Integrals', lessonId: 3),
     ],
     4: [
-      Topic(id: 7, name: 'Tenses', lessonId: 4),
-      Topic(id: 8, name: 'Articles', lessonId: 4),
+      TopicModel(id: 7, name: 'Tenses', lessonId: 4),
+      TopicModel(id: 8, name: 'Articles', lessonId: 4),
     ],
     5: [
-      Topic(id: 9, name: 'Shakespeare', lessonId: 5),
-      Topic(id: 10, name: 'Modern Poetry', lessonId: 5),
+      TopicModel(id: 9, name: 'Shakespeare', lessonId: 5),
+      TopicModel(id: 10, name: 'Modern Poetry', lessonId: 5),
     ],
     6: [
-      Topic(id: 11, name: 'Motion Laws', lessonId: 6),
-      Topic(id: 12, name: 'Energy', lessonId: 6),
+      TopicModel(id: 11, name: 'Motion Laws', lessonId: 6),
+      TopicModel(id: 12, name: 'Energy', lessonId: 6),
     ],
     7: [
-      Topic(id: 13, name: 'Heat Transfer', lessonId: 7),
-      Topic(id: 14, name: 'Temperature', lessonId: 7),
+      TopicModel(id: 13, name: 'Heat Transfer', lessonId: 7),
+      TopicModel(id: 14, name: 'Temperature', lessonId: 7),
     ],
     8: [
-      Topic(id: 15, name: 'Reaction Mechanism', lessonId: 8),
-      Topic(id: 16, name: 'Synthesis', lessonId: 8),
+      TopicModel(id: 15, name: 'Reaction Mechanism', lessonId: 8),
+      TopicModel(id: 16, name: 'Synthesis', lessonId: 8),
     ],
     9: [
-      Topic(id: 17, name: 'Periodic Table', lessonId: 9),
-      Topic(id: 18, name: 'Bonding', lessonId: 9),
+      TopicModel(id: 17, name: 'Periodic Table', lessonId: 9),
+      TopicModel(id: 18, name: 'Bonding', lessonId: 9),
     ],
   };
 
