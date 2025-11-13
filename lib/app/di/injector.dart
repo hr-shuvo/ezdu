@@ -1,6 +1,7 @@
 import 'package:ezdu/data/datasources/class_remote_ds.dart';
 import 'package:ezdu/data/datasources/lesson_remote_ds.dart';
 import 'package:ezdu/data/datasources/question_remote_ds.dart';
+import 'package:ezdu/data/datasources/quiz_remote_ds.dart';
 import 'package:ezdu/data/datasources/subject_remote_ds.dart';
 import 'package:ezdu/data/datasources/user_progress_ds.dart';
 import 'package:ezdu/data/repositories/archive_repository.dart';
@@ -8,6 +9,7 @@ import 'package:ezdu/data/repositories/auth_repository.dart';
 import 'package:ezdu/data/repositories/classRepository.dart';
 import 'package:ezdu/data/repositories/lesson_repository.dart';
 import 'package:ezdu/data/repositories/question_repository.dart';
+import 'package:ezdu/data/repositories/quiz_repository.dart';
 import 'package:ezdu/data/repositories/subject_repository.dart';
 import 'package:ezdu/data/repositories/user_progress_repository.dart';
 import 'package:ezdu/features/archive/datasources/archive_remote_ds.dart';
@@ -73,6 +75,14 @@ Future<void> initializeDependencies() async {
   );
   sl.registerLazySingleton<ArchiveRemoteDataSource>(
     () => ArchiveRemoteDataSource(sl()),
+  );
+
+  // quiz
+  sl.registerLazySingleton<QuizRepository>(
+    () => QuizRepository(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton<QuizRemoteDataSource>(
+    () => QuizRemoteDataSource(sl()),
   );
 
   // progress

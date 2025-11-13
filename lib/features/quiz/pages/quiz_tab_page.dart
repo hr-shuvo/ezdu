@@ -49,7 +49,7 @@ class _QuizPageState extends State<QuizTabPage>
           children: [
             QuizChallengeTab(),
             QuizMockTab(subjectRepository: sl()),
-            QuizPage(),
+            QuizPage(quizRepository: sl(),),
           ],
         ),
       ),

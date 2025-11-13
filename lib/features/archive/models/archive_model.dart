@@ -30,10 +30,11 @@ class ArchiveModel extends Equatable {
       subjectId: json['subjectId'] ?? 0,
       instituteId: json['instituteId'] ?? 0,
       year: json['year'] ?? 0,
-        questions: (json['questions'] as List<dynamic>?)
-            ?.map((q) => QuestionModel.toModel(q))
-            .toList() ??
-            []
+      questions:
+          (json['questions'] as List<dynamic>?)
+              ?.map((q) => QuestionModel.toModel(q))
+              .toList() ??
+          [],
     );
   }
 
