@@ -1,14 +1,14 @@
-import 'package:ezdu/features/archive/models/archive_model.dart';
+import 'package:ezdu/data/models/question_model.dart';
 import 'package:ezdu/features/archive/models/archive_quiz_settings_model.dart';
 import 'package:flutter/material.dart';
 
 class ArchiveQuizSettingsDialog extends StatefulWidget {
-  final ArchiveModel examDetails;
+  final List<QuestionModel> questions;
   final Function(ArchiveQuizSettingsModel) onConfirm;
 
   const ArchiveQuizSettingsDialog({
     Key? key,
-    required this.examDetails,
+    required this.questions,
     required this.onConfirm,
   }) : super(key: key);
 
@@ -32,7 +32,7 @@ class _ArchiveQuizSettingsDialogState extends State<ArchiveQuizSettingsDialog> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final totalMarks = widget.examDetails.questions.fold<int>(
+    final totalMarks = widget.questions.fold<int>(
       0,
           (sum, q) => sum + (q.marks ?? 0),
     );
@@ -59,7 +59,7 @@ class _ArchiveQuizSettingsDialogState extends State<ArchiveQuizSettingsDialog> {
                 value: minutes,
                 isExpanded: true,
                 underline: const SizedBox(),
-                items: [1, 15, 20, 30, 45, 60, 90].map((value) {
+                items: [15, 20, 30, 40, 60].map((value) {
                   return DropdownMenuItem(
                     value: value,
                     child: Text('$value minutes'),
@@ -123,7 +123,7 @@ class _ArchiveQuizSettingsDialogState extends State<ArchiveQuizSettingsDialog> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Questions: ${widget.examDetails.questions.length}',
+                    'Questions: ${widget.questions.length}',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: colorScheme.onPrimaryContainer,
                     ),

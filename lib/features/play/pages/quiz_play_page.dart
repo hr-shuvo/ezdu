@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:ezdu/app/di/injector.dart';
-import 'package:ezdu/core/constants/app_constants.dart';
 import 'package:ezdu/data/models/option_model.dart';
 import 'package:ezdu/data/models/question_model.dart';
 import 'package:ezdu/data/repositories/user_progress_repository.dart';
@@ -75,10 +74,10 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
       userAnswers[question.id] = option.id;
       visitedQuestions[currentQuestionIndex] = true;
 
-      if (option.isCorrect) {
-        earnedMarks += question.marks ?? 0;
-        correctAnswers++;
-      }
+      // if (option.isCorrect) {
+      //   earnedMarks += question.marks ?? 1;
+      //   correctAnswers++;
+      // }
     });
   }
 
@@ -106,25 +105,23 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
   }
 
   void submitQuiz() async {
-    final questions = widget.questions;
+    calculateTotalMarks();
 
-    final totalQuestions = questions.length;
-    final int percentage = totalQuestions > 0
-        ? ((correctAnswers / totalQuestions) * 100).round()
+    final percentage = widget.questions.isNotEmpty
+        ? ((correctAnswers / widget.questions.length) * 100).round()
         : 0;
 
     var quizModel = UserQuizSubmissionModel(
-      quizType: QuizType.Archive,
-      quizId: widget.quizId ?? 0,
+      quizType: widget.quizType,
+      quizId: widget.quizId,
       markPercentage: percentage,
     );
 
     // submit
+    timer.cancel();
     var result = await widget.progressRepository.submitQuiz(quizModel);
 
-    timer.cancel();
     if (result.success) {
-      calculateTotalMarks();
       setState(() {
         isSubmitted = true;
       });
@@ -134,10 +131,33 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
   }
 
   void calculateTotalMarks() {
-    totalMarks = widget.questions.fold<int>(
-      0,
-      (sum, q) => sum + (q.marks ?? 0),
-    );
+    int newTotalMarks = 0;
+    int newEarnedMarks = 0;
+    int newCorrectAnswers = 0;
+
+    for (var question in widget.questions) {
+      final marks = question.marks ?? 1;
+
+      newTotalMarks += marks;
+      final selectedOptionId = userAnswers[question.id];
+
+      final isCorrect =
+          question.options?.any(
+            (option) => option.id == selectedOptionId && option.isCorrect,
+          ) ??
+          false;
+
+      if (isCorrect) {
+        newCorrectAnswers++;
+        newEarnedMarks += marks;
+      }
+    }
+
+    setState(() {
+      totalMarks = newTotalMarks;
+      earnedMarks = newEarnedMarks;
+      correctAnswers = newCorrectAnswers;
+    });
   }
 
   String formatTime(int seconds) {
@@ -155,6 +175,9 @@ class _QuizPlayPageState extends State<QuizPlayPage> {
   @override
   Widget build(BuildContext context) {
     if (isSubmitted) {
+      print('earned score, ${earnedMarks}');
+      print('total marks, ${totalMarks}');
+
       return CongratulationPage(
         score: earnedMarks,
         totalMarks: totalMarks,

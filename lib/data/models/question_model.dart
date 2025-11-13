@@ -55,7 +55,7 @@ class QuestionModel extends Equatable {
       passage: json['passage'],
       imageUrl: json['imageUrl'],
       difficultyLevel: json['difficultyLevel'],
-      marks: json['marks'],
+      marks: json['marks'] ?? 1,
       hint: json['hint'],
       explanation: json['explanation'],
       explanationImageUrl: json['explanationImageUrl'],

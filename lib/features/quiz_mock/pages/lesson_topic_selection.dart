@@ -1,3 +1,4 @@
+import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/core/models/api_response.dart';
 import 'package:ezdu/data/models/lesson_model.dart';
 import 'package:ezdu/data/models/subject_model.dart';
@@ -63,6 +64,7 @@ class _LessonTopicSelectionPageState extends State<LessonTopicSelectionPage> {
         builder: (context) => ReviewSelectionPage(
           lessons: lessons,
           selectedTopicIds: selectedTopicIds,
+          questionRepository: sl(),
         ),
       ),
     );

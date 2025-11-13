@@ -5,7 +5,7 @@ import 'package:ezdu/features/play/pages/quiz_play_page.dart';
 import 'package:ezdu/features/archive/widgets/archive_exam_header_card.dart';
 import 'package:ezdu/features/archive/widgets/archive_exam_start_card.dart';
 import 'package:ezdu/features/archive/widgets/archive_question_preview_card.dart';
-import 'package:ezdu/features/archive/widgets/archive_quiz_setting_dialog.dart';
+import 'package:ezdu/features/play/widgets/quiz_setting_dialog.dart';
 import 'package:flutter/material.dart';
 
 class ArchiveQuizStartPage extends StatefulWidget {
@@ -25,7 +25,7 @@ class _ArchiveQuizStartPageState extends State<ArchiveQuizStartPage> {
     showDialog(
       context: context,
       builder: (context) => ArchiveQuizSettingsDialog(
-        examDetails: examDetails,
+        questions: examDetails.questions,
         onConfirm: (settings) {
           Navigator.pop(context);
           Navigator.push(

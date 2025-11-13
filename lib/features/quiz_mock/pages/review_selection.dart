@@ -1,5 +1,9 @@
-// lib/features/quiz/presentation/pages/review_selection_page.dart
+import 'package:ezdu/app/di/injector.dart';
+import 'package:ezdu/core/constants/app_constants.dart';
 import 'package:ezdu/data/models/lesson_model.dart';
+import 'package:ezdu/data/repositories/question_repository.dart';
+import 'package:ezdu/features/play/pages/quiz_play_page.dart';
+import 'package:ezdu/features/play/widgets/quiz_setting_dialog.dart';
 import 'package:ezdu/features/quiz_mock/widgets/revire_lesson_card.dart';
 import 'package:flutter/material.dart';
 
@@ -7,10 +11,13 @@ class ReviewSelectionPage extends StatelessWidget {
   final List<LessonWithTopicModel> lessons;
   final Set<int> selectedTopicIds;
 
+  final QuestionRepository questionRepository;
+
   const ReviewSelectionPage({
     super.key,
     required this.lessons,
     required this.selectedTopicIds,
+    required this.questionRepository,
   });
 
   List<LessonWithTopicModel> _getSelectedLessons() {
@@ -24,9 +31,81 @@ class ReviewSelectionPage extends StatelessWidget {
     return selectedTopicIds.length;
   }
 
-  void _onStartQuiz() {
-    // TODO: Navigate to quiz screen with selectedTopicIds
-    print('Starting quiz with ${selectedTopicIds.length} topics');
+  void _showQuizSettingsDialog(BuildContext context) async {
+    final selectedTopicIdList = selectedTopicIds.toList();
+
+    showDialog(
+      context: context,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    final response = await questionRepository.getQuestionsByTopicIds(
+      selectedTopicIdList,
+    );
+    Navigator.pop(context);
+
+    if (response.success) {
+      final questions = response.data!.items;
+
+      if (questions.isEmpty) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('No Data'),
+            content: const Text(
+              'No questions found, choose more or different topics',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+
+      showDialog(
+        context: context,
+        builder: (context) => ArchiveQuizSettingsDialog(
+          questions: questions,
+          onConfirm: (settings) {
+            Navigator.pop(context);
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => QuizPlayPage(
+                  questions: questions,
+                  settings: settings,
+                  progressRepository: sl(),
+                  quizType: QuizType.Mock,
+                  title: "Mock",
+                  quizId: 0,
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Error'),
+          content: Text(response.message ?? 'Failed to load questions.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -35,10 +114,7 @@ class ReviewSelectionPage extends StatelessWidget {
     final selectedCount = _getSelectedTopicsCount();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Review Selection'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Review Selection'), centerTitle: true),
       body: Column(
         children: [
           // Summary Section
@@ -60,10 +136,7 @@ class ReviewSelectionPage extends StatelessWidget {
                     ),
                     Text(
                       'Lesson${selectedLessons.length > 1 ? 's' : ''}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -79,10 +152,7 @@ class ReviewSelectionPage extends StatelessWidget {
                     ),
                     Text(
                       'Topic${selectedCount > 1 ? 's' : ''}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -132,7 +202,7 @@ class ReviewSelectionPage extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: _onStartQuiz,
+                    onPressed: () => _showQuizSettingsDialog(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       padding: const EdgeInsets.symmetric(vertical: 12),
