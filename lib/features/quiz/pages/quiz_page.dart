@@ -1,26 +1,120 @@
+import 'package:ezdu/app/di/injector.dart';
+import 'package:ezdu/core/constants/app_constants.dart';
 import 'package:ezdu/core/models/api_response.dart';
 import 'package:ezdu/core/utils/helpers.dart';
 import 'package:ezdu/data/models/quiz_model.dart';
 import 'package:ezdu/data/repositories/quiz_repository.dart';
+import 'package:ezdu/features/archive/models/archive_quiz_settings_model.dart';
+import 'package:ezdu/features/play/pages/quiz_play_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class QuizPage extends ConsumerStatefulWidget {
+class QuizPage extends StatefulWidget {
   const QuizPage({super.key, required this.quizRepository});
 
   final QuizRepository quizRepository;
 
   @override
-  ConsumerState<QuizPage> createState() => _AdminQuizTabState();
+  State<QuizPage> createState() => _AdminQuizTabState();
 }
 
-class _AdminQuizTabState extends ConsumerState<QuizPage> {
+class _AdminQuizTabState extends State<QuizPage> {
   late Future<ApiResponse<PagedList<QuizModel>>> _quizListFuture;
 
   @override
   void initState() {
     super.initState();
     _quizListFuture = widget.quizRepository.getQuizList();
+  }
+
+  void _showQuizSettingsDialog(BuildContext context, int quizId) async {
+    showDialog(
+      context: context,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    final response = await widget.quizRepository.getQuiz(quizId);
+    Navigator.pop(context);
+
+    if (response.success) {
+      final quiz = response.data!;
+
+      if (quiz.questions.isEmpty) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('No Data'),
+            content: const Text(
+              'No questions found, choose more or different topics',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Start quiz'),
+          content: const Text('Are you ready?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+
+                final settings = ArchiveQuizSettingsModel(
+                  timeInMinutes: quiz.durationInMinutes,
+                  enableNegativeMarking: false,
+                  negativeMarkValue: 0,
+                );
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => QuizPlayPage(
+                      questions: quiz.questions,
+                      settings: settings,
+                      progressRepository: sl(),
+                      quizType: QuizType.Quiz,
+                      title: quiz.name,
+                      quizId: quiz.id,
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Confirm'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Error'),
+          content: Text(response.message ?? 'Failed to load questions.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -202,11 +296,10 @@ class _AdminQuizTabState extends ConsumerState<QuizPage> {
                                   width: double.infinity,
                                   child: ElevatedButton(
                                     onPressed: !isExpired
-                                        ? () {
-                                            setState(() {
-                                              // todo: start quiz
-                                            });
-                                          }
+                                        ? () => _showQuizSettingsDialog(
+                                            context,
+                                            quiz.id,
+                                          )
                                         : null,
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: isExpired
@@ -240,19 +333,10 @@ class _AdminQuizTabState extends ConsumerState<QuizPage> {
                   );
                 },
               ),
-
             ],
           ),
-
         ],
       ),
-
-
-
-
     );
   }
-
-
-
 }
