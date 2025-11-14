@@ -1,10 +1,10 @@
+import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/features/feed/pages/feed_page.dart';
 import 'package:ezdu/features/home/pages/home_page.dart';
 import 'package:ezdu/features/leaderboard/pages/leaderboard_page.dart';
 import 'package:ezdu/features/quest/pages/quest_page.dart';
 import 'package:ezdu/features/quiz/pages/quiz_tab_page.dart';
 import 'package:flutter/material.dart';
-
 
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});
@@ -17,7 +17,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    const HomePage(),
+    HomePage(quizRepository: sl()),
     const QuestPage(),
     const QuizTabPage(),
     const LeaderboardPage(),
@@ -135,27 +135,47 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
-            activeIcon: Image.asset('assets/icons/house.png', height: 24, width: 24,),
+            activeIcon: Image.asset(
+              'assets/icons/house.png',
+              height: 24,
+              width: 24,
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.card_giftcard_outlined),
-            activeIcon: Image.asset('assets/icons/giftbox.png', height: 24, width: 24,),
+            activeIcon: Image.asset(
+              'assets/icons/giftbox.png',
+              height: 24,
+              width: 24,
+            ),
             label: 'Quest',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.quiz_outlined),
-            activeIcon: Image.asset('assets/icons/reward.png', height: 24, width: 24,),
+            activeIcon: Image.asset(
+              'assets/icons/reward.png',
+              height: 24,
+              width: 24,
+            ),
             label: 'Quiz',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.emoji_events_outlined),
-            activeIcon: Image.asset('assets/icons/award.png', height: 24, width: 24,),
+            activeIcon: Image.asset(
+              'assets/icons/award.png',
+              height: 24,
+              width: 24,
+            ),
             label: 'Leaderboard',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.dynamic_feed_outlined),
-            activeIcon: Image.asset('assets/icons/chat-balloons.png', height: 24, width: 24,),
+            activeIcon: Image.asset(
+              'assets/icons/chat-balloons.png',
+              height: 24,
+              width: 24,
+            ),
             label: 'Feed',
           ),
           BottomNavigationBarItem(

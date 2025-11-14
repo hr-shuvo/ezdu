@@ -34,5 +34,22 @@ class QuizRepository {
     }
   }
 
+  Future<ApiResponse<QuizModel>> getUpcomingQuiz() async {
+    try {
+      final classId = await UserOnboardingService.getClassId();
+      if (classId == null) {
+        ApiResponse.error("Please set up your profile in setting");
+      }
+
+      final result = await _remoteDataSource.getUpcomingQuiz(classId!);
+
+      return ApiResponse.success(result);
+    } catch (e) {
+      return ApiResponse.error(e.toString());
+    }
+  }
+
+
+
 
 }

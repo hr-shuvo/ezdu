@@ -1,16 +1,28 @@
+import 'package:ezdu/core/utils/helpers.dart';
+import 'package:ezdu/data/models/quiz_model.dart';
 import 'package:ezdu/features/auth/pages/register_page.dart';
 import 'package:ezdu/features/quiz/pages/quiz_tab_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/current_remaining_time.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 
 class UpcomingQuizCard extends StatelessWidget {
-  const UpcomingQuizCard({super.key, required this.isLoggedIn});
+  const UpcomingQuizCard({
+    super.key,
+    required this.isLoggedIn,
+    required this.quiz,
+  });
 
   final bool isLoggedIn;
+  final QuizModel quiz;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
+    final targetLocal = TimeHelper.utcToLocalDateTime(quiz.startTime);
+    final endTime = targetLocal.millisecondsSinceEpoch;
 
     return Container(
       decoration: BoxDecoration(
@@ -29,33 +41,55 @@ class UpcomingQuizCard extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        // Ensure splash color is visible over the surface color
-        splashColor: colorScheme.onSurface.withOpacity(0.1),
+        splashColor: colorScheme.onSurface.withValues(alpha: .1),
 
-        leading: Icon(
-          Icons.schedule,
-          size: 32,
-          // Use a contrasting color, like secondary or tertiary, for icons
-          color: colorScheme.secondary,
+        leading: SizedBox(
+          width: 32,
+          height: 32,
+          child: Image.asset(
+            'assets/icons/gifs/clock_animation.gif',
+            fit: BoxFit.contain,
+          ),
         ),
         title: Text(
-          'Next Quiz: General Knowledge',
+          'Next Quiz: ${quiz.name}',
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
-            // Text color readable ON the surface color
             color: colorScheme.onSurface,
           ),
         ),
-        subtitle: Text(
-          'Starts in 2h 30m',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            // Subtler color, using onSurface with opacity
-            color: colorScheme.onSurface.withOpacity(0.8),
-          ),
+        subtitle: CountdownTimer(
+          endTime: endTime,
+          widgetBuilder: (_, CurrentRemainingTime? time) {
+            if (time == null) {
+              return Text('Quiz is Live!');
+            }
+            int totalDays = time.days ?? 0;
+            int months = totalDays ~/ 30;
+            int remainingDays = totalDays % 30;
+
+            String monthString = months > 0 ? '${months}mo ' : '';
+            String dayString = remainingDays > 0 ? '${remainingDays}d ' : '';
+
+            String hours = time.hours != null ? '${time.hours}h ' : '';
+            String min = time.min != null ? '${time.min}m ' : '';
+            String sec = time.sec != null ? '${time.sec}s' : '';
+
+            String finalDayString = (months > 0)
+                ? dayString
+                : (time.days != null ? '${time.days}d ' : '');
+
+            return Text(
+              'Starts in: $monthString$finalDayString$hours$min$sec',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: colorScheme.secondary,
+                fontWeight: FontWeight.w600,
+              ),
+            );
+          },
         ),
         trailing: Icon(
           Icons.arrow_forward_ios,
-          // Match the leading icon color
           color: colorScheme.secondary,
           size: 20,
         ),
@@ -64,17 +98,12 @@ class UpcomingQuizCard extends StatelessWidget {
 
           if (isLoggedIn) {
             navigator.push(
-              MaterialPageRoute(
-                builder: (context) =>
-                    const QuizTabPage(),
-              ),
+              MaterialPageRoute(builder: (context) => const QuizTabPage()),
             );
           } else {
-            navigator.push(
-              MaterialPageRoute(
-                builder: (context) =>
-                    const RegisterPage(),
-              ),
+            navigator.pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => const RegisterPage()),
+              (route) => false,
             );
           }
         },

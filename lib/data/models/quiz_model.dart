@@ -36,9 +36,9 @@ class QuizModel {
       totalMarks: json['totalMarks'] ?? 0,
       passingMarks: json['passingMarks'] ?? 0,
       durationInMinutes: json['durationInMinutes'] ?? 0,
-      hasNegativeMarks: json['hasNegativeMarks'] ?? 0,
-      startTime: json['startTime'],
-      endTime: json['endTime'],
+      hasNegativeMarks: json['hasNegativeMarks'] ?? false,
+      startTime: json['startTime'] ?? '',
+      endTime: json['endTime'] ?? '',
       questions:
           (json['questions'] as List<dynamic>?)
               ?.map((q) => QuestionModel.toModel(q))

@@ -34,4 +34,13 @@ class QuizRemoteDataSource {
 
     return response;
   }
+
+  Future<QuizModel> getUpcomingQuiz(int classId) async {
+    var response = await _dioClient.get(
+      'quizzes/upcomming/$classId',
+      fromJson: (json) => QuizModel.toModel(json),
+    );
+
+    return response;
+  }
 }
