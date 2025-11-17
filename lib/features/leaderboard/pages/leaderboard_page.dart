@@ -1,9 +1,14 @@
+import 'package:ezdu/core/models/api_response.dart';
+import 'package:ezdu/data/repositories/leaderboard_repository.dart';
 import 'package:ezdu/features/leaderboard/entities/leaderboard.dart';
+import 'package:ezdu/features/leaderboard/models/leaderboard.dart';
 import 'package:ezdu/features/leaderboard/widgets/leaderboard_list.dart';
 import 'package:flutter/material.dart';
 
 class LeaderboardPage extends StatefulWidget {
-  const LeaderboardPage({super.key});
+  const LeaderboardPage({super.key, required this.leaderboardRepository});
+
+  final LeaderboardRepository leaderboardRepository;
 
   @override
   State<LeaderboardPage> createState() => _LeaderboardPageState();
@@ -11,17 +16,21 @@ class LeaderboardPage extends StatefulWidget {
 
 class _LeaderboardPageState extends State<LeaderboardPage>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+  late Future<ApiResponse<PagedList<LeaderboardModel>>> _leaderboardFuture;
+
+  // late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
 
-    _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(() {
-      // Example: print selected tab index
-      print("Selected tab: ${_tabController.index}");
-    });
+    _leaderboardFuture = widget.leaderboardRepository.getWeeklyLeaderboard();
+
+    // _tabController = TabController(length: 3, vsync: this);
+    // _tabController.addListener(() {
+    //   // Example: print selected tab index
+    //   print("Selected tab: ${_tabController.index}");
+    // });
   }
 
   @override
@@ -29,33 +38,78 @@ class _LeaderboardPageState extends State<LeaderboardPage>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Leaderboard'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Today'),
-            Tab(text: 'This Week'),
-            Tab(text: 'All Time'),
-          ],
-        ),
+        // bottom: TabBar(
+        //   controller: _tabController,
+        //   tabs: const [
+        //     Tab(text: 'Today'),
+        //     Tab(text: 'This Week'),
+        //     Tab(text: 'All Time'),
+        //   ],
+        // ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          LeaderboardList(entries: todayEntries),
-          LeaderboardList(entries: weeklyEntries),
-          LeaderboardList(entries: allTimeEntries),
-        ],
+      body: FutureBuilder(
+        future: _leaderboardFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16.0),
+                    child: Text('Loading...'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Error loading data: ${snapshot.error}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+            );
+          }
+
+          if (snapshot.hasData &&
+              snapshot.data!.data != null &&
+              snapshot.data!.data!.items.isNotEmpty){
+
+            return LeaderboardList(entries: snapshot.data!.data!.items);
+          }
+
+          return Center(
+            child: Text(
+              'No data found. ${snapshot.data!.data!.items.length}',
+            ),
+          );
+        },
       ),
+
+      // TabBarView(
+      //   controller: _tabController,
+      //   children: [
+      //     LeaderboardList(entries: todayEntries),
+      //     LeaderboardList(entries: weeklyEntries),
+      //     LeaderboardList(entries: allTimeEntries),
+      //   ],
+      // ),
     );
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    // _tabController.dispose();
     super.dispose();
   }
 }
-
 
 final todayEntries = [
   LeaderboardEntry(

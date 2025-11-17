@@ -91,7 +91,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         body: RefreshIndicator(
           onRefresh: () async {
-            // todo: reload related data
+            upcomingQuizFuture = widget.quizRepository.getUpcomingQuiz();
           },
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),

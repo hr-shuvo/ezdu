@@ -1,4 +1,5 @@
 import 'package:ezdu/data/datasources/class_remote_ds.dart';
+import 'package:ezdu/data/datasources/leaderboard_remote_ds.dart';
 import 'package:ezdu/data/datasources/lesson_remote_ds.dart';
 import 'package:ezdu/data/datasources/question_remote_ds.dart';
 import 'package:ezdu/data/datasources/quiz_remote_ds.dart';
@@ -7,6 +8,7 @@ import 'package:ezdu/data/datasources/user_progress_ds.dart';
 import 'package:ezdu/data/repositories/archive_repository.dart';
 import 'package:ezdu/data/repositories/auth_repository.dart';
 import 'package:ezdu/data/repositories/classRepository.dart';
+import 'package:ezdu/data/repositories/leaderboard_repository.dart';
 import 'package:ezdu/data/repositories/lesson_repository.dart';
 import 'package:ezdu/data/repositories/question_repository.dart';
 import 'package:ezdu/data/repositories/quiz_repository.dart';
@@ -94,6 +96,14 @@ Future<void> initializeDependencies() async {
   );
   sl.registerLazySingleton<UserProgressRemoteDataSource>(
     () => UserProgressRemoteDataSource(),
+  );
+
+  // quiz
+  sl.registerLazySingleton<LeaderboardRepository>(
+        () => LeaderboardRepository(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton<LeaderboardRemoteDataSource>(
+        () => LeaderboardRemoteDataSource(sl()),
   );
 
   print('Dependency Injection initialized.');

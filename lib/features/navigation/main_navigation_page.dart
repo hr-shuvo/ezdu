@@ -20,7 +20,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     HomePage(quizRepository: sl()),
     const QuestPage(),
     const QuizTabPage(),
-    const LeaderboardPage(),
+    LeaderboardPage(leaderboardRepository: sl()),
     const FeedPage(),
   ];
 

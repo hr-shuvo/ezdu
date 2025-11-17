@@ -49,7 +49,9 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const ForumHomeScreen());
 
       case '/leaderboard':
-        return MaterialPageRoute(builder: (_) => const LeaderboardPage());
+        return MaterialPageRoute(
+          builder: (_) => LeaderboardPage(leaderboardRepository: sl()),
+        );
 
       case '/profile':
         return MaterialPageRoute(builder: (_) => const ProfilePage());

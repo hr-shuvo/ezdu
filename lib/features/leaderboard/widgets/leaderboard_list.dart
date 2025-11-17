@@ -1,9 +1,10 @@
 import 'package:ezdu/features/leaderboard/entities/leaderboard.dart';
+import 'package:ezdu/features/leaderboard/models/leaderboard.dart';
 import 'package:flutter/material.dart';
 import 'leaderboard_tile.dart';
 
 class LeaderboardList extends StatelessWidget {
-  final List<LeaderboardEntry> entries;
+  final List<LeaderboardModel> entries;
 
   const LeaderboardList({super.key, required this.entries});
 

@@ -1,8 +1,9 @@
 import 'package:ezdu/features/leaderboard/entities/leaderboard.dart';
+import 'package:ezdu/features/leaderboard/models/leaderboard.dart';
 import 'package:flutter/material.dart';
 
 class LeaderboardTile extends StatelessWidget {
-  final LeaderboardEntry entry;
+  final LeaderboardModel entry;
   final int rank;
   final bool isTopThree;
 
@@ -125,7 +126,7 @@ class LeaderboardTile extends StatelessWidget {
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
-                        '${entry.streak} day streak',
+                        '${entry.streakCount} day streak',
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey[600],
