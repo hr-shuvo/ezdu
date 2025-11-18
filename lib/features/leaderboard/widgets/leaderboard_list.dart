@@ -1,4 +1,3 @@
-import 'package:ezdu/features/leaderboard/entities/leaderboard.dart';
 import 'package:ezdu/features/leaderboard/models/leaderboard.dart';
 import 'package:flutter/material.dart';
 import 'leaderboard_tile.dart';

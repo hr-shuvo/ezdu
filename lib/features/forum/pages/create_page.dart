@@ -19,8 +19,16 @@ class CreatePostScreen extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    throw UnimplementedError();
+  State<StatefulWidget> createState() =>_CreatePostScreenState();
+
+}
+
+
+class _CreatePostScreenState extends State<CreatePostScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text("Hello from CreatePostScreen"),
+    );
   }
 }

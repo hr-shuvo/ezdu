@@ -17,111 +17,13 @@ class ForumHomeScreen extends StatefulWidget {
 
 
 class _ForumHomeScreenState extends State<ForumHomeScreen> {
-  final List<SubjectModel> subjects = [
-    SubjectModel(id: 1, name: 'Mathematics', activeQuizCount: 0),
-    SubjectModel(id: 2, name: 'English', activeQuizCount: 0),
-    SubjectModel(id: 3, name: 'Physics', activeQuizCount: 0),
-    SubjectModel(id: 4, name: 'Chemistry', activeQuizCount: 0),
-  ];
 
-  final Map<int, List<LessonModel>> lessons = {
-    1: [
-      LessonModel(id: 1, name: 'Algebra', subjectId: 1),
-      LessonModel(id: 2, name: 'Geometry', subjectId: 1),
-      LessonModel(id: 3, name: 'Calculus', subjectId: 1),
-    ],
-    2: [
-      LessonModel(id: 4, name: 'Grammar', subjectId: 2),
-      LessonModel(id: 5, name: 'Literature', subjectId: 2),
-    ],
-    3: [
-      LessonModel(id: 6, name: 'Mechanics', subjectId: 3),
-      LessonModel(id: 7, name: 'Thermodynamics', subjectId: 3),
-    ],
-    4: [
-      LessonModel(id: 8, name: 'Organic Chemistry', subjectId: 4),
-      LessonModel(id: 9, name: 'Inorganic Chemistry', subjectId: 4),
-    ],
-  };
-
-  final Map<int, List<TopicModel>> topics = {
-    1: [
-      TopicModel(id: 1, name: 'Linear Equations', lessonId: 1),
-      TopicModel(id: 2, name: 'Quadratic Equations', lessonId: 1),
-    ],
-    2: [
-      TopicModel(id: 3, name: 'Triangles', lessonId: 2),
-      TopicModel(id: 4, name: 'Circles', lessonId: 2),
-    ],
-    3: [
-      TopicModel(id: 5, name: 'Derivatives', lessonId: 3),
-      TopicModel(id: 6, name: 'Integrals', lessonId: 3),
-    ],
-    4: [
-      TopicModel(id: 7, name: 'Tenses', lessonId: 4),
-      TopicModel(id: 8, name: 'Articles', lessonId: 4),
-    ],
-    5: [
-      TopicModel(id: 9, name: 'Shakespeare', lessonId: 5),
-      TopicModel(id: 10, name: 'Modern Poetry', lessonId: 5),
-    ],
-    6: [
-      TopicModel(id: 11, name: 'Motion Laws', lessonId: 6),
-      TopicModel(id: 12, name: 'Energy', lessonId: 6),
-    ],
-    7: [
-      TopicModel(id: 13, name: 'Heat Transfer', lessonId: 7),
-      TopicModel(id: 14, name: 'Temperature', lessonId: 7),
-    ],
-    8: [
-      TopicModel(id: 15, name: 'Reaction Mechanism', lessonId: 8),
-      TopicModel(id: 16, name: 'Synthesis', lessonId: 8),
-    ],
-    9: [
-      TopicModel(id: 17, name: 'Periodic Table', lessonId: 9),
-      TopicModel(id: 18, name: 'Bonding', lessonId: 9),
-    ],
-  };
-
-  List<ForumPost> posts = [
-    ForumPost(
-      id: 1,
-      userId: 'user1',
-      userName: 'Alex Kumar',
-      userAvatar: '👨‍💼',
-      title: 'How to solve quadratic equations quickly?',
-      content: 'Can someone explain the fastest method to solve quadratic equations? I am struggling with the discriminant method.',
-      images: [],
-      subjectId: 1,
-      lessonId: 1,
-      topicId: 2,
-      createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-      upvotes: 15,
-      commentCount: 5,
-    ),
-    ForumPost(
-      id: 2,
-      userId: 'user2',
-      userName: 'Priya Singh',
-      userAvatar: '👩‍🎓',
-      title: 'English Grammar Tips for SSC',
-      content: 'Just passed the grammar section with 48/50. Here are my tips and tricks!',
-      images: ['image1.jpg'],
-      subjectId: 2,
-      lessonId: 4,
-      topicId: 7,
-      createdAt: DateTime.now().subtract(const Duration(hours: 5)),
-      upvotes: 42,
-      downvotes: 2,
-      commentCount: 12,
-    ),
-  ];
 
   int? selectedSubject;
   int? selectedLesson;
   int? selectedTopic;
   String searchQuery = '';
-  String sortBy = 'recent';
+  // String sortBy = 'recent';
 
   List<ForumPost> get filteredPosts {
     List<ForumPost> filtered = posts;
@@ -146,18 +48,7 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
           .toList();
     }
 
-    // Sort
-    switch (sortBy) {
-      case 'trending':
-        filtered.sort((a, b) =>
-            (b.upvotes! - b.downvotes!).compareTo(a.upvotes! - a.downvotes!));
-        break;
-      case 'comments':
-        filtered.sort((a, b) => b.commentCount!.compareTo(a.commentCount!));
-        break;
-      default:
-        filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    }
+
 
     return filtered;
   }
@@ -169,7 +60,7 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
         elevation: 0,
         backgroundColor: Colors.transparent,
         title: const Text(
-          '💬 EzDu Forum',
+          'Forum',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -273,34 +164,6 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Search
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.08),
-                            blurRadius: 8,
-                          ),
-                        ],
-                      ),
-                      child: TextField(
-                        onChanged: (value) {
-                          setState(() => searchQuery = value);
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Search posts...',
-                          prefixIcon: const Icon(Icons.search),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
 
                     // Subject Filter
                     SingleChildScrollView(
@@ -406,26 +269,10 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
                           ],
                         ),
                       ),
-                    const SizedBox(height: 12),
 
-                    // Sort Options
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _SortDropdown(
-                            value: sortBy,
-                            onChanged: (value) {
-                              setState(() => sortBy = value);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
-
-              const SizedBox(height: 16),
 
               // Posts List
               Padding(
@@ -552,3 +399,107 @@ class _SortDropdown extends StatelessWidget {
     );
   }
 }
+
+
+
+
+List<ForumPost> posts = [
+  ForumPost(
+    id: 1,
+    userId: 'user1',
+    userName: 'Alex Kumar',
+    userAvatar: '👨‍💼',
+    title: 'How to solve quadratic equations quickly?',
+    content: 'Can someone explain the fastest method to solve quadratic equations? I am struggling with the discriminant method.',
+    images: [],
+    subjectId: 1,
+    lessonId: 1,
+    topicId: 2,
+    createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+    upvotes: 15,
+    commentCount: 5,
+  ),
+  ForumPost(
+    id: 2,
+    userId: 'user2',
+    userName: 'Priya Singh',
+    userAvatar: '👩‍🎓',
+    title: 'English Grammar Tips for SSC',
+    content: 'Just passed the grammar section with 48/50. Here are my tips and tricks!',
+    images: ['image1.jpg'],
+    subjectId: 2,
+    lessonId: 4,
+    topicId: 7,
+    createdAt: DateTime.now().subtract(const Duration(hours: 5)),
+    upvotes: 42,
+    downvotes: 2,
+    commentCount: 12,
+  ),
+];
+
+
+final List<SubjectModel> subjects = [
+  SubjectModel(id: 1, name: 'Mathematics', activeQuizCount: 0),
+  SubjectModel(id: 2, name: 'English', activeQuizCount: 0),
+  SubjectModel(id: 3, name: 'Physics', activeQuizCount: 0),
+  SubjectModel(id: 4, name: 'Chemistry', activeQuizCount: 0),
+];
+
+final Map<int, List<LessonModel>> lessons = {
+  1: [
+    LessonModel(id: 1, name: 'Algebra', subjectId: 1),
+    LessonModel(id: 2, name: 'Geometry', subjectId: 1),
+    LessonModel(id: 3, name: 'Calculus', subjectId: 1),
+  ],
+  2: [
+    LessonModel(id: 4, name: 'Grammar', subjectId: 2),
+    LessonModel(id: 5, name: 'Literature', subjectId: 2),
+  ],
+  3: [
+    LessonModel(id: 6, name: 'Mechanics', subjectId: 3),
+    LessonModel(id: 7, name: 'Thermodynamics', subjectId: 3),
+  ],
+  4: [
+    LessonModel(id: 8, name: 'Organic Chemistry', subjectId: 4),
+    LessonModel(id: 9, name: 'Inorganic Chemistry', subjectId: 4),
+  ],
+};
+
+final Map<int, List<TopicModel>> topics = {
+  1: [
+    TopicModel(id: 1, name: 'Linear Equations', lessonId: 1),
+    TopicModel(id: 2, name: 'Quadratic Equations', lessonId: 1),
+  ],
+  2: [
+    TopicModel(id: 3, name: 'Triangles', lessonId: 2),
+    TopicModel(id: 4, name: 'Circles', lessonId: 2),
+  ],
+  3: [
+    TopicModel(id: 5, name: 'Derivatives', lessonId: 3),
+    TopicModel(id: 6, name: 'Integrals', lessonId: 3),
+  ],
+  4: [
+    TopicModel(id: 7, name: 'Tenses', lessonId: 4),
+    TopicModel(id: 8, name: 'Articles', lessonId: 4),
+  ],
+  5: [
+    TopicModel(id: 9, name: 'Shakespeare', lessonId: 5),
+    TopicModel(id: 10, name: 'Modern Poetry', lessonId: 5),
+  ],
+  6: [
+    TopicModel(id: 11, name: 'Motion Laws', lessonId: 6),
+    TopicModel(id: 12, name: 'Energy', lessonId: 6),
+  ],
+  7: [
+    TopicModel(id: 13, name: 'Heat Transfer', lessonId: 7),
+    TopicModel(id: 14, name: 'Temperature', lessonId: 7),
+  ],
+  8: [
+    TopicModel(id: 15, name: 'Reaction Mechanism', lessonId: 8),
+    TopicModel(id: 16, name: 'Synthesis', lessonId: 8),
+  ],
+  9: [
+    TopicModel(id: 17, name: 'Periodic Table', lessonId: 9),
+    TopicModel(id: 18, name: 'Bonding', lessonId: 9),
+  ],
+};

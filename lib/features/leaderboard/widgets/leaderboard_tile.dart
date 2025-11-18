@@ -1,4 +1,3 @@
-import 'package:ezdu/features/leaderboard/entities/leaderboard.dart';
 import 'package:ezdu/features/leaderboard/models/leaderboard.dart';
 import 'package:flutter/material.dart';
 
@@ -44,17 +43,19 @@ class LeaderboardTile extends StatelessWidget {
         color: Theme.of(context).colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isTopThree ? rankColor.withOpacity(0.3) : Colors.grey.shade200,
+          color: isTopThree
+              ? rankColor.withValues(alpha: 0.3)
+              : Colors.grey.shade200,
           width: isTopThree ? 2 : 1,
         ),
         boxShadow: isTopThree
             ? [
-          BoxShadow(
-            color: rankColor.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ]
+                BoxShadow(
+                  color: rankColor.withValues(alpha: 0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ]
             : null,
       ),
       child: Row(
@@ -64,24 +65,20 @@ class LeaderboardTile extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: rankColor.withOpacity(0.1),
+              color: rankColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
               child: isTopThree
-                  ? Icon(
-                _getRankIcon(rank),
-                color: rankColor,
-                size: 24,
-              )
+                  ? Icon(_getRankIcon(rank), color: rankColor, size: 24)
                   : Text(
-                '$rank',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: rankColor,
-                ),
-              ),
+                      '$rank',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: rankColor,
+                      ),
+                    ),
             ),
           ),
           const SizedBox(width: 16),
@@ -89,11 +86,11 @@ class LeaderboardTile extends StatelessWidget {
           // User Avatar
           CircleAvatar(
             radius: 24,
-            backgroundColor: Theme.of(context).primaryColor.withValues(alpha: .1),
+            backgroundColor: Theme.of(
+              context,
+            ).primaryColor.withValues(alpha: .1),
             child: Text(
-              entry.userName.isNotEmpty
-                  ? entry.userName[0].toUpperCase()
-                  : 'U',
+              entry.userName.isNotEmpty ? entry.userName[0].toUpperCase() : 'U',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -127,10 +124,7 @@ class LeaderboardTile extends StatelessWidget {
                     Expanded(
                       child: Text(
                         '${entry.streakCount} day streak',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                       ),
                     ),
                   ],
@@ -143,7 +137,7 @@ class LeaderboardTile extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: rankColor.withOpacity(0.1),
+              color: rankColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(

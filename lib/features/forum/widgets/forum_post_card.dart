@@ -165,30 +165,31 @@ class ForumPostCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                // _ActionButton(
+                //   icon: post.isUpvoted! ? Icons.thumb_up : Icons.thumb_up_outlined,
+                //   label: '${post.upvotes}',
+                //   isActive: post.isUpvoted!,
+                //   onTap: onUpvote,
+                // ),
+                // _ActionButton(
+                //   icon:
+                //   post.isDownvoted! ? Icons.thumb_down : Icons.thumb_down_outlined,
+                //   label: '${post.downvotes}',
+                //   isActive: post.isDownvoted!,
+                //   onTap: onDownvote,
+                // ),
+
                 _ActionButton(
-                  icon: post.isUpvoted! ? Icons.thumb_up : Icons.thumb_up_outlined,
-                  label: '${post.upvotes}',
-                  isActive: post.isUpvoted!,
-                  onTap: onUpvote,
-                ),
-                _ActionButton(
-                  icon:
-                  post.isDownvoted! ? Icons.thumb_down : Icons.thumb_down_outlined,
-                  label: '${post.downvotes}',
-                  isActive: post.isDownvoted!,
-                  onTap: onDownvote,
+                  icon: Icons.comment_outlined,
+                  label: 'Comment',
+                  isActive: false,
+                  onTap: onComment,
                 ),
                 _ActionButton(
                   icon: post.isBookmarked! ? Icons.bookmark : Icons.bookmark_outline,
                   label: 'Save',
                   isActive: post.isBookmarked!,
                   onTap: onBookmark,
-                ),
-                _ActionButton(
-                  icon: Icons.comment_outlined,
-                  label: 'Comment',
-                  isActive: false,
-                  onTap: onComment,
                 ),
                 _ActionButton(
                   icon: Icons.share_outlined,
