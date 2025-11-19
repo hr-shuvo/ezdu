@@ -81,82 +81,82 @@ class _ForumHomeScreenState extends State<ForumHomeScreen> {
           child: Column(
             children: [
               // Create Post Button
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreatePostScreen(
-                          subjects: subjects,
-                          lessons: lessons,
-                          topics: topics,
-                          onPostCreated: (newPost) {
-                            setState(() {
-                              posts.insert(0, newPost);
-                            });
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF3B82F6), Color(0xFF1E40AF)],
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.blue.withOpacity(0.3),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        const CircleAvatar(
-                          radius: 24,
-                          backgroundColor: Colors.white24,
-                          child: Text('👤', style: TextStyle(fontSize: 20)),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Create a post',
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              const Text(
-                                'Share your question or knowledge...',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Icon(
-                          Icons.add_circle,
-                          color: Colors.white,
-                          size: 28,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(16),
+              //   child: GestureDetector(
+              //     onTap: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //           builder: (context) => CreatePostScreen(
+              //             subjects: subjects,
+              //             lessons: lessons,
+              //             topics: topics,
+              //             onPostCreated: (newPost) {
+              //               setState(() {
+              //                 posts.insert(0, newPost);
+              //               });
+              //             },
+              //           ),
+              //         ),
+              //       );
+              //     },
+              //     child: Container(
+              //       padding: const EdgeInsets.all(16),
+              //       decoration: BoxDecoration(
+              //         gradient: const LinearGradient(
+              //           colors: [Color(0xFF3B82F6), Color(0xFF1E40AF)],
+              //         ),
+              //         borderRadius: BorderRadius.circular(16),
+              //         boxShadow: [
+              //           BoxShadow(
+              //             color: Colors.blue.withOpacity(0.3),
+              //             blurRadius: 12,
+              //             offset: const Offset(0, 4),
+              //           ),
+              //         ],
+              //       ),
+              //       child: Row(
+              //         children: [
+              //           const CircleAvatar(
+              //             radius: 24,
+              //             backgroundColor: Colors.white24,
+              //             child: Text('👤', style: TextStyle(fontSize: 20)),
+              //           ),
+              //           const SizedBox(width: 12),
+              //           Expanded(
+              //             child: Column(
+              //               crossAxisAlignment: CrossAxisAlignment.start,
+              //               children: [
+              //                 const Text(
+              //                   'Create a post',
+              //                   style: TextStyle(
+              //                     color: Colors.white70,
+              //                     fontSize: 12,
+              //                   ),
+              //                 ),
+              //                 const SizedBox(height: 4),
+              //                 const Text(
+              //                   'Share your question or knowledge...',
+              //                   style: TextStyle(
+              //                     color: Colors.white,
+              //                     fontSize: 14,
+              //                     fontWeight: FontWeight.w600,
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
+              //           ),
+              //           const Icon(
+              //             Icons.add_circle,
+              //             color: Colors.white,
+              //             size: 28,
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
 
               // Filters
               Padding(

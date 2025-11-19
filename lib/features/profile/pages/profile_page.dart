@@ -1,3 +1,5 @@
+// self profile page
+
 import 'package:ezdu/core/utils/route_helper.dart';
 import 'package:ezdu/features/profile/models/progress.dart';
 import 'package:ezdu/features/settings/pages/settings_page.dart';
@@ -101,7 +103,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               border: Border.all(color: Colors.white, width: 4),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
+                                  color: Colors.black.withValues(alpha: 0.2),
                                   blurRadius: 8,
                                   offset: const Offset(0, 4),
                                 ),
@@ -168,7 +170,7 @@ class _ProgressOverviewCard extends StatelessWidget {
         gradient: LinearGradient(
           colors: [
             Theme.of(context).primaryColor,
-            Theme.of(context).primaryColor.withOpacity(0.7),
+            Theme.of(context).primaryColor.withValues(alpha: 0.7),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
@@ -204,7 +206,7 @@ class _ProgressOverviewCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(

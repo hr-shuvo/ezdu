@@ -77,7 +77,7 @@ class ForumPostCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Text(
-                    '📌 Question',
+                    'Question',
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,

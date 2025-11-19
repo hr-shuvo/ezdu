@@ -1,4 +1,5 @@
 import 'package:ezdu/features/leaderboard/models/leaderboard.dart';
+import 'package:ezdu/features/profile/pages/user_profile_page.dart';
 import 'package:flutter/material.dart';
 
 class LeaderboardTile extends StatelessWidget {
@@ -39,7 +40,6 @@ class LeaderboardTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        // color: Colors.white,
         color: Theme.of(context).colorScheme.surfaceContainer,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
@@ -82,57 +82,75 @@ class LeaderboardTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 16),
-
-          // User Avatar
-          CircleAvatar(
-            radius: 24,
-            backgroundColor: Theme.of(
-              context,
-            ).primaryColor.withValues(alpha: .1),
-            child: Text(
-              entry.userName.isNotEmpty ? entry.userName[0].toUpperCase() : 'U',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.primary,
+          // User Info Section
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => UserProfilePage(userId: entry.userId),
+                  ),
+                );
+              },
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Theme.of(
+                      context,
+                    ).primaryColor.withValues(alpha: 0.1),
+                    child: Text(
+                      entry.userName.isNotEmpty
+                          ? entry.userName[0].toUpperCase()
+                          : 'U',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          entry.userName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.local_fire_department,
+                              size: 14,
+                              color: Colors.orange,
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                '${entry.streakCount} day streak',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
           const SizedBox(width: 12),
-
-          // User Info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  entry.userName,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.local_fire_department,
-                      size: 14,
-                      color: Colors.orange,
-                    ),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        '${entry.streakCount} day streak',
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
           // XP Score
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
