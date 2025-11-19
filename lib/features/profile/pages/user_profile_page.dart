@@ -1,107 +1,256 @@
 // all other user profile page
-
+import 'package:ezdu/core/models/api_response.dart';
+import 'package:ezdu/data/models/user_model.dart';
+import 'package:ezdu/data/repositories/user_repository.dart';
 import 'package:ezdu/features/profile/widgets/profile_overview.dart';
 import 'package:flutter/material.dart';
 
 class UserProfilePage extends StatefulWidget {
-  const UserProfilePage({super.key, required this.userId});
+  const UserProfilePage({
+    super.key,
+    required this.userId,
+    required this.userRepository,
+  });
 
   final int userId;
+  final UserRepository userRepository;
 
   @override
   State<StatefulWidget> createState() => _UserProfilePage();
 }
 
 class _UserProfilePage extends State<UserProfilePage> {
+  late Future<ApiResponse<UserDetailsModel>> _userFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _userFuture = widget.userRepository.getUserDetails(widget.userId);
+  }
+
+  Future<void> _refreshProfile() async {
+    setState(() {
+      _userFuture = widget.userRepository.getUserDetails(widget.userId);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: RefreshIndicator(
-        onRefresh: () async {},
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Stack(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text(
+          'Profile ${widget.userId}',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              _showProfileOptions(context);
+            },
+          ),
+        ],
+      ),
+      body: FutureBuilder<ApiResponse<UserDetailsModel>>(
+        future: _userFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    height: 120,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Theme.of(context).primaryColor,
-                          Theme.of(context).primaryColor.withValues(alpha: 0.6),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 4),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.2),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: CircleAvatar(
-                              backgroundImage: AssetImage(
-                                'assets/images/avatars/1.png',
-                              ),
-                              backgroundColor: Colors.grey[300],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text('Error: ${snapshot.error}'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _refreshProfile,
+                    child: const Text('Retry'),
                   ),
                 ],
               ),
-              UserProfileWidget(
-                displayName: 'authState.name',
-                username: 'userName',
-                joinedDate: 'Jan 15, 2024',
-                profileImageUrl:
-                    'https://api.dicebear.com/9.x/avataaars/svg?seed=Christopher',
-                followers: 1250,
-                following: 320,
-                totalXP: 15420,
-                currentStreak: 42,
-                level: 18,
-                totalQuizzes: 156,
-                isFollowing: false,
-                isFriend: true,
-                lastQuizzes: [
-                  {'title': 'Spanish Basics', 'date': 'Today', 'score': 95},
-                  {'title': 'French Verbs', 'date': 'Yesterday', 'score': 88},
-                  {
-                    'title': 'German Grammar',
-                    'date': '2 days ago',
-                    'score': 76,
-                  },
+            );
+          }
+
+          if (!snapshot.hasData || snapshot.data?.data == null) {
+            return const Center(child: Text('No user data found'));
+          }
+
+          final user = snapshot.data!.data!;
+
+          return RefreshIndicator(
+            onRefresh: _refreshProfile,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildProfileHeader(user),
+                  UserProfileWidget(
+                    displayName: user.name ?? 'User',
+                    username: user.userName ?? '@user',
+                    joinedDate: user.createdAt ?? 'Jan 15, 2024',
+                    profileImageUrl: user.photoUrl ??
+                        'https://api.dicebear.com/9.x/avataaars/svg?seed=User',
+                    followers: user.followers ?? 0,
+                    following: user.following ?? 0,
+                    totalXP: user.totalXp ?? 0,
+                    currentStreak: user.streak ?? 0,
+                    level: 17,
+                    totalQuizzes: 13,
+                    isFollowing: user.isFollowing,
+                    isFriend: false,
+                    lastQuizzes: [],
+                    onFollowPressed: () => _handleFollowPressed(user),
+                    onFriendPressed: () => _handleFriendPressed(user),
+                  ),
                 ],
-                onFollowPressed: () {},
-                onFriendPressed: () {},
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildProfileHeader(UserDetailsModel user) {
+    return Stack(
+      children: [
+        Container(
+          height: 120,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Theme.of(context).primaryColor,
+                Theme.of(context).primaryColor.withValues(alpha: 0.6),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 4),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                        'https://api.dicebear.com/9.x/avataaars/svg?seed=User',
+                  ),
+                  backgroundColor: Colors.grey[300],
+                  onBackgroundImageError: (exception, stackTrace) {},
+                ),
               ),
             ],
           ),
         ),
+      ],
+    );
+  }
+
+  void _showProfileOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.block),
+              title: const Text('Block User'),
+              onTap: () {
+                Navigator.pop(context);
+                _blockUser();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.report),
+              title: const Text('Report User'),
+              onTap: () {
+                Navigator.pop(context);
+                _reportUser();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.share),
+              title: const Text('Share Profile'),
+              onTap: () {
+                Navigator.pop(context);
+                _shareProfile();
+              },
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  void _handleFollowPressed(UserDetailsModel user) {
+    // TODO: Implement follow logic
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          false ? 'Unfollowed' : 'Following',
+        ),
+      ),
+    );
+  }
+
+  void _handleFriendPressed(UserDetailsModel user) {
+    // TODO: Implement friend request logic
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          false ? 'Friend removed' : 'Friend request sent',
+        ),
+      ),
+    );
+  }
+
+  void _blockUser() {
+    // TODO: Implement block user logic
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('User blocked')),
+    );
+  }
+
+  void _reportUser() {
+    // TODO: Implement report user logic
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Report submitted')),
+    );
+  }
+
+  void _shareProfile() {
+    // TODO: Implement share profile logic
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Profile shared')),
     );
   }
 }

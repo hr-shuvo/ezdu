@@ -21,16 +21,16 @@ class UserProgressRepository {
     return ApiResponse(success: false);
   }
 
-  Future<ApiResponse<ProgressModel>> submitQuiz(UserQuizSubmissionModel model) async {
+  Future<ApiResponse<ProgressModel>> submitQuiz(
+    UserQuizSubmissionModel model,
+  ) async {
     try {
       final result = await _playQuizRemoteDataSource.submitQuiz(model);
-      final response =  ApiResponse.success(result);
+      final response = ApiResponse.success(result);
 
       return response;
     } catch (e) {
       return ApiResponse.error(e.toString());
     }
   }
-
-
 }

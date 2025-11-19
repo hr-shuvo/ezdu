@@ -1,3 +1,4 @@
+import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/features/leaderboard/models/leaderboard.dart';
 import 'package:ezdu/features/profile/pages/user_profile_page.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +90,7 @@ class LeaderboardTile extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => UserProfilePage(userId: entry.userId),
+                    builder: (_) => UserProfilePage(userId: entry.userId, userRepository: sl(),),
                   ),
                 );
               },
