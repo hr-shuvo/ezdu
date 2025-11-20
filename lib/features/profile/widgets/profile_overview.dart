@@ -1,3 +1,4 @@
+import 'package:ezdu/core/utils/helpers.dart';
 import 'package:ezdu/features/profile/models/achievement.dart';
 import 'package:ezdu/features/profile/models/progress.dart';
 import 'package:ezdu/features/profile/widgets/xp_bar_chart.dart';
@@ -21,6 +22,7 @@ class UserProfileWidget extends StatelessWidget {
   final List<Map<String, dynamic>> lastQuizzes;
 
   const UserProfileWidget({
+    super.key,
     required this.displayName,
     required this.username,
     required this.joinedDate,
@@ -56,7 +58,7 @@ class UserProfileWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Joined $joinedDate',
+                  'Joined ${TimeHelper.formatUtcToLocalDate(joinedDate)}',
                   style: TextStyle(fontSize: 14, color: Colors.grey[500]),
                 ),
               ],
@@ -329,15 +331,12 @@ class UserProfileWidget extends StatelessWidget {
     );
   }
 
-
-
   Color _getScoreColor(int score) {
     if (score >= 80) return Colors.green;
     if (score >= 60) return Colors.orange;
     return Colors.red;
   }
 }
-
 
 class _AchievementTile extends StatelessWidget {
   final Achievement achievement;
@@ -409,8 +408,6 @@ class _AchievementTile extends StatelessWidget {
     );
   }
 }
-
-
 
 final progress = Progress(
   totalXP: 4233,

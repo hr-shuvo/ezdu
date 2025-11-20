@@ -21,6 +21,7 @@ class UserProfilePage extends StatefulWidget {
 
 class _UserProfilePage extends State<UserProfilePage> {
   late Future<ApiResponse<UserDetailsModel>> _userFuture;
+  late String name;
 
   @override
   void initState() {
@@ -41,7 +42,7 @@ class _UserProfilePage extends State<UserProfilePage> {
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          'Profile ${widget.userId}',
+          'Profile',
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         leading: IconButton(
@@ -144,26 +145,28 @@ class _UserProfilePage extends State<UserProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 4),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                        'https://api.dicebear.com/9.x/avataaars/svg?seed=User',
+              Center(
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 4),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.2),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                  backgroundColor: Colors.grey[300],
-                  onBackgroundImageError: (exception, stackTrace) {},
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage(
+                          'assets/images/avatars/1.png',
+                    ),
+                    backgroundColor: Colors.grey[300],
+                    onBackgroundImageError: (exception, stackTrace) {},
+                  ),
                 ),
               ),
             ],
