@@ -52,9 +52,7 @@ class AuthState extends Equatable {
     );
   }
 
-  bool isLoggedIn() {
-    return data != null;
-  }
+  bool get isLoggedIn => data != null;
 
   @override
   List<Object?> get props => [];
@@ -83,7 +81,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> restoreSession() async {
-
     final storageService = sl<StorageService>();
     final dioClient = sl<DioClient>();
 
@@ -93,9 +90,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
     if (authData != null && token != null) {
       dioClient.setAuthToken(token);
       state = state.copyWithSuccess(authData);
+
       print('->->->->->->->->->-> Authenticated');
     }
-
   }
 
   void setIntendedRoute(String route) {

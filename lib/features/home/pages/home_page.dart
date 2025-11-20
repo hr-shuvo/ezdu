@@ -1,5 +1,3 @@
-import 'package:ezdu/core/models/api_response.dart';
-import 'package:ezdu/data/models/quiz_model.dart';
 import 'package:ezdu/data/repositories/quiz_repository.dart';
 import 'package:ezdu/features/home/widgets/daily_quiz_card.dart';
 import 'package:ezdu/features/home/widgets/home_grid_section.dart';
@@ -11,27 +9,14 @@ import 'package:ezdu/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomePage extends ConsumerStatefulWidget {
+class HomePage extends ConsumerWidget {
   const HomePage({super.key, required this.quizRepository});
 
   final QuizRepository quizRepository;
 
   @override
-  ConsumerState<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends ConsumerState<HomePage> {
-  late Future<ApiResponse<QuizModel>> upcomingQuizFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    upcomingQuizFuture = widget.quizRepository.getUpcomingQuiz();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isLoggedIn = ref.read(authProvider).isLoggedIn();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLoggedIn = ref.watch(authProvider).isLoggedIn;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -46,7 +31,6 @@ class _HomePageState extends ConsumerState<HomePage> {
             children: [
               Row(
                 children: [
-                  // Icon(Icons.local_fire_department_outlined, size: 24),
                   Image.asset('assets/icons/fire.png', height: 24, width: 24),
                   SizedBox(width: 4),
                   Text(isLoggedIn ? '75' : '1', style: TextStyle(fontSize: 14)),
@@ -91,7 +75,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         body: RefreshIndicator(
           onRefresh: () async {
-            upcomingQuizFuture = widget.quizRepository.getUpcomingQuiz();
+            await quizRepository.getUpcomingQuiz();
           },
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
@@ -100,34 +84,35 @@ class _HomePageState extends ConsumerState<HomePage> {
               children: [
                 if (isLoggedIn) ...[DailyQuizCard(), SizedBox(height: 16)],
 
-                FutureBuilder(
-                  future: upcomingQuizFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CircularProgressIndicator(),
-                            Padding(
-                              padding: EdgeInsets.only(top: 16.0),
-                              child: Text('Loading...'),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
+                if (isLoggedIn)
+                  FutureBuilder(
+                    future: quizRepository.getUpcomingQuiz(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(),
+                              Padding(
+                                padding: EdgeInsets.only(top: 16.0),
+                                child: Text('Loading...'),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
 
-                    if (snapshot.hasData && snapshot.data!.data != null) {
-                      return UpcomingQuizCard(
-                        isLoggedIn: isLoggedIn,
-                        quiz: snapshot.data!.data!,
-                      );
-                    }
+                      if (snapshot.hasData && snapshot.data!.data != null) {
+                        return UpcomingQuizCard(
+                          isLoggedIn: isLoggedIn,
+                          quiz: snapshot.data!.data!,
+                        );
+                      }
 
-                    return SizedBox.shrink();
-                  },
-                ),
+                      return SizedBox.shrink();
+                    },
+                  ),
 
                 if (!isLoggedIn) ...[
                   Container(

@@ -110,7 +110,7 @@ class _UserProfilePage extends State<UserProfilePage> {
                     level: 17,
                     totalQuizzes: 13,
                     isFollowing: user.isFollowing,
-                    isFriend: false,
+                    isFriend: true,
                     lastQuizzes: [],
                     onFollowPressed: () => _handleFollowPressed(user),
                     onFriendPressed: () => _handleFriendPressed(user),

@@ -17,23 +17,14 @@ class MyApp extends StatelessWidget {
           ref.watch(authInitProvider);
           ref.watch(onboardingInitProvider);
 
-          return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Colors.green[50]!, Colors.blue[50]!],
-              ),
-            ),
-            child: MaterialApp(
-              title: 'ezdu',
-              debugShowCheckedModeBanner: false,
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
-              themeMode: ThemeMode.light,
-              onGenerateRoute: AppRoutes.generateRoute,
-              initialRoute: '/',
-            ),
+          return MaterialApp(
+            title: 'ezdu',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: ThemeMode.light,
+            onGenerateRoute: AppRoutes.generateRoute,
+            initialRoute: '/',
           );
         },
       ),
