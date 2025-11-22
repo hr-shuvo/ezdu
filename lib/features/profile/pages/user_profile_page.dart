@@ -3,9 +3,11 @@ import 'package:ezdu/core/models/api_response.dart';
 import 'package:ezdu/data/models/user_model.dart';
 import 'package:ezdu/data/repositories/user_repository.dart';
 import 'package:ezdu/features/profile/widgets/profile_overview.dart';
+import 'package:ezdu/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UserProfilePage extends StatefulWidget {
+class UserProfilePage extends ConsumerStatefulWidget {
   const UserProfilePage({
     super.key,
     required this.userId,
@@ -16,10 +18,10 @@ class UserProfilePage extends StatefulWidget {
   final UserRepository userRepository;
 
   @override
-  State<StatefulWidget> createState() => _UserProfilePage();
+  ConsumerState<UserProfilePage> createState() => _UserProfilePage();
 }
 
-class _UserProfilePage extends State<UserProfilePage> {
+class _UserProfilePage extends ConsumerState<UserProfilePage> {
   late Future<ApiResponse<UserDetailsModel>> _userFuture;
   late String name;
 
@@ -37,6 +39,8 @@ class _UserProfilePage extends State<UserProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider).data;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -110,7 +114,7 @@ class _UserProfilePage extends State<UserProfilePage> {
                     level: 17,
                     totalQuizzes: 13,
                     isFollowing: user.isFollowing,
-                    isFriend: true,
+                    isMyself: authState?.id == user.id,
                     lastQuizzes: [],
                     onFollowPressed: () => _handleFollowPressed(user),
                     onFriendPressed: () => _handleFriendPressed(user),
@@ -219,7 +223,7 @@ class _UserProfilePage extends State<UserProfilePage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          false ? 'Unfollowed' : 'Following',
+          user.isFollowing ? 'Unfollowed' : 'Following',
         ),
       ),
     );

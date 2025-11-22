@@ -11,7 +11,7 @@ void main() async {
   await initializeDependencies();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await initPushNotifications();
+  // await initPushNotifications();
 
   runApp(const MyApp());
 }

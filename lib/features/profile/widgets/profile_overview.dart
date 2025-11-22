@@ -16,7 +16,7 @@ class UserProfileWidget extends StatelessWidget {
   final int level;
   final int totalQuizzes;
   final bool isFollowing;
-  final bool isFriend;
+  final bool isMyself;
   final VoidCallback onFollowPressed;
   final VoidCallback onFriendPressed;
   final List<Map<String, dynamic>> lastQuizzes;
@@ -34,7 +34,7 @@ class UserProfileWidget extends StatelessWidget {
     required this.level,
     required this.totalQuizzes,
     required this.isFollowing,
-    required this.isFriend,
+    required this.isMyself,
     required this.onFollowPressed,
     required this.onFriendPressed,
     required this.lastQuizzes,
@@ -79,13 +79,21 @@ class UserProfileWidget extends StatelessWidget {
           // Action Buttons
           Row(
             children: [
-              Expanded(
-                child: _buildActionButton(
-                  label: isFollowing ? 'Unfollow' : 'Follow',
-                  onPressed: onFollowPressed,
-                  isPrimary: !isFollowing,
-                ),
-              ),
+              isMyself
+                  ? Expanded(
+                      child: _buildActionButton(
+                        label: 'Add Friends',
+                        onPressed: () {},
+                        isPrimary: true,
+                      ),
+                    )
+                  : Expanded(
+                      child: _buildActionButton(
+                        label: isFollowing ? 'Unfollow' : 'Follow',
+                        onPressed: onFollowPressed,
+                        isPrimary: !isFollowing,
+                      ),
+                    ),
             ],
           ),
           const SizedBox(height: 24),

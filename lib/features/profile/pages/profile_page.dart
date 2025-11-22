@@ -12,7 +12,7 @@ class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ProfilePageState();
+  ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
@@ -136,7 +136,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 level: 18,
                 totalQuizzes: 156,
                 isFollowing: false,
-                isFriend: true,
+                isMyself: true,
                 lastQuizzes: [
                   {'title': 'Spanish Basics', 'date': 'Today', 'score': 95},
                   {'title': 'French Verbs', 'date': 'Yesterday', 'score': 88},

@@ -1,6 +1,7 @@
 import 'package:ezdu/data/datasources/class_remote_ds.dart';
 import 'package:ezdu/data/datasources/leaderboard_remote_ds.dart';
 import 'package:ezdu/data/datasources/lesson_remote_ds.dart';
+import 'package:ezdu/data/datasources/notification_remote_ds.dart';
 import 'package:ezdu/data/datasources/question_remote_ds.dart';
 import 'package:ezdu/data/datasources/quiz_remote_ds.dart';
 import 'package:ezdu/data/datasources/subject_remote_ds.dart';
@@ -11,6 +12,7 @@ import 'package:ezdu/data/repositories/auth_repository.dart';
 import 'package:ezdu/data/repositories/classRepository.dart';
 import 'package:ezdu/data/repositories/leaderboard_repository.dart';
 import 'package:ezdu/data/repositories/lesson_repository.dart';
+import 'package:ezdu/data/repositories/notification_repository.dart';
 import 'package:ezdu/data/repositories/question_repository.dart';
 import 'package:ezdu/data/repositories/quiz_repository.dart';
 import 'package:ezdu/data/repositories/subject_repository.dart';
@@ -42,9 +44,7 @@ Future<void> initializeDependencies() async {
   );
 
   // user
-  sl.registerLazySingleton<UserRepository>(
-    () => UserRepository(sl()),
-  );
+  sl.registerLazySingleton<UserRepository>(() => UserRepository(sl()));
   sl.registerLazySingleton<UserRemoteDataSource>(
     () => UserRemoteDataSource(sl()),
   );
@@ -75,10 +75,10 @@ Future<void> initializeDependencies() async {
 
   // question
   sl.registerLazySingleton<QuestionRepository>(
-        () => QuestionRepository(remoteDataSource: sl()),
+    () => QuestionRepository(remoteDataSource: sl()),
   );
   sl.registerLazySingleton<QuestionRemoteDataSource>(
-        () => QuestionRemoteDataSource(sl()),
+    () => QuestionRemoteDataSource(sl()),
   );
 
   // archive
@@ -110,10 +110,18 @@ Future<void> initializeDependencies() async {
 
   // quiz
   sl.registerLazySingleton<LeaderboardRepository>(
-        () => LeaderboardRepository(remoteDataSource: sl()),
+    () => LeaderboardRepository(remoteDataSource: sl()),
   );
   sl.registerLazySingleton<LeaderboardRemoteDataSource>(
-        () => LeaderboardRemoteDataSource(sl()),
+    () => LeaderboardRemoteDataSource(sl()),
+  );
+
+  // notification
+  sl.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepository(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton<NotificationRemoteDataSource>(
+    () => NotificationRemoteDataSource(sl()),
   );
 
   print('Dependency Injection initialized.');

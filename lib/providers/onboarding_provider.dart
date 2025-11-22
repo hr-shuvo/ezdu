@@ -124,13 +124,13 @@ class OnboardingSelectionNotifier extends StateNotifier<OnboardingState> {
       selectedGroup: null,
     );
 
-    _logState('Class updated to: $selectedClassName');
+    // _logState('Class updated to: $selectedClassName');
   }
 
   void updateGroup(String? group) {
     state = state.copyWith(isLoading: false, selectedGroup: group);
 
-    _logState('Group updated to: $group');
+    // _logState('Group updated to: $group');
   }
 
   void finalizeOnboarding() {
@@ -141,7 +141,7 @@ class OnboardingSelectionNotifier extends StateNotifier<OnboardingState> {
     UserOnboardingService.saveClass(state.className!);
     UserOnboardingService.saveGroup(state.group!);
 
-    _logState('Onboarding Finalized!');
+    // _logState('Onboarding Finalized!');
   }
 
   void _logState(String action) {
@@ -157,9 +157,6 @@ class OnboardingSelectionNotifier extends StateNotifier<OnboardingState> {
     final classId = await UserOnboardingService.getClassId();
     final className = await UserOnboardingService.getClass();
     final group = await UserOnboardingService.getGroup();
-
-    print('onboarding segment >->->->->->->->->->, $segment');
-    print('onboarding class   >->->->->->->->->->, $classId');
 
     if (segment > 0 && classId != null && classId > 0) {
       state = state.copyWith(
