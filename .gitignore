@@ -21,3 +21,7 @@ doc/api/
 *.js.map
 
 .idea/
+
+android/app/google-services.json
+
+lib/data/firebase_options.dart
