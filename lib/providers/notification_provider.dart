@@ -84,7 +84,7 @@ class NotificationNotifier extends StateNotifier<NotificationState> {
     _isInitializing = true;
 
     try {
-      print('✅ initializing notifications...........');
+      // print('✅ initializing notifications...........');
       state = state.copyWithInitializing();
 
       await _firebaseMessaging.requestPermission();
@@ -98,7 +98,7 @@ class NotificationNotifier extends StateNotifier<NotificationState> {
       }
 
       state = state.copyWithSuccess(token);
-      print('✅ FCM Token: $token');
+      // print('✅ FCM Token: $token');
 
       _setupListeners();
 
@@ -139,7 +139,7 @@ class NotificationNotifier extends StateNotifier<NotificationState> {
     });
 
     _firebaseMessaging.onTokenRefresh.listen((String newToken) {
-      print('✅ FCM Token Refreshed: $newToken');
+      // print('✅ FCM Token Refreshed: $newToken');
       state = state.copyWithTokenRefresh(newToken);
     });
 
@@ -158,18 +158,18 @@ class NotificationNotifier extends StateNotifier<NotificationState> {
   Future<void> syncToken() async {
     // Safety check: Need a token to sync
     if (state.fcmToken == null || state.isInitialized) {
-      print("⚠️ Cannot sync: No FCM Token available yet.");
+      // print("⚠️ Cannot sync: No FCM Token available yet.");
       return;
     }
 
     try {
-      print("🔄 Syncing FCM Token for user...");
+      // print("🔄 Syncing FCM Token for user...");
       final result = await _repository.syncFcmToken(state.fcmToken!);
       if (result.success) {
         state = state.copyWithSuccess(state.fcmToken!, initialized: true);
       }
 
-      print("✅ Token Synced");
+      // print("✅ Token Synced");
     } catch (e) {
       print("❌ Sync failed: $e");
     }

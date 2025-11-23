@@ -76,23 +76,6 @@ class AchievementCard extends StatelessWidget {
               ],
             ),
           ),
-          // Container(
-          //   color: Theme.of(context).secondaryHeaderColor,
-          //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          //   child: Row(
-          //     children: [
-          //       Icon(Icons.favorite, size: 16, color: Colors.red),
-          //       const SizedBox(width: 4),
-          //       Text(
-          //         '${feedItem.likeCount} likes',
-          //         style: TextStyle(
-          //           fontSize: 12,
-          //           color: Theme.of(context).colorScheme.primary,
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
     );

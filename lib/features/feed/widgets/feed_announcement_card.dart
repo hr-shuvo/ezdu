@@ -1,3 +1,4 @@
+import 'package:ezdu/core/utils/helpers.dart';
 import 'package:ezdu/data/models/feed_model.dart';
 import 'package:flutter/material.dart';
 
@@ -13,15 +14,13 @@ class AnnouncementCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.yellow[50]!, Colors.orange[50]!],
-          ),
           borderRadius: BorderRadius.circular(12),
           border: Border(
             left: BorderSide(color: Colors.yellow[400]!, width: 4),
@@ -51,16 +50,16 @@ class AnnouncementCard extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
-                              color: Colors.yellow[900],
+                              color: colorScheme.onTertiary,
                             ),
                           ),
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          feedItem.createdAt ?? '',
+                          TimeHelper.formatRelativeTime(feedItem.createdAt),
                           style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.grey[500],
+                            color: Colors.grey[600],
+                            fontSize: 12,
                           ),
                         ),
                       ],
@@ -76,10 +75,7 @@ class AnnouncementCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       feedItem.message ?? '',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[700],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[700]),
                     ),
                   ],
                 ),
