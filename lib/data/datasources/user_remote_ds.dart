@@ -1,3 +1,4 @@
+import 'package:ezdu/core/models/api_response.dart';
 import 'package:ezdu/data/models/user_model.dart';
 import 'package:ezdu/services/dio_client.dart';
 
@@ -17,6 +18,23 @@ class UserRemoteDataSource {
       'users/details/$userId',
       queryParameters: params,
       fromJson: (json) => UserDetailsModel.toModel(json),
+    );
+
+    return response;
+  }
+
+  Future<ApiResponse> followUser({required int userId}) async {
+    var response = await _dioClient.get(
+      'userfollow/follow/$userId',
+      fromJson: (json) => ApiResponse.toModel(json, null),
+    );
+
+    return response;
+  }
+  Future<ApiResponse> unFollowUser({required int userId}) async {
+    var response = await _dioClient.get(
+      'userfollow/unfollow/$userId',
+      fromJson: (json) => ApiResponse.toModel(json, null),
     );
 
     return response;

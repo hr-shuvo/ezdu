@@ -23,7 +23,6 @@ class UserProfilePage extends ConsumerStatefulWidget {
 
 class _UserProfilePage extends ConsumerState<UserProfilePage> {
   late Future<ApiResponse<UserDetailsModel>> _userFuture;
-  late String name;
 
   @override
   void initState() {
@@ -45,10 +44,7 @@ class _UserProfilePage extends ConsumerState<UserProfilePage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text(
-          'Profile',
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
+        title: Text('Profile', style: TextStyle(fontWeight: FontWeight.w600)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -93,6 +89,12 @@ class _UserProfilePage extends ConsumerState<UserProfilePage> {
 
           final user = snapshot.data!.data!;
 
+          // setState(() {
+          //   isFollowing = user.isFollowing;
+          //   followers = user.followers;
+          //   following = user.following;
+          // });
+
           return RefreshIndicator(
             onRefresh: _refreshProfile,
             child: SingleChildScrollView(
@@ -105,7 +107,8 @@ class _UserProfilePage extends ConsumerState<UserProfilePage> {
                     displayName: user.name ?? 'User',
                     username: user.userName ?? '@user',
                     joinedDate: user.createdAt ?? 'Jan 15, 2024',
-                    profileImageUrl: user.photoUrl ??
+                    profileImageUrl:
+                        user.photoUrl ??
                         'https://api.dicebear.com/9.x/avataaars/svg?seed=User',
                     followers: user.followers ?? 0,
                     following: user.following ?? 0,
@@ -165,9 +168,7 @@ class _UserProfilePage extends ConsumerState<UserProfilePage> {
                     ],
                   ),
                   child: CircleAvatar(
-                    backgroundImage: AssetImage(
-                          'assets/images/avatars/1.png',
-                    ),
+                    backgroundImage: AssetImage('assets/images/avatars/1.png'),
                     backgroundColor: Colors.grey[300],
                     onBackgroundImageError: (exception, stackTrace) {},
                   ),
@@ -218,46 +219,60 @@ class _UserProfilePage extends ConsumerState<UserProfilePage> {
     );
   }
 
-  void _handleFollowPressed(UserDetailsModel user) {
-    // TODO: Implement follow logic
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          user.isFollowing ? 'Unfollowed' : 'Following',
-        ),
-      ),
-    );
+  void _handleFollowPressed(UserDetailsModel user) async {
+    bool wantToFollow = !user.isFollowing;
+
+    var result;
+
+    if (user.isFollowing) {
+      result = await widget.userRepository.unFollowUser(user.id);
+    } else {
+      result = await widget.userRepository.followUser(user.id);
+    }
+
+    if (result.success) {
+      setState(() {
+        user.isFollowing = wantToFollow;
+
+        if (wantToFollow) {
+          user.followers = (user.followers ?? 0) + 1;
+        } else {
+          user.followers = (user.followers ?? 0) - 1;
+        }
+      });
+
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Action failed. Please try again.')),
+      );
+    }
   }
 
   void _handleFriendPressed(UserDetailsModel user) {
     // TODO: Implement friend request logic
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          false ? 'Friend removed' : 'Friend request sent',
-        ),
-      ),
+      SnackBar(content: Text(false ? 'Friend removed' : 'Friend request sent')),
     );
   }
 
   void _blockUser() {
     // TODO: Implement block user logic
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('User blocked')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('User blocked')));
   }
 
   void _reportUser() {
     // TODO: Implement report user logic
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Report submitted')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Report submitted')));
   }
 
   void _shareProfile() {
     // TODO: Implement share profile logic
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Profile shared')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Profile shared')));
   }
 }

@@ -6,9 +6,9 @@ class UserDetailsModel {
   final String photoUrl;
   final String createdAt;
   final String lastActive;
-  final bool isFollowing;
-  final int following;
-  final int followers;
+  late bool isFollowing;
+  late int following;
+  late int followers;
   final int streak;
   final int totalXp;
   final int weekXp;
