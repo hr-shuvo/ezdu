@@ -1,7 +1,6 @@
 import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/data/repositories/notification_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 class NotificationState {
