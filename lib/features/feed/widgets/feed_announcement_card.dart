@@ -1,8 +1,8 @@
-import 'package:ezdu/features/feed/entities/feed.dart';
+import 'package:ezdu/data/models/feed_model.dart';
 import 'package:flutter/material.dart';
 
 class AnnouncementCard extends StatelessWidget {
-  final FeedEntry feedItem;
+  final FeedItem feedItem;
   final VoidCallback onDismiss;
 
   const AnnouncementCard({
@@ -57,7 +57,7 @@ class AnnouncementCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          feedItem.timestamp ?? '',
+                          feedItem.createdAt ?? '',
                           style: TextStyle(
                             fontSize: 10,
                             color: Colors.grey[500],

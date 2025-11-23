@@ -1,8 +1,8 @@
-import 'package:ezdu/features/feed/entities/feed.dart';
+import 'package:ezdu/data/models/feed_model.dart';
 import 'package:flutter/material.dart';
 
 class SingleRecommendedFriend extends StatelessWidget {
-  final FeedEntry feedItem;
+  final FeedItem feedItem;
   final VoidCallback onAddFriend;
 
   const SingleRecommendedFriend({
@@ -37,14 +37,14 @@ class SingleRecommendedFriend extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              Text(feedItem.avatar ?? '', style: const TextStyle(fontSize: 40)),
+              Text(feedItem.userImageUrl ?? '', style: const TextStyle(fontSize: 40)),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      feedItem.userName ?? '',
+                      feedItem.name ?? '',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -53,12 +53,12 @@ class SingleRecommendedFriend extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${feedItem.mutualFriends} mutual friends',
+                      '76 mutual friends',
                       style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      feedItem.language ?? '',
+                      feedItem.subject ?? '',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.green[700],

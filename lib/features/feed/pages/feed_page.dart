@@ -1,4 +1,6 @@
-import 'package:ezdu/features/feed/entities/feed.dart';
+import 'package:ezdu/core/constants/app_constants.dart';
+import 'package:ezdu/data/models/feed_model.dart';
+import 'package:ezdu/data/repositories/feed_repository.dart';
 import 'package:ezdu/features/feed/widgets/feed_achievement_card.dart';
 import 'package:ezdu/features/feed/widgets/feed_announcement_card.dart';
 import 'package:ezdu/features/feed/widgets/feed_friend_suggestion_slider.dart';
@@ -7,39 +9,21 @@ import 'package:ezdu/features/feed/widgets/feed_sentence_shared_card.dart';
 import 'package:ezdu/features/feed/widgets/feed_single_recommended_friend.dart';
 import 'package:flutter/material.dart';
 
-class FeedPage extends StatefulWidget {
-  const FeedPage({super.key});
+class FeedPage extends StatelessWidget {
+  const FeedPage({super.key, required this.feedRepository});
 
-  @override
-  State<StatefulWidget> createState() => _FeedPageState();
-
-}
-
-class _FeedPageState extends State<FeedPage> {
-  late PageController _pageController;
-  int _currentPage = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController();
-  }
+  final FeedRepository feedRepository;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        // decoration: BoxDecoration(
-        //   gradient: LinearGradient(
-        //     begin: Alignment.topLeft,
-        //     end: Alignment.bottomRight,
-        //     colors: [Colors.green[50]!, Colors.blue[50]!],
-        //   ),
-        // ),
-        child: SafeArea(
+    return RefreshIndicator(
+      onRefresh: () async {
+        await feedRepository.getFeedList();
+      },
+      child: Scaffold(
+        body: SafeArea(
           child: CustomScrollView(
             slivers: [
-              // Header
               SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -50,82 +34,175 @@ class _FeedPageState extends State<FeedPage> {
                         'Feed',
                         style: Theme.of(context).textTheme.headlineLarge
                             ?.copyWith(
-                          color: Colors.green[700],
-                          fontWeight: FontWeight.bold,
-                        ),
+                              color: Colors.green[700],
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         "Celebrate your friends' learning journey",
-                        style: Theme.of(context).textTheme.bodyMedium
-                            ?.copyWith(color: Colors.grey[600]),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[600],
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
+
+              FutureBuilder(
+                future: feedRepository.getFeedList(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return SliverToBoxAdapter(
+                      child: const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16.0),
+                              child: Text('Loading...'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  if (snapshot.hasData && snapshot.data!.data != null) {
+                    return SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final item = snapshot.data!.data!.items[index];
+
+                        switch (item.type) {
+                          case FeedType.Achievement:
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: AchievementCard(
+                                feedItem: item,
+                                onLikeTap: () {},
+                              ),
+                            );
+                          case FeedType.SentenceShare:
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: SentenceShareCard(
+                                feedItem: item,
+                                onLikeTap: () {},
+                              ),
+                            );
+                          case FeedType.FriendSuggestion:
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: FriendSuggestionsSlider(
+                                // pageController: _pageController,
+                                onPageChanged: (page) {
+                                  // setState(() => _currentPage = page);
+                                },
+                                onRemoveItem: (itemId) {},
+                              ),
+                            );
+                          case FeedType.SingleFriend:
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: SingleRecommendedFriend(
+                                feedItem: item,
+                                onAddFriend: () {},
+                              ),
+                            );
+                          case FeedType.Notification:
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: NotificationCard(
+                                feedItem: item,
+                                onDismiss: () {},
+                              ),
+                            );
+                          case FeedType.Announcement:
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 16),
+                              child: AnnouncementCard(
+                                feedItem: item,
+                                onDismiss: () {},
+                              ),
+                            );
+                          default:
+                            return const SizedBox.shrink();
+                        }
+                      }, childCount: snapshot.data!.data!.totalCount),
+                    );
+                  }
+
+                  return SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32.0),
+                      child: Text(
+                        'No more updates from the past week',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                      ),
+                    ),
+                  );
+                },
+              ),
+
+              SliverToBoxAdapter(child: const SizedBox(height: 20)),
               // Feed Items
               SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
                   final item = feedItems[index];
 
                   switch (item.type) {
-                    case 'achievement':
+                    case FeedType.Achievement:
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: AchievementCard(
                           feedItem: item,
-                          onLikeTap: () {
-
-                          },
+                          onLikeTap: () {},
                         ),
                       );
-                    case 'sentence_share':
+                    case FeedType.SentenceShare:
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: SentenceShareCard(
                           feedItem: item,
-                          onLikeTap: () {
-                          },
+                          onLikeTap: () {},
                         ),
                       );
-                    case 'friend_suggestions_slider':
+                    case FeedType.FriendSuggestion:
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: FriendSuggestionsSlider(
-                          pageController: _pageController,
+                          // pageController: _pageController,
                           onPageChanged: (page) {
-                            setState(() => _currentPage = page);
+                            // setState(() => _currentPage = page);
                           },
-                          onRemoveItem: (itemId) {
-                          },
+                          onRemoveItem: (itemId) {},
                         ),
                       );
-                    case 'single_friend':
+                    case FeedType.SingleFriend:
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: SingleRecommendedFriend(
                           feedItem: item,
-                          onAddFriend: () {
-                          },
+                          onAddFriend: () {},
                         ),
                       );
-                    case 'notification':
+                    case FeedType.Notification:
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: NotificationCard(
                           feedItem: item,
-                          onDismiss: () {
-                          },
+                          onDismiss: () {},
                         ),
                       );
-                    case 'announcement':
+                    case FeedType.Announcement:
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: AnnouncementCard(
                           feedItem: item,
-                          onDismiss: () {
-                          },
+                          onDismiss: () {},
                         ),
                       );
                     default:
@@ -139,106 +216,214 @@ class _FeedPageState extends State<FeedPage> {
                   child: Text(
                     'No more updates from the past week',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   ),
                 ),
               ),
             ],
-          )
+          ),
         ),
       ),
     );
   }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
 }
 
-const feedItems = [
-  FeedEntry(
-    id: '1',
-    type: 'achievement',
-    userName: 'Sarah Chen',
-    avatar: '👩‍🦰',
-    action: 'reached a 30-day streak!',
-    timestamp: '2 hours ago',
-    language: '🇪🇸 Spanish',
+final feedItems = [
+  FeedItem(
+    id: 1,
+    type: FeedType.Achievement,
+    name: 'Sarah Chen',
+    userImageUrl: '👩‍🦰',
+    message: 'reached a 30-day streak!',
+    createdAt: '2025-11-23T15:24:50.123456Z',
     likeCount: 24,
-    isLiked: false,
+    isRead: false,
+    userId: 1,
+    content: '',
+    subjectId: 1,
+    subject: "math",
+    subjectImageUrl: '',
+    topicId: 1,
+    topic: '',
+    title: '',
   ),
-  FeedEntry(
-    id: '2',
-    type: 'sentence_share',
-    userName: 'Alex Rodriguez',
-    avatar: '👨‍💼',
-    action: 'shared a sentence',
-    sentence: 'El gato está durmiendo en el sofá',
-    translation: 'The cat is sleeping on the sofa',
-    timestamp: '4 hours ago',
-    language: '🇫🇷 French',
+  FeedItem(
+    id: 2,
+    type: FeedType.SentenceShare,
+    name: 'Alex Rodriguez',
+    // Changed from userName
+    userImageUrl: '👨‍💼',
+    // Changed from avatar
+    message:
+        'shared a sentence: "El gato está durmiendo en el sofá" (The cat is sleeping on the sofa)',
+    // Combined action, sentence, and translation
+    createdAt: '2025-11-23T15:00:00.000000Z',
+    // Changed from timestamp
     likeCount: 42,
-    isLiked: false,
+    isRead: false,
+    // Defaulted
+    userId: 2,
+    // Defaulted
+    content: 'Language: French 🇫🇷',
+    // Stored extra info here
+    subjectId: 2,
+    // Defaulted
+    subjectImageUrl: '',
+    topicId: 2,
+    // Defaulted
+    topic: 'French',
+    // Defaulted
+    title: '',
   ),
-  FeedEntry(
-    id: '3',
-    type: 'friend_suggestions_slider',
+  FeedItem(
+    id: 3,
+    type: FeedType.FriendSuggestion,
+    name: 'Suggestions',
+    // Defaulted
+    userImageUrl: '',
+    message: 'Find new friends to connect with!',
+    // Defaulted
+    createdAt: '2025-11-23T10:25:00.000000Z',
+    // Defaulted
     likeCount: 0,
-    isLiked: false,
+    isRead: true,
+    // Likely true for non-action items
+    userId: 0,
+    // Defaulted
+    content: 'slider',
+    // Stored type content
+    subjectId: 0,
+    // Defaulted
+    subjectImageUrl: '',
+    topicId: 0,
+    // Defaulted
+    topic: '',
+    title: '',
   ),
-  FeedEntry(
-    id: '4',
-    type: 'single_friend',
-    userName: 'Jordan Lee',
-    avatar: '👩‍🎓',
-    language: '🇯🇵 Japanese',
-    mutualFriends: 3,
+  FeedItem(
+    id: 4,
+    type: FeedType.SingleFriend,
+    name: 'Jordan Lee',
+    // Changed from userName
+    userImageUrl: '👩‍🎓',
+    // Changed from avatar
+    message: 'Connect with Jordan. You have 3 mutual friends.',
+    // Combined action
+    createdAt: '2025-11-22T13:25:00.000000Z',
+    // Defaulted
     likeCount: 0,
-    isLiked: false,
+    isRead: true,
+    // Likely true
+    userId: 4,
+    // Defaulted
+    content: 'Language: Japanese 🇯🇵',
+    // Stored extra info
+    subjectId: 4,
+    // Defaulted
+    subjectImageUrl: '',
+    topicId: 4,
+    // Defaulted
+    topic: 'Japanese',
+    // Defaulted
+    title: '',
   ),
-  FeedEntry(
-    id: '5',
-    type: 'notification',
-    title: 'Daily Practice Reminder',
+  FeedItem(
+    id: 5,
+    type: FeedType.Notification,
+    name: 'System Alert',
+    // Defaulted
+    userImageUrl: '',
     message: "You haven't practiced today. Keep your streak alive!",
-    timestamp: '1 hour ago',
+    // Changed from message
+    createdAt: '2025-11-22T13:25:00.000000Z',
+    // Changed from timestamp
     likeCount: 0,
-    isLiked: false,
+    isRead: false,
+    userId: 0,
+    // Defaulted
+    content: '',
+    subjectId: 0,
+    // Defaulted
+    subjectImageUrl: '',
+    topicId: 0,
+    // Defaulted
+    topic: '',
+    title: 'Daily Practice Reminder',
   ),
-  FeedEntry(
-    id: '6',
-    type: 'achievement',
-    userName: 'Marcus Thompson',
-    avatar: '👨‍🎯',
-    action: 'is now in 2nd place in Gold League!',
-    timestamp: '3 hours ago',
-    language: '🇩🇪 German',
+  FeedItem(
+    id: 6,
+    type: FeedType.Achievement,
+    name: 'Marcus Thompson',
+    // Changed from userName
+    userImageUrl: '👨‍🎯',
+    // Changed from avatar
+    message: 'is now in 2nd place in Gold League!',
+    // Changed from action
+    createdAt: '2025-11-16T15:25:00.000000Z',
+    // Changed from timestamp
     likeCount: 56,
-    isLiked: false,
+    isRead: false,
+    userId: 6,
+    // Defaulted
+    content: 'Language: German 🇩🇪',
+    // Stored extra info
+    subjectId: 6,
+    // Defaulted
+    subjectImageUrl: '',
+    topicId: 6,
+    // Defaulted
+    topic: 'German',
+    // Defaulted
+    title: 'League Update',
   ),
-  FeedEntry(
-    id: '7',
-    type: 'announcement',
-    title: '🎉 New Challenge Available',
+  FeedItem(
+    id: 7,
+    type: FeedType.Announcement,
+    name: 'App News',
+    // Defaulted
+    userImageUrl: '',
     message: 'Try the new Monthly Challenge and earn special rewards!',
-    timestamp: '6 hours ago',
+    // Changed from message
+    createdAt: '2025-11-16T15:25:00.000000Z',
+    // Changed from timestamp
     likeCount: 0,
-    isLiked: false,
+    isRead: true,
+    userId: 0,
+    // Defaulted
+    content: '',
+    subjectId: 0,
+    // Defaulted
+    subjectImageUrl: '',
+    topicId: 0,
+    // Defaulted
+    topic: '',
+    title: '🎉 New Challenge Available',
   ),
-  FeedEntry(
-    id: '8',
-    type: 'achievement',
-    userName: 'Emma Wilson',
-    avatar: '👩‍🔬',
-    action: 'completed 1,000 XP this week!',
-    timestamp: '7 hours ago',
-    language: '🇮🇹 Italian',
+  FeedItem(
+    id: 8,
+    type: FeedType.Achievement,
+    // Keeping Type 6 for all 'achievement' types
+    name: 'Emma Wilson',
+    // Changed from userName
+    userImageUrl: '👩‍🔬',
+    // Changed from avatar
+    message: 'completed 1,000 XP this week!',
+    // Changed from action
+    createdAt: '2025-11-16T15:25:00.000000Z',
+    // Changed from timestamp
     likeCount: 38,
-    isLiked: false,
+    isRead: false,
+    userId: 8,
+    // Defaulted
+    content: 'Language: Italian 🇮🇹',
+    // Stored extra info
+    subjectId: 8,
+    // Defaulted
+    subjectImageUrl: '',
+    topicId: 8,
+    // Defaulted
+    topic: 'Italian',
+    // Defaulted
+    title: 'XP Milestone', // Defaulted
   ),
 ];

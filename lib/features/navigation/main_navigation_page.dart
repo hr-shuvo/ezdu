@@ -151,7 +151,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
       case 3:
         return LeaderboardPage(leaderboardRepository: sl());
       case 4:
-        return FeedPage();
+        return FeedPage(feedRepository: sl(),);
       case 5:
         return _buildExtendedBody(context);
       default:

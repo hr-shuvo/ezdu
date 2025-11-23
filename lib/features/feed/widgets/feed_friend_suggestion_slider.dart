@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class FriendSuggestionsSlider extends StatefulWidget {
-  final PageController pageController;
+  // final PageController pageController;
   final Function(int) onPageChanged;
   final Function(String) onRemoveItem;
 
   const FriendSuggestionsSlider({
     Key? key,
-    required this.pageController,
+    // required this.pageController,
     required this.onPageChanged,
     required this.onRemoveItem,
   }) : super(key: key);
@@ -50,8 +50,14 @@ class _FriendSuggestionsSliderState extends State<FriendSuggestionsSlider> {
       'language': '🇩🇪 German',
     },
   ];
-
+  late PageController _pageController;
   int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +80,7 @@ class _FriendSuggestionsSliderState extends State<FriendSuggestionsSlider> {
             SizedBox(
               height: 200,
               child: PageView.builder(
-                controller: widget.pageController,
+                controller: _pageController,
                 onPageChanged: (page) {
                   setState(() => _currentPage = page);
                   widget.onPageChanged(page);
@@ -92,7 +98,7 @@ class _FriendSuggestionsSliderState extends State<FriendSuggestionsSlider> {
                 suggestedFriends.length,
                 (index) => GestureDetector(
                   onTap: () {
-                    widget.pageController.animateToPage(
+                    _pageController.animateToPage(
                       index,
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,

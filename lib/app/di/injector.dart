@@ -1,4 +1,5 @@
 import 'package:ezdu/data/datasources/class_remote_ds.dart';
+import 'package:ezdu/data/datasources/feed_remote_ds.dart';
 import 'package:ezdu/data/datasources/leaderboard_remote_ds.dart';
 import 'package:ezdu/data/datasources/lesson_remote_ds.dart';
 import 'package:ezdu/data/datasources/notification_remote_ds.dart';
@@ -10,6 +11,7 @@ import 'package:ezdu/data/datasources/user_remote_ds.dart';
 import 'package:ezdu/data/repositories/archive_repository.dart';
 import 'package:ezdu/data/repositories/auth_repository.dart';
 import 'package:ezdu/data/repositories/classRepository.dart';
+import 'package:ezdu/data/repositories/feed_repository.dart';
 import 'package:ezdu/data/repositories/leaderboard_repository.dart';
 import 'package:ezdu/data/repositories/lesson_repository.dart';
 import 'package:ezdu/data/repositories/notification_repository.dart';
@@ -122,6 +124,14 @@ Future<void> initializeDependencies() async {
   );
   sl.registerLazySingleton<NotificationRemoteDataSource>(
     () => NotificationRemoteDataSource(sl()),
+  );
+
+  // feed
+  sl.registerLazySingleton<FeedRepository>(
+    () => FeedRepository(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton<FeedRemoteDataSource>(
+    () => FeedRemoteDataSource(sl()),
   );
 
   print('Dependency Injection initialized.');

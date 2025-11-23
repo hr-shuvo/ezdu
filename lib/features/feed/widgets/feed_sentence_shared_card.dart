@@ -1,8 +1,9 @@
-import 'package:ezdu/features/feed/entities/feed.dart';
+import 'package:ezdu/core/utils/helpers.dart';
+import 'package:ezdu/data/models/feed_model.dart';
 import 'package:flutter/material.dart';
 
 class SentenceShareCard extends StatelessWidget {
-  final FeedEntry feedItem;
+  final FeedItem feedItem;
   final VoidCallback onLikeTap;
 
   const SentenceShareCard({
@@ -24,7 +25,7 @@ class SentenceShareCard extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  feedItem.avatar ?? '',
+                  feedItem.userImageUrl ?? '',
                   style: const TextStyle(fontSize: 40),
                 ),
                 const SizedBox(width: 12),
@@ -35,7 +36,7 @@ class SentenceShareCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            feedItem.userName ?? '',
+                            feedItem.name ?? '',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
@@ -43,7 +44,7 @@ class SentenceShareCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            feedItem.timestamp ?? '',
+                            TimeHelper.formatRelativeTime(feedItem.createdAt),
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 12,
@@ -53,12 +54,12 @@ class SentenceShareCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        feedItem.action ?? '',
+                        feedItem.message ?? '',
                         style: const TextStyle(fontSize: 14),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        feedItem.language ?? '',
+                        feedItem.subject ?? '',
                         style: TextStyle(
                           color: Colors.green[700],
                           fontWeight: FontWeight.bold,
@@ -66,14 +67,6 @@ class SentenceShareCard extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ),
-                ),
-                IconButton(
-                  onPressed: onLikeTap,
-                  icon: Icon(
-                    feedItem.isLiked ? Icons.favorite : Icons.favorite_outline,
-                    color: feedItem.isLiked ? Colors.red : Colors.grey,
-                    size: 24,
                   ),
                 ),
               ],
@@ -86,7 +79,7 @@ class SentenceShareCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '"${feedItem.sentence ?? ''}"',
+                  '"${feedItem.content ?? ''}"',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -95,7 +88,7 @@ class SentenceShareCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  feedItem.translation ?? '',
+                  feedItem.content ?? '',
                   style: TextStyle(fontSize: 12, color: Colors.grey[700]),
                 ),
               ],

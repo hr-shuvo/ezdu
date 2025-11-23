@@ -1,43 +1,49 @@
 class FeedItem {
   int id;
+  String title;
+  String message;
+  int type;
+  String? content;
   String name;
   int userId;
-  String userImageUrl;
-  int type;
-  String message;
-  String content;
+  String? userImageUrl;
   bool isRead;
-  int likeCount;
+  int? likeCount;
 
-  int subjectId;
-  String subject;
-  String subjectImageUrl;
-  int topicId;
-  String topic;
+  int? subjectId;
+  String? subject;
+  String? subjectImageUrl;
+  int? topicId;
+  String? topic;
+
+  String createdAt;
 
   FeedItem({
     required this.id,
+    required this.title,
+    required this.message,
+    required this.type,
+    this.content,
     required this.name,
     required this.userId,
-    required this.userImageUrl,
-    required this.type,
-    required this.message,
-    required this.content,
+    this.userImageUrl,
     required this.isRead,
-    required this.likeCount,
-    required this.subjectId,
-    required this.subject,
-    required this.subjectImageUrl,
-    required this.topicId,
-    required this.topic,
+    this.likeCount,
+    this.subjectId,
+    this.subject,
+    this.subjectImageUrl,
+    this.topicId,
+    this.topic,
+    required this.createdAt,
   });
 
-  factory FeedItem.fromJson(Map<String, dynamic> json) {
+  factory FeedItem.toModel(Map<String, dynamic> json) {
     return FeedItem(
       id: json['id'] ?? 0,
+      title: json['title'] ?? '',
       name: json['name'] ?? '',
       userId: json['userId'] ?? 0,
-      userImageUrl: json['userImageUrl'] ?? '',
+      userImageUrl: json['userImageUrl'],
       type: json['type'] ?? 0,
       message: json['message'] ?? '',
       content: json['content'] ?? '',
@@ -50,6 +56,7 @@ class FeedItem {
 
       topicId: json['topicId'] ?? 0,
       topic: json['topic'] ?? '',
+      createdAt: json['createdAt'] ?? '',
     );
   }
 }
