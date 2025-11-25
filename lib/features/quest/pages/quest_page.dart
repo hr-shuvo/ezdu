@@ -2,6 +2,204 @@ import 'package:ezdu/features/quest/models/quest_model.dart';
 import 'package:ezdu/features/quest/widgets/quest_card.dart';
 import 'package:flutter/material.dart';
 
+class QuestPage extends StatefulWidget {
+  const QuestPage({Key? key}) : super(key: key);
+
+  @override
+  State<QuestPage> createState() => _QuestPageHomeState();
+}
+
+class _QuestPageHomeState extends State<QuestPage> {
+  late List<QuestModel> dailyQuestsList;
+  late List<QuestModel> weeklyQuestsList;
+  int totalDailyXP = 0;
+  int totalWeeklyXP = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    dailyQuestsList = dailyQuests;
+    weeklyQuestsList = weeklyQuests;
+    _calculateTotalXP();
+  }
+
+  void _calculateTotalXP() {
+    totalDailyXP = dailyQuestsList
+        .where((q) => q.isComplete)
+        .fold(0, (sum, q) => sum + q.xpReward);
+    totalWeeklyXP = weeklyQuestsList
+        .where((q) => q.isComplete)
+        .fold(0, (sum, q) => sum + q.xpReward);
+  }
+
+  void _completeQuest(QuestModel quest) {
+    setState(() {
+      final index = quest.type == QuestType.daily
+          ? dailyQuestsList.indexWhere((q) => q.id == quest.id)
+          : weeklyQuestsList.indexWhere((q) => q.id == quest.id);
+
+      if (index != -1) {
+        final questList = quest.type == QuestType.daily
+            ? dailyQuestsList
+            : weeklyQuestsList;
+        questList[index] = QuestModel(
+          id: quest.id,
+          title: quest.title,
+          description: quest.description,
+          xpReward: quest.xpReward,
+          currentProgress: quest.targetProgress,
+          targetProgress: quest.targetProgress,
+          type: quest.type,
+          icon: quest.icon,
+          color: quest.color,
+          completed: true,
+        );
+        _calculateTotalXP();
+      }
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('QuestModel completed! +${quest.xpReward} XP'),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Quests & Challenges'),
+        elevation: 0,
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Total XP Card
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.deepPurple.shade400,
+                      Colors.deepPurple.shade700,
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.deepPurple.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Today\'s XP',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: Colors.white70),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '$totalDailyXP XP',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      ],
+                    ),
+                    Container(width: 1, height: 50, color: Colors.white30),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          'This Week',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: Colors.white70),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '$totalWeeklyXP XP',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // Daily Quests Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text(
+                '📅 Daily Quests',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: dailyQuestsList
+                    .map(
+                      (quest) => QuestCard(
+                        quest: quest,
+                        onComplete: () => _completeQuest(quest),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Weekly Quests Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Text(
+                '📊 Weekly Challenges',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: weeklyQuestsList
+                    .map(
+                      (quest) => QuestCard(
+                        quest: quest,
+                        onComplete: () => _completeQuest(quest),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+            const SizedBox(height: 32),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 final List<QuestModel> dailyQuests = [
   QuestModel(
@@ -200,220 +398,3 @@ final List<QuestModel> weeklyQuests = [
     completed: false,
   ),
 ];
-
-class QuestPage extends StatelessWidget {
-  const QuestPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'EzDu Quests',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const QuestPageHome(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-// ============= QUEST PAGE HOME =============
-class QuestPageHome extends StatefulWidget {
-  const QuestPageHome({Key? key}) : super(key: key);
-
-  @override
-  State<QuestPageHome> createState() => _QuestPageHomeState();
-}
-
-class _QuestPageHomeState extends State<QuestPageHome> {
-  late List<QuestModel> dailyQuestsList;
-  late List<QuestModel> weeklyQuestsList;
-  int totalDailyXP = 0;
-  int totalWeeklyXP = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    dailyQuestsList = dailyQuests;
-    weeklyQuestsList = weeklyQuests;
-    _calculateTotalXP();
-  }
-
-  void _calculateTotalXP() {
-    totalDailyXP = dailyQuestsList
-        .where((q) => q.isComplete)
-        .fold(0, (sum, q) => sum + q.xpReward);
-    totalWeeklyXP = weeklyQuestsList
-        .where((q) => q.isComplete)
-        .fold(0, (sum, q) => sum + q.xpReward);
-  }
-
-  void _completeQuest(QuestModel quest) {
-    setState(() {
-      final index = quest.type == QuestType.daily
-          ? dailyQuestsList.indexWhere((q) => q.id == quest.id)
-          : weeklyQuestsList.indexWhere((q) => q.id == quest.id);
-
-      if (index != -1) {
-        final questList =
-        quest.type == QuestType.daily ? dailyQuestsList : weeklyQuestsList;
-        questList[index] = QuestModel(
-          id: quest.id,
-          title: quest.title,
-          description: quest.description,
-          xpReward: quest.xpReward,
-          currentProgress: quest.targetProgress,
-          targetProgress: quest.targetProgress,
-          type: quest.type,
-          icon: quest.icon,
-          color: quest.color,
-          completed: true,
-        );
-        _calculateTotalXP();
-      }
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('QuestModel completed! +${quest.xpReward} XP'),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Quests & Challenges'),
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Total XP Card
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.deepPurple.shade400,
-                      Colors.deepPurple.shade700,
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.deepPurple.withOpacity(0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Today\'s XP',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.white70,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '$totalDailyXP XP',
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: 1,
-                      height: 50,
-                      color: Colors.white30,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          'This Week',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.white70,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '$totalWeeklyXP XP',
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            // Daily Quests Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text(
-                '📅 Daily Quests',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: dailyQuestsList
-                    .map((quest) => QuestCard(
-                  quest: quest,
-                  onComplete: () => _completeQuest(quest),
-                ))
-                    .toList(),
-              ),
-            ),
-            const SizedBox(height: 24),
-            // Weekly Quests Section
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text(
-                '📊 Weekly Challenges',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: weeklyQuestsList
-                    .map((quest) => QuestCard(
-                  quest: quest,
-                  onComplete: () => _completeQuest(quest),
-                ))
-                    .toList(),
-              ),
-            ),
-            const SizedBox(height: 32),
-          ],
-        ),
-      ),
-    );
-  }
-}
-

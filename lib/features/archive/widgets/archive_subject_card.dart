@@ -3,129 +3,128 @@ import 'package:flutter/material.dart';
 
 class SubjectCard extends StatefulWidget {
   final SubjectModel subject;
+  final Color cardColor;
   final VoidCallback onTap;
 
-  const SubjectCard({super.key, required this.subject, required this.onTap});
+  const SubjectCard({
+    super.key,
+    required this.subject,
+    required this.onTap,
+    required this.cardColor,
+  });
 
   @override
   State<SubjectCard> createState() => _SubjectCardState();
 }
 
-class _SubjectCardState extends State<SubjectCard>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-  static const String _imageUrl = 'https://picsum.photos/400/200?random=1';
+class _SubjectCardState extends State<SubjectCard>{
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.05,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final cardColor = colorScheme.primaryContainer;
-    final contentColor = colorScheme.tertiary;
+    final theme = Theme.of(context);
+    final cardColor = widget.cardColor;
 
     return GestureDetector(
-      onTapDown: (_) => _controller.forward(),
+      onTapDown: (_) => {},
       onTapUp: (_) {
-        _controller.reverse();
         widget.onTap();
       },
-      onTapCancel: () => _controller.reverse(),
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: Container(
-          height: 150,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: colorScheme.secondary.withValues(alpha: 0.2),
-              width: 1,
+      onTapCancel: () => {},
+      child: Container(
+        height: 150,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: theme.brightness == Brightness.dark
+              ? cardColor.withValues(alpha: 0.25)
+              : cardColor,
+          border: Border.all(
+            color: theme.brightness == Brightness.dark
+                ? cardColor.withValues(alpha: 0.5)
+                : cardColor.withValues(alpha: 0.4),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: theme.brightness == Brightness.dark
+                  ? cardColor.withValues(alpha: 0.25)
+                  : cardColor.withValues(alpha: 0.4),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
-            // color: cardColor,
-            // image: const DecorationImage(
-            //   image: NetworkImage(_imageUrl),
-            //   fit: BoxFit.cover,
-            //   colorFilter: ColorFilter.mode(Colors.black54, BlendMode.darken),
-            // ),
-            boxShadow: [
-              BoxShadow(
-                color: colorScheme.secondary.withValues(alpha: 0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(
-                      Icons.subject,
-                      color: colorScheme.primary.withValues(alpha: .8),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.subject.name,
-                          style: TextStyle(
-                            color: colorScheme.primary.withValues(),
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            // shadows: const [
-                            //   Shadow(color: Colors.black, blurRadius: 4),
-                            // ],
-                          ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    Icons.subject,
+                    color: theme.brightness == Brightness.dark
+                        ? cardColor
+                        : _getTextColor(cardColor).withValues(alpha: 0.8),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.subject.name,
+                        style: TextStyle(
+                          color: theme.brightness == Brightness.dark
+                              ? Colors.white
+                              : _getTextColor(cardColor),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${widget.subject.activeQuizCount} exams',
-                          style: TextStyle(
-                            color: colorScheme.primary.withValues(alpha: .8),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${widget.subject.activeQuizCount} exams',
+                        style: TextStyle(
+                          color: theme.brightness == Brightness.dark
+                              ? Colors.white70
+                              : _getTextColor(cardColor).withValues(alpha: 0.8),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Positioned(
-                right: 12,
-                top: 12,
-                child: Icon(
-                  Icons.chevron_right,
-                  color: colorScheme.primary.withValues(alpha: .8),
-                  size: 24,
-                ),
+            ),
+            Positioned(
+              right: 12,
+              top: 12,
+              child: Icon(
+                Icons.chevron_right,
+                color: theme.brightness == Brightness.dark
+                    ? cardColor
+                    : _getTextColor(cardColor).withValues(alpha: 0.8),
+                size: 24,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+}
+
+Color _getTextColor(Color bgColor) {
+  final luminance = bgColor.computeLuminance();
+  return luminance > 0.5 ? Colors.black87 : Colors.white;
 }

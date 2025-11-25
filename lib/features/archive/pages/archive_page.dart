@@ -35,142 +35,134 @@ class _ArchivePageState extends ConsumerState<ArchivePage> {
         title: Text(
           'Archive',
           style: TextStyle(
-            fontSize: 28,
+            fontSize: 24,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF1E293B),
           ),
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFF8FAFC), Color(0xFFF1F5F9)],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                     children: [
                       Expanded(
                         child: StatCard(
                           label: 'Streak',
                           value: '79',
                           icon: '🔥',
-                          backgroundColor: Color(0xFFFEF3C7),
+                          backgroundColor: const Color(0xFFD4765F), // Deep Terracotta (matching theme)
                         ),
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: StatCard(
                           label: 'Points',
                           value: '2.5K',
                           icon: '⭐',
-                          backgroundColor: Color(0xFFFEF08A),
+                          backgroundColor: const Color(0xFFD4B84E), // Deep Gold
                         ),
                       ),
-
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: StatCard(
                           icon: '✅',
                           label: 'Answered',
                           value: '145',
-                          backgroundColor: Color(0xFFDCFCE7),
+                          backgroundColor: const Color(0xFF70AD47), // Deep Green
                         ),
                       ),
                     ],
+                ),
+                const SizedBox(height: 28),
+
+                const Text(
+                  'Explore Subjects',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF475569),
                   ),
-                  const SizedBox(height: 28),
+                ),
+                const SizedBox(height: 12),
 
-                  const Text(
-                    'Explore Subjects',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF475569),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
-                  FutureBuilder(
-                    future: _subjectListFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CircularProgressIndicator(),
-                              Padding(
-                                padding: EdgeInsets.only(top: 16.0),
-                                child: Text('Loading subjects...'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text(
-                              'Error loading data: ${snapshot.error}',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.red),
+                FutureBuilder(
+                  future: _subjectListFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(),
+                            Padding(
+                              padding: EdgeInsets.only(top: 16.0),
+                              child: Text('Loading subjects...'),
                             ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            'Error loading data: ${snapshot.error}',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.red),
                           ),
-                        );
-                      }
+                        ),
+                      );
+                    }
 
-                      if (snapshot.hasData &&
-                          snapshot.data!.data != null &&
-                          snapshot.data!.data!.totalCount > 0) {
-                        final subjects = snapshot.data!.data!.items;
+                    if (snapshot.hasData &&
+                        snapshot.data!.data != null &&
+                        snapshot.data!.data!.totalCount > 0) {
+                      final subjects = snapshot.data!.data!.items;
 
-                        return GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 12,
-                                mainAxisSpacing: 12,
-                                childAspectRatio: 0.85,
-                              ),
-                          itemCount: subjects.length,
-                          itemBuilder: (context, index) {
-                            final subject = subjects[index];
-                            return SubjectCard(
-                              subject: subject,
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  SlideRightToLeftRoute(
-                                    page: ExamListScreen(
-                                      subject: subject,
-                                      archiveRepository: sl(),
-                                    ),
+                      return GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                              childAspectRatio: 0.85,
+                            ),
+                        itemCount: subjects.length,
+                        itemBuilder: (context, index) {
+                          final subject = subjects[index];
+                          final cardColor = _cardColors[index % _cardColors.length];
+
+                          return SubjectCard(
+                            subject: subject,
+                            cardColor: cardColor,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                SlideRightToLeftRoute(
+                                  page: ExamListScreen(
+                                    subject: subject,
+                                    archiveRepository: sl(),
                                   ),
-                                );
-                              },
-                            );
-                          },
-                        );
-                      }
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    }
 
-                      return const Center(child: Text('No subjects found.'));
-                    },
-                  ),
-                ],
-              ),
+                    return const Center(child: Text('No subjects found.'));
+                  },
+                ),
+              ],
             ),
           ),
         ),
@@ -178,3 +170,15 @@ class _ArchivePageState extends ConsumerState<ArchivePage> {
     );
   }
 }
+
+final List<Color> _cardColors = [
+  const Color(0xFFFF9800), // Deep Orange
+  const Color(0xFF2196F3), // Deep Blue
+  const Color(0xFF4CAF50), // Deep Green
+  const Color(0xFFE91E63), // Deep Pink
+  const Color(0xFFFF5722), // Deep Red-Orange
+  const Color(0xFF00BCD4), // Deep Cyan
+  const Color(0xFF9C27B0), // Deep Purple
+  const Color(0xFFFBC02D), // Deep Amber
+];
+
