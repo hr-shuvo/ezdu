@@ -145,13 +145,13 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
       case 0:
         return HomePage(quizRepository: sl());
       case 1:
-        return QuestPage();
+        return QuestPage(userQuestRepository: sl());
       case 2:
         return QuizTabPage();
       case 3:
         return LeaderboardPage(leaderboardRepository: sl());
       case 4:
-        return FeedPage(feedRepository: sl(),);
+        return FeedPage(feedRepository: sl());
       case 5:
         return _buildExtendedBody(context);
       default:

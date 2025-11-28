@@ -7,6 +7,7 @@ import 'package:ezdu/data/datasources/question_remote_ds.dart';
 import 'package:ezdu/data/datasources/quiz_remote_ds.dart';
 import 'package:ezdu/data/datasources/subject_remote_ds.dart';
 import 'package:ezdu/data/datasources/user_progress_ds.dart';
+import 'package:ezdu/data/datasources/user_quest_remote_ds.dart';
 import 'package:ezdu/data/datasources/user_remote_ds.dart';
 import 'package:ezdu/data/repositories/archive_repository.dart';
 import 'package:ezdu/data/repositories/auth_repository.dart';
@@ -19,6 +20,7 @@ import 'package:ezdu/data/repositories/question_repository.dart';
 import 'package:ezdu/data/repositories/quiz_repository.dart';
 import 'package:ezdu/data/repositories/subject_repository.dart';
 import 'package:ezdu/data/repositories/user_progress_repository.dart';
+import 'package:ezdu/data/repositories/user_quest_repository.dart';
 import 'package:ezdu/data/repositories/user_repository.dart';
 import 'package:ezdu/features/archive/datasources/archive_remote_ds.dart';
 import 'package:ezdu/features/auth/datasources/auth_remote_ds.dart';
@@ -132,6 +134,14 @@ Future<void> initializeDependencies() async {
   );
   sl.registerLazySingleton<FeedRemoteDataSource>(
     () => FeedRemoteDataSource(sl()),
+  );
+
+  // user quest
+  sl.registerLazySingleton<UserQuestRepository>(
+    () => UserQuestRepository(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton<UserQuestRemoteDataSource>(
+    () => UserQuestRemoteDataSource(sl()),
   );
 
   print('Dependency Injection initialized.');

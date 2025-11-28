@@ -1,15 +1,15 @@
-import 'package:ezdu/features/quest/models/quest_model.dart';
+import 'package:ezdu/data/models/user_quest_model.dart';
 import 'package:flutter/material.dart';
 
 class QuestCard extends StatefulWidget {
-  final QuestModel quest;
+  final UserQuestModel quest;
   final VoidCallback onComplete;
 
   const QuestCard({
-    Key? key,
+    super.key,
     required this.quest,
     required this.onComplete,
-  }) : super(key: key);
+  });
 
   @override
   State<QuestCard> createState() => _QuestCardState();
@@ -44,7 +44,7 @@ class _QuestCardState extends State<QuestCard>
   @override
   Widget build(BuildContext context) {
     final progress = widget.quest.progress;
-    final isComplete = widget.quest.isComplete;
+    final isComplete = widget.quest.completed;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
@@ -60,8 +60,8 @@ class _QuestCardState extends State<QuestCard>
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isComplete
-                  ? Colors.green.withOpacity(0.3)
-                  : widget.quest.color.withOpacity(0.3),
+                  ? Color(0xFF4CAF50).withOpacity(0.3)
+                  : Color(0xFF4CAF50).withOpacity(0.7),
               width: 2,
             ),
           ),
@@ -75,12 +75,12 @@ class _QuestCardState extends State<QuestCard>
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: widget.quest.color.withOpacity(0.2),
+                      color:  Color(0xFF4CAF50),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
-                      widget.quest.icon,
-                      color: widget.quest.color,
+                      Icons.local_fire_department,
+                      color: const Color(0xFFF8F5F5),
                       size: 24,
                     ),
                   ),
@@ -95,9 +95,6 @@ class _QuestCardState extends State<QuestCard>
                           style:
                           Theme.of(context).textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: isComplete
-                                ? Colors.grey[700]
-                                : Colors.black,
                             decoration: isComplete
                                 ? TextDecoration.lineThrough
                                 : TextDecoration.none,
@@ -123,16 +120,16 @@ class _QuestCardState extends State<QuestCard>
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: widget.quest.color.withOpacity(0.2),
+                      color: const Color(0xFF4CAF50).withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: widget.quest.color.withOpacity(0.5),
+                        color: const Color(0xFF4CAF50).withOpacity(0.5),
                       ),
                     ),
                     child: Text(
-                      '+${widget.quest.xpReward}',
+                      '+${widget.quest.target}',
                       style: TextStyle(
-                        color: widget.quest.color,
+                        color: const Color(0xFF4CAF50),
                         fontWeight: FontWeight.bold,
                         fontSize: 13,
                       ),
@@ -148,13 +145,13 @@ class _QuestCardState extends State<QuestCard>
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: LinearProgressIndicator(
-                      value: progress,
+                      value: progress / 1,
                       minHeight: 10,
                       backgroundColor: Colors.grey[200],
                       valueColor: AlwaysStoppedAnimation<Color>(
                         isComplete
                             ? Colors.green
-                            : widget.quest.color,
+                            : const Color(0xFF4CAF50),
                       ),
                     ),
                   ),
@@ -163,7 +160,7 @@ class _QuestCardState extends State<QuestCard>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${widget.quest.currentProgress}/${widget.quest.targetProgress}',
+                        '${widget.quest.progress}/${widget.quest.target}',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -191,7 +188,7 @@ class _QuestCardState extends State<QuestCard>
                         Text(
                           '${(progress * 100).toStringAsFixed(0)}%',
                           style: TextStyle(
-                            color: widget.quest.color,
+                            color: const Color(0xFF4CAF50),
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
                           ),
@@ -204,7 +201,7 @@ class _QuestCardState extends State<QuestCard>
               ),
               const SizedBox(height: 12),
               // Claim Button (only show if complete and not claimed)
-              if (isComplete && !widget.quest.completed)
+              if (widget.quest.completed)
                 SizedBox(
                   width: double.infinity,
                   height: 40,
