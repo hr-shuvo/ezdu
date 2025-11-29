@@ -54,7 +54,7 @@ class AppRoutes {
         );
 
       case '/profile':
-        return MaterialPageRoute(builder: (_) => const ProfilePage());
+        return MaterialPageRoute(builder: (_) => ProfilePage(userRepository: sl(),));
 
       default:
         return MaterialPageRoute(

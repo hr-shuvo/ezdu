@@ -43,25 +43,15 @@ class UserProfileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '@$username',
-                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Joined ${TimeHelper.formatUtcToLocalDate(joinedDate)}',
-                  style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-                ),
-              ],
+            child: Text(
+              'Joined ${TimeHelper.formatUtcToLocalDate(joinedDate)}',
+              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
             ),
           ),
           const SizedBox(height: 16),

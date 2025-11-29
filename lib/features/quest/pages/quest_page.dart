@@ -1,34 +1,11 @@
-import 'package:ezdu/data/models/user_quest_model.dart';
 import 'package:ezdu/data/repositories/user_quest_repository.dart';
 import 'package:ezdu/features/quest/widgets/quest_card.dart';
 import 'package:flutter/material.dart';
 
-class QuestPage extends StatefulWidget {
-  const QuestPage({super.key, required this.userQuestRepository});
-
+class QuestPage extends StatelessWidget {
   final UserQuestRepository userQuestRepository;
 
-  @override
-  State<QuestPage> createState() => _QuestPageHomeState();
-}
-
-class _QuestPageHomeState extends State<QuestPage> {
-  late List<UserQuestModel> dailyQuestsList;
-  int totalDailyXP = 0;
-  int totalWeeklyXP = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    dailyQuestsList = dailyQuests;
-    _calculateTotalXP();
-  }
-
-  void _calculateTotalXP() {
-    totalDailyXP = dailyQuestsList
-        .where((q) => q.completed)
-        .fold(0, (sum, q) => sum + q.target);
-  }
+  const QuestPage({super.key, required this.userQuestRepository});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +38,7 @@ class _QuestPageHomeState extends State<QuestPage> {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: FutureBuilder(
-                future: widget.userQuestRepository.getDailyQuestList(),
+                future: userQuestRepository.getDailyQuestList(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
@@ -79,7 +56,10 @@ class _QuestPageHomeState extends State<QuestPage> {
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: items.length,
                       itemBuilder: (context, index) {
-                        return QuestCard(quest: items[index], onComplete: () {});
+                        return QuestCard(
+                          quest: items[index],
+                          onComplete: () {},
+                        );
                       },
                     );
                   }
@@ -89,26 +69,15 @@ class _QuestPageHomeState extends State<QuestPage> {
               ),
             ),
           ),
-
-
-
-
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: Column(
-                children: dailyQuestsList
-                    .map((q) => QuestCard(quest: q, onComplete: () {}))
-                    .toList(),
-              ),
-            ),
-          )
         ],
       ),
     );
   }
 
   Widget _buildXPCard(BuildContext context) {
+    int totalDailyXP = 0;
+    int totalWeeklyXP = 0;
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -171,78 +140,3 @@ class _QuestPageHomeState extends State<QuestPage> {
     );
   }
 }
-
-final List<UserQuestModel> dailyQuests = [
-  UserQuestModel(
-    userId: 1,
-    questId: 1,
-    completed: true,
-    title: 'Complete 3 Lessons',
-    description: 'Finish any 3 lessons today',
-    progress: 2,
-    target: 3,
-  ),
-  UserQuestModel(
-    userId: 1,
-    questId: 2,
-    completed: false,
-    title: 'Start a Streak',
-    description: 'Complete 1 lesson to start your daily streak',
-    progress: 0,
-    target: 1,
-  ),
-  UserQuestModel(
-    userId: 1,
-    questId: 3,
-    completed: false,
-    title: 'Score 80% in 2 Lessons',
-    description: 'Achieve 80% accuracy or higher in 2 lessons',
-    progress: 1,
-    target: 2,
-  ),
-  UserQuestModel(
-    userId: 1,
-    questId: 4,
-    completed: false,
-    title: 'Get 10 in a Row',
-    description: 'Answer 10 questions correctly in a row',
-    progress: 7,
-    target: 10,
-  ),
-  UserQuestModel(
-    userId: 1,
-    questId: 5,
-    completed: false,
-    title: 'Earn 100 XP',
-    description: 'Accumulate 100 XP throughout the day',
-    progress: 85,
-    target: 100,
-  ),
-  UserQuestModel(
-    userId: 1,
-    questId: 6,
-    completed: false,
-    title: 'Perfect Lesson',
-    description: 'Complete 1 lesson with 100% accuracy',
-    progress: 0,
-    target: 1,
-  ),
-  UserQuestModel(
-    userId: 1,
-    questId: 7,
-    completed: false,
-    title: 'Try 3 Different Topics',
-    description: 'Practice lessons from 3 different subjects',
-    progress: 1,
-    target: 3,
-  ),
-  UserQuestModel(
-    userId: 1,
-    questId: 8,
-    completed: false,
-    title: 'Speed Runner',
-    description: 'Complete 2 lessons in under 5 minutes each',
-    progress: 1,
-    target: 2,
-  ),
-];

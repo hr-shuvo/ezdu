@@ -31,6 +31,154 @@ class ReviewSelectionPage extends StatelessWidget {
     return selectedTopicIds.length;
   }
 
+  @override
+  Widget build(BuildContext context) {
+    final selectedLessons = _getSelectedLessons();
+    final selectedCount = _getSelectedTopicsCount();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Review Selection'),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
+      ),
+      body: Column(
+        children: [
+          // Summary Section
+          Container(
+            padding: const EdgeInsets.all(16),
+            color: Theme.of(context).colorScheme.primary.withAlpha(25),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      selectedLessons.length.toString(),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                    ),
+                    Text(
+                      'Lesson${selectedLessons.length > 1 ? 's' : ''}',
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  width: 1,
+                  height: 50,
+                  color: Theme.of(context).colorScheme.outlineVariant,
+                ),
+                Column(
+                  children: [
+                    Text(
+                      selectedCount.toString(),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                    ),
+                    Text(
+                      'Topic${selectedCount > 1 ? 's' : ''}',
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          // Selected Lessons & Topics List
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                children: [
+                  for (var lesson in selectedLessons)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: ReviewLessonCard(
+                        lesson: lesson,
+                        selectedTopicIds: selectedTopicIds,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+
+          // Start Quiz Button
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerHighest,
+                      foregroundColor: Theme.of(context).colorScheme.onSurface,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: BorderSide(
+                          color: Theme.of(context).colorScheme.outlineVariant,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      'Back',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => _showQuizSettingsDialog(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      'Start Quiz',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showQuizSettingsDialog(BuildContext context) async {
     final selectedTopicIdList = selectedTopicIds.toList();
 
@@ -42,6 +190,7 @@ class ReviewSelectionPage extends StatelessWidget {
     final response = await questionRepository.getQuestionsByTopicIds(
       selectedTopicIdList,
     );
+    if (!context.mounted) return;
     Navigator.pop(context);
 
     if (response.success) {
@@ -106,122 +255,5 @@ class ReviewSelectionPage extends StatelessWidget {
         ),
       );
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final selectedLessons = _getSelectedLessons();
-    final selectedCount = _getSelectedTopicsCount();
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('Review Selection'), centerTitle: true),
-      body: Column(
-        children: [
-          // Summary Section
-          Container(
-            padding: const EdgeInsets.all(16),
-            color: Colors.blue[50],
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      selectedLessons.length.toString(),
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    Text(
-                      'Lesson${selectedLessons.length > 1 ? 's' : ''}',
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      selectedCount.toString(),
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    Text(
-                      'Topic${selectedCount > 1 ? 's' : ''}',
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          // Selected Lessons & Topics List
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                children: [
-                  for (var lesson in selectedLessons)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: ReviewLessonCard(
-                        lesson: lesson,
-                        selectedTopicIds: selectedTopicIds,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-          // Start Quiz Button
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[300],
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    child: Text(
-                      'Back',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[800],
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => _showQuizSettingsDialog(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    child: const Text(
-                      'Start Quiz',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

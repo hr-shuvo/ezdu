@@ -162,7 +162,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   Widget _buildExtendedBody(BuildContext context) {
     switch (_extendedIndex) {
       case 0:
-        return ProfilePage();
+        return ProfilePage(userRepository: sl());
       case 1:
         return ArchivePage(subjectRepository: sl());
       case 2:

@@ -19,9 +19,12 @@ class ReviewLessonCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.blue[200]!, width: 1.5),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary.withAlpha(100),
+          width: 1.5,
+        ),
         borderRadius: BorderRadius.circular(8),
-        color: Colors.blue[50],
+        color: Theme.of(context).colorScheme.primary.withAlpha(25),
       ),
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -33,10 +36,9 @@ class ReviewLessonCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   lesson.name,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -48,15 +50,14 @@ class ReviewLessonCard extends StatelessWidget {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   selectedTopics.length.toString(),
-                  style: const TextStyle(
-                    fontSize: 11,
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
                 ),
               ),
@@ -75,15 +76,14 @@ class ReviewLessonCard extends StatelessWidget {
                       Icon(
                         Icons.check_circle,
                         size: 16,
-                        color: Colors.green[600],
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           selectedTopics[i].name,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[700],
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,

@@ -83,7 +83,7 @@ class _LessonTopicSelectionPageState extends State<LessonTopicSelectionPage> {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[800],
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ),

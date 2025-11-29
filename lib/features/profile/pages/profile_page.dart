@@ -1,6 +1,7 @@
 // self profile page
 
 import 'package:ezdu/core/utils/route_helper.dart';
+import 'package:ezdu/data/repositories/user_repository.dart';
 import 'package:ezdu/features/profile/models/progress.dart';
 import 'package:ezdu/features/settings/pages/settings_page.dart';
 import 'package:ezdu/features/profile/widgets/profile_overview.dart';
@@ -9,13 +10,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, required this.userRepository});
+
+  final UserRepository userRepository;
 
   @override
   ConsumerState<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
+  Future<void> _refreshProfile() async {
+    setState(() {
+      // widget.userRepository.getUserDetails(auth);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,91 +75,123 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {},
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Stack(
+      body: FutureBuilder(
+        future: widget.userRepository.getUserDetails(authState.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    height: 120,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Theme.of(context).primaryColor,
-                          Theme.of(context).primaryColor.withValues(alpha: 0.6),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
+                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text('Error: ${snapshot.error}'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _refreshProfile,
+                    child: const Text('Retry'),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 4),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.2),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: CircleAvatar(
-                              backgroundImage: AssetImage(
-                                'assets/images/avatars/1.png',
-                              ),
-                              backgroundColor: Colors.grey[300],
-                            ),
+                ],
+              ),
+            );
+          }
+
+          if (!snapshot.hasData || snapshot.data?.data == null) {
+            return const Center(child: Text('No user data found'));
+          }
+
+          final user = snapshot.data!.data!;
+          return RefreshIndicator(
+            onRefresh: () async {},
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        height: 120,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Theme.of(context).primaryColor,
+                              Theme.of(
+                                context,
+                              ).primaryColor.withValues(alpha: 0.6),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 4,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.2,
+                                      ),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: CircleAvatar(
+                                  backgroundImage: AssetImage(
+                                    'assets/images/avatars/1.png',
+                                  ),
+                                  backgroundColor: Colors.grey[300],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Overview Card
+                  UserProfileWidget(
+                    displayName: user.name ?? 'User',
+                    username: user.userName ?? '@user',
+                    joinedDate: user.createdAt ?? 'Jan 15, 2024',
+                    profileImageUrl:
+                        user.photoUrl ??
+                        'https://api.dicebear.com/9.x/avataaars/svg?seed=User',
+                    followers: user.followers ?? 0,
+                    following: user.following ?? 0,
+                    totalXP: user.totalXp ?? 0,
+                    currentStreak: user.streak ?? 0,
+                    level: 17,
+                    totalQuizzes: 13,
+                    isFollowing: user.isFollowing,
+                    isMyself: authState.id == user.id,
+                    lastQuizzes: [],
+                    onFollowPressed: () {},
+                    onFriendPressed: () => {},
                   ),
                 ],
               ),
-              // Overview Card
-              UserProfileWidget(
-                displayName: authState.name,
-                username: authState.userName,
-                joinedDate: 'Jan 15, 2024',
-                profileImageUrl:
-                    'https://api.dicebear.com/9.x/avataaars/svg?seed=Christopher',
-                followers: 1250,
-                following: 320,
-                totalXP: 15420,
-                currentStreak: 42,
-                level: 18,
-                totalQuizzes: 156,
-                isFollowing: false,
-                isMyself: true,
-                lastQuizzes: [
-                  {'title': 'Spanish Basics', 'date': 'Today', 'score': 95},
-                  {'title': 'French Verbs', 'date': 'Yesterday', 'score': 88},
-                  {
-                    'title': 'German Grammar',
-                    'date': '2 days ago',
-                    'score': 76,
-                  },
-                ],
-                onFollowPressed: () {},
-                onFriendPressed: () {},
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

@@ -8,114 +8,10 @@ import 'package:ezdu/features/archive/models/archive_quiz_settings_model.dart';
 import 'package:ezdu/features/play/pages/quiz_play_page.dart';
 import 'package:flutter/material.dart';
 
-class QuizPage extends StatefulWidget {
+class QuizPage extends StatelessWidget {
   const QuizPage({super.key, required this.quizRepository});
 
   final QuizRepository quizRepository;
-
-  @override
-  State<QuizPage> createState() => _AdminQuizTabState();
-}
-
-class _AdminQuizTabState extends State<QuizPage> {
-  late Future<ApiResponse<PagedList<QuizModel>>> _quizListFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _quizListFuture = widget.quizRepository.getQuizList();
-  }
-
-  void _showQuizSettingsDialog(BuildContext context, int quizId) async {
-    showDialog(
-      context: context,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
-    );
-
-    final response = await widget.quizRepository.getQuiz(quizId);
-    Navigator.pop(context);
-
-    if (response.success) {
-      final quiz = response.data!;
-
-      if (quiz.questions.isEmpty) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('No Data'),
-            content: const Text(
-              'No questions found, choose more or different topics',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-        return;
-      }
-
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Start quiz'),
-          content: const Text('Are you ready?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-
-                final settings = ArchiveQuizSettingsModel(
-                  timeInMinutes: quiz.durationInMinutes,
-                  enableNegativeMarking: false,
-                  negativeMarkValue: 0,
-                );
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => QuizPlayPage(
-                      questions: quiz.questions,
-                      settings: settings,
-                      progressRepository: sl(),
-                      quizType: QuizType.Quiz,
-                      title: quiz.name,
-                      quizId: quiz.id,
-                    ),
-                  ),
-                );
-              },
-              child: const Text('Confirm'),
-            ),
-          ],
-        ),
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text('Error'),
-          content: Text(response.message ?? 'Failed to load questions.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +29,7 @@ class _AdminQuizTabState extends State<QuizPage> {
           Column(
             children: [
               FutureBuilder(
-                future: _quizListFuture,
+                future: quizRepository.getQuizList(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
@@ -338,5 +234,99 @@ class _AdminQuizTabState extends State<QuizPage> {
         ],
       ),
     );
+  }
+
+  void _showQuizSettingsDialog(BuildContext context, int quizId) async {
+    if (!context.mounted) return;
+
+    showDialog(
+      context: context,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    final response = await quizRepository.getQuiz(quizId);
+    if (!context.mounted) return;
+    Navigator.pop(context);
+
+    if (response.success) {
+      final quiz = response.data!;
+
+      if (quiz.questions.isEmpty) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('No Data'),
+            content: const Text(
+              'No questions found, choose more or different topics',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Start quiz'),
+          content: const Text('Are you ready?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+
+                final settings = ArchiveQuizSettingsModel(
+                  timeInMinutes: quiz.durationInMinutes,
+                  enableNegativeMarking: false,
+                  negativeMarkValue: 0,
+                );
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => QuizPlayPage(
+                      questions: quiz.questions,
+                      settings: settings,
+                      progressRepository: sl(),
+                      quizType: QuizType.Quiz,
+                      title: quiz.name,
+                      quizId: quiz.id,
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Confirm'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Error'),
+          content: Text(response.message ?? 'Failed to load questions.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
