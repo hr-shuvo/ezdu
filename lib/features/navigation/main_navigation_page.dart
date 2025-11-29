@@ -19,20 +19,10 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   int _currentIndex = 0;
   int _extendedIndex = 0;
 
-  // final List<Widget> _pages = [
-  //   HomePage(quizRepository: sl()),
-  //   const QuestPage(),
-  //   const QuizTabPage(),
-  //   LeaderboardPage(leaderboardRepository: sl()),
-  //   const FeedPage(),
-  // ];
-
   void _onItemTapped(int index) async {
-    // setState(() => _currentIndex = index);
     _currentIndex = index;
 
     if (index == 5) {
-      // final RenderBox bar = context.findRenderObject() as RenderBox;
       await _showMoreMenu(context);
       return;
     }
@@ -45,131 +35,21 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     final colorScheme = Theme.of(context).colorScheme;
     late OverlayEntry entry;
 
+    void handleSetExtendedIndex(int index) {
+      setState(() {
+        _extendedIndex = index;
+      });
+    }
+
     entry = OverlayEntry(
-      builder: (context) => Stack(
-        children: [
-          // Background tap dismiss
-          Positioned.fill(
-            child: GestureDetector(
-              onTap: () => entry.remove(),
-              behavior: HitTestBehavior.translucent,
-            ),
-          ),
-
-          // Floating popup just above bottom nav
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 80,
-            child: Material(
-              color: Colors.transparent,
-              child: Container(
-                // padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainer,
-                  borderRadius: BorderRadius.zero,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(color: colorScheme.outlineVariant),
-                          top: BorderSide(color: colorScheme.outlineVariant),
-                        ),
-                      ),
-                      child: ListTile(
-                        leading: const Icon(Icons.person_outline),
-                        title: const Text('Profile'),
-                        onTap: () {
-                          entry.remove();
-                          // Navigator.pushNamed(context, '/profile');
-                          setState(() {
-                            _extendedIndex = 0;
-                          });
-                        },
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(color: colorScheme.outlineVariant),
-                        ),
-                      ),
-                      child: ListTile(
-                        leading: const Icon(Icons.history),
-                        title: const Text('History'),
-                        onTap: () {
-                          entry.remove();
-                          // Navigator.pushNamed(context, '/history');
-                          setState(() {
-                            _extendedIndex = 1;
-                          });
-                        },
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(color: colorScheme.outlineVariant),
-                        ),
-                      ),
-                      child: ListTile(
-                        leading: const Icon(Icons.archive_outlined),
-                        title: const Text('Archive'),
-                        onTap: () {
-                          entry.remove();
-                          // Navigator.pushNamed(context, '/archive');
-                          setState(() {
-                            _extendedIndex = 2;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
+      builder: (context) => _MoreMenuOverlay(
+        colorScheme: colorScheme,
+        onDismiss: () => entry.remove(),
+        onAction: handleSetExtendedIndex,
       ),
     );
 
     overlay.insert(entry);
-  }
-
-  Widget _buildBody(BuildContext context) {
-    switch (_currentIndex) {
-      case 0:
-        return HomePage(quizRepository: sl());
-      case 1:
-        return QuestPage(userQuestRepository: sl());
-      case 2:
-        return QuizTabPage();
-      case 3:
-        return LeaderboardPage(leaderboardRepository: sl());
-      case 4:
-        return FeedPage(feedRepository: sl());
-      case 5:
-        return _buildExtendedBody(context);
-      default:
-        return SizedBox.shrink();
-    }
-  }
-
-  Widget _buildExtendedBody(BuildContext context) {
-    switch (_extendedIndex) {
-      case 0:
-        return ProfilePage(userRepository: sl());
-      case 1:
-        return ArchivePage(subjectRepository: sl());
-      case 2:
-        return ArchivePage(subjectRepository: sl());
-      default:
-        return SizedBox.shrink();
-    }
   }
 
   @override
@@ -232,6 +112,190 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    switch (_currentIndex) {
+      case 0:
+        return HomePage(quizRepository: sl());
+      case 1:
+        return QuestPage(userQuestRepository: sl());
+      case 2:
+        return QuizTabPage();
+      case 3:
+        return LeaderboardPage(leaderboardRepository: sl());
+      case 4:
+        return FeedPage(feedRepository: sl());
+      case 5:
+        return _buildExtendedBody(context);
+      default:
+        return SizedBox.shrink();
+    }
+  }
+
+  Widget _buildExtendedBody(BuildContext context) {
+    switch (_extendedIndex) {
+      case 0:
+        return ProfilePage(userRepository: sl());
+      case 1:
+        return ArchivePage(subjectRepository: sl());
+      case 2:
+        return ArchivePage(subjectRepository: sl());
+      default:
+        return SizedBox.shrink();
+    }
+  }
+}
+
+typedef MenuActionCallback = void Function(int index);
+
+class _MoreMenuOverlay extends StatefulWidget {
+  const _MoreMenuOverlay({
+    required this.colorScheme,
+    required this.onDismiss,
+    required this.onAction,
+  });
+
+  final ColorScheme colorScheme;
+  final VoidCallback onDismiss;
+  final MenuActionCallback onAction;
+
+  @override
+  State<_MoreMenuOverlay> createState() => _MoreMenuOverlayState();
+}
+
+class _MoreMenuOverlayState extends State<_MoreMenuOverlay>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 350),
+    );
+
+    _offsetAnimation =
+        Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: Curves.easeOutCubic, // A modern, smooth curve
+            reverseCurve: Curves.easeInCubic,
+          ),
+        );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
+
+    _controller.forward();
+  }
+
+  void _handleDismiss() async {
+    await _controller.reverse();
+
+    if (mounted) {
+      widget.onDismiss();
+    }
+  }
+
+  void _handleAction(int index) {
+    _controller.reverse().then((_) {
+      widget.onAction(index);
+      widget.onDismiss();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = widget.colorScheme;
+    final outlineColor = colorScheme.outlineVariant;
+
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: GestureDetector(
+            onTap: _handleDismiss,
+            behavior: HitTestBehavior.translucent,
+          ),
+        ),
+
+        // 2. Floating popup with animation wrappers
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 80,
+
+          child: SlideTransition(
+            position: _offsetAnimation,
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: Material(
+                color: Colors.transparent,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainer,
+                    borderRadius: BorderRadius.zero,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: outlineColor),
+                            top: BorderSide(color: outlineColor),
+                          ),
+                        ),
+                        child: ListTile(
+                          leading: const Icon(Icons.person_outline),
+                          title: const Text('Profile'),
+                          onTap: () => _handleAction(0),
+                        ),
+                      ),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: outlineColor),
+                          ),
+                        ),
+                        child: ListTile(
+                          leading: const Icon(Icons.history),
+                          title: const Text('History'),
+                          onTap: () => _handleAction(1),
+                        ),
+                      ),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: outlineColor),
+                          ),
+                        ),
+                        child: ListTile(
+                          leading: const Icon(Icons.archive_outlined),
+                          title: const Text('Archive'),
+                          onTap: () => _handleAction(2),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
