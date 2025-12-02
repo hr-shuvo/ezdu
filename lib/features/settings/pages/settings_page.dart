@@ -34,28 +34,12 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     );
   }
 
-  Widget _buildDuolingoSwitch(
-    bool value,
-    ValueChanged<bool> onChanged,
-    Color primaryColor,
-  ) {
-    return Switch(
-      value: value,
-      onChanged: onChanged,
-      activeThumbColor: Colors.white,
-      // Use theme primary color for active track
-      activeTrackColor: primaryColor,
-      inactiveThumbColor: Colors.white,
-      inactiveTrackColor: Colors.grey.shade600.withValues(alpha: 0.5),
-      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
     final authNotifier = ref.read(authProvider.notifier);
+    final authState = ref.read(authProvider);
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -76,18 +60,19 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               ),
             ),
             centerTitle: true,
-            backgroundColor: colorScheme.surface,
+            // backgroundColor: colorScheme.surface,
             elevation: 0,
+
+
           ),
 
           SliverList(
             delegate: SliverChildListDelegate([
-              // --- Account Section ---
               _buildSectionHeader('Account', colorScheme.onSurface),
               SettingsItem(
                 icon: Icons.person_outline,
-                title: 'Username',
-                subtitle: 'DuoFan123',
+                title: 'Profile',
+                subtitle: authState.data!.userName,
                 trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                 onTap: () {
                   Navigator.of(context).push(
@@ -103,9 +88,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 color: colorScheme.surfaceContainerHighest,
               ),
               SettingsItem(
-                icon: Icons.email_outlined,
-                title: 'Email',
-                subtitle: 'duo.fan@example.com',
+                icon: Icons.notifications_outlined,
+                title: 'Notifications',
                 trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                 onTap: () {},
               ),
@@ -259,6 +243,26 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           ),
         ],
       ),
+    );
+  }
+
+
+
+
+  Widget _buildDuolingoSwitch(
+      bool value,
+      ValueChanged<bool> onChanged,
+      Color primaryColor,
+      ) {
+    return Switch(
+      value: value,
+      onChanged: onChanged,
+      activeThumbColor: Colors.white,
+      // Use theme primary color for active track
+      activeTrackColor: primaryColor,
+      inactiveThumbColor: Colors.white,
+      inactiveTrackColor: Colors.grey.shade600.withValues(alpha: 0.5),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 }

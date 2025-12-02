@@ -4,7 +4,7 @@ import 'package:ezdu/core/utils/route_helper.dart';
 import 'package:ezdu/data/repositories/user_repository.dart';
 import 'package:ezdu/features/profile/models/progress.dart';
 import 'package:ezdu/features/settings/pages/settings_page.dart';
-import 'package:ezdu/features/profile/widgets/profile_overview.dart';
+import 'package:ezdu/features/profile/widgets/profile_details.dart';
 import 'package:ezdu/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,7 +38,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           child: Padding(
             padding: const EdgeInsets.only(left: 20),
             child: Text(
-              authState!.userName,
+              authState!.name,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ),
@@ -168,7 +168,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     ],
                   ),
                   // Overview Card
-                  UserProfileWidget(
+                  UserDetailsWidget(
                     displayName: user.name ?? 'User',
                     username: user.userName ?? '@user',
                     joinedDate: user.createdAt ?? 'Jan 15, 2024',

@@ -54,6 +54,24 @@ class TimeHelper {
     }
   }
 
+  static String formatUtcToLocalMonth(String utcTimeString) {
+    if (utcTimeString.isEmpty) {
+      return 'N/A';
+    }
+
+    try {
+      final utcDateTime = DateTime.parse(safeUtc(utcTimeString));
+      final localDateTime = utcDateTime.toLocal();
+
+      final formatter = DateFormat('MMM, yyyy', Intl.systemLocale);
+
+      return formatter.format(localDateTime);
+    } catch (e) {
+      print('Error parsing date string: $utcTimeString. Error: $e');
+      return 'Invalid Date';
+    }
+  }
+
   static bool isUtcTimeExpired(String utcTimeString) {
     if (utcTimeString.isEmpty) {
       return true;

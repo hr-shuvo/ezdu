@@ -5,7 +5,6 @@ import 'package:ezdu/services/user_onboarding_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
-
 class OnboardingState {
   final bool isLoading;
   final int? segment;
@@ -139,9 +138,11 @@ class OnboardingSelectionNotifier extends StateNotifier<OnboardingState> {
     UserOnboardingService.saveSegment(state.segment!);
     UserOnboardingService.saveClassId(state.classId!);
     UserOnboardingService.saveClass(state.className!);
-    UserOnboardingService.saveGroup(state.group!);
+    if (state.group != null) {
+      UserOnboardingService.saveGroup(state.group!);
+    }
 
-    // _logState('Onboarding Finalized!');
+    _logState('Onboarding Finalized!');
   }
 
   void _logState(String action) {

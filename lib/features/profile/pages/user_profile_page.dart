@@ -2,7 +2,7 @@
 import 'package:ezdu/core/models/api_response.dart';
 import 'package:ezdu/data/models/user_model.dart';
 import 'package:ezdu/data/repositories/user_repository.dart';
-import 'package:ezdu/features/profile/widgets/profile_overview.dart';
+import 'package:ezdu/features/profile/widgets/profile_details.dart';
 import 'package:ezdu/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -103,7 +103,7 @@ class _UserProfilePage extends ConsumerState<UserProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _buildProfileHeader(user),
-                  UserProfileWidget(
+                  UserDetailsWidget(
                     displayName: user.name ?? 'User',
                     username: user.userName ?? '@user',
                     joinedDate: user.createdAt ?? 'Jan 15, 2024',
