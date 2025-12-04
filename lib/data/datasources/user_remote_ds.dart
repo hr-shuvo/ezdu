@@ -1,5 +1,6 @@
 import 'package:ezdu/core/models/api_response.dart';
 import 'package:ezdu/data/models/user_model.dart';
+import 'package:ezdu/features/settings/models/update_profile_model.dart';
 import 'package:ezdu/services/dio_client.dart';
 
 class UserRemoteDataSource {
@@ -35,6 +36,16 @@ class UserRemoteDataSource {
     var response = await _dioClient.get(
       'userfollow/unfollow/$userId',
       fromJson: (json) => ApiResponse.toModel(json, null),
+    );
+
+    return response;
+  }
+
+  Future<UpdateProfileModel> updateProfile(UpdateProfileModel data) async {
+    var response = await _dioClient.put(
+      'users/update',
+      data: data,
+      fromJson: (json) => UpdateProfileModel.toModel(json),
     );
 
     return response;

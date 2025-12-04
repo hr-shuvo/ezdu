@@ -43,8 +43,6 @@ class UserDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final itemWidth = (MediaQuery.of(context).size.width - 16 - 16) / 2;
-
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(

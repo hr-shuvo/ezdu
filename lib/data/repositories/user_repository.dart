@@ -1,6 +1,7 @@
 import 'package:ezdu/core/models/api_response.dart';
 import 'package:ezdu/data/datasources/user_remote_ds.dart';
 import 'package:ezdu/data/models/user_model.dart';
+import 'package:ezdu/features/settings/models/update_profile_model.dart';
 
 class UserRepository {
   final UserRemoteDataSource _remoteDataSource;
@@ -13,6 +14,17 @@ class UserRepository {
   Future<ApiResponse<UserDetailsModel>> getUserDetails(int userId) async {
     try {
       final result = await _remoteDataSource.getUserDetails(userId: userId);
+      final response =  ApiResponse.success(result);
+
+      return response;
+    } catch (e) {
+      return ApiResponse.error(e.toString());
+    }
+  }
+
+  Future<ApiResponse<UpdateProfileModel>> updateProfile(UpdateProfileModel data) async {
+    try {
+      final result = await _remoteDataSource.updateProfile(data);
       final response =  ApiResponse.success(result);
 
       return response;

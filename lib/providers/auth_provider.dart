@@ -80,6 +80,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = const AuthState.initial();
   }
 
+  void copyWith(String username, String name) {
+    state = state.copyWithSuccess(
+      AuthModel(
+        id: state.data!.id,
+        name: name,
+        userName: username,
+        token: state.data!.token,
+      ),
+    );
+  }
+
   Future<void> restoreSession() async {
     final storageService = sl<StorageService>();
     final dioClient = sl<DioClient>();

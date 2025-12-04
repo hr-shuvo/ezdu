@@ -1,5 +1,5 @@
+import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/core/utils/route_helper.dart';
-import 'package:ezdu/features/home/pages/home_page.dart';
 import 'package:ezdu/features/settings/pages/update_profile_page.dart';
 import 'package:ezdu/features/settings/widgets/settings_item.dart';
 import 'package:ezdu/providers/auth_provider.dart';
@@ -14,9 +14,6 @@ class SettingsPage extends ConsumerStatefulWidget {
 }
 
 class _SettingsPageState extends ConsumerState<SettingsPage> {
-  bool _isSpeakerOn = true;
-  bool _isMicrophoneOn = true;
-  bool _isDailyReminderOn = true;
   bool _isProActive = true;
 
   Widget _buildSectionHeader(String title, Color onSurface) {
@@ -34,7 +31,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -42,7 +38,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     final authState = ref.read(authProvider);
 
     return Scaffold(
-      backgroundColor: colorScheme.surface,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -62,8 +57,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             centerTitle: true,
             // backgroundColor: colorScheme.surface,
             elevation: 0,
-
-
           ),
 
           SliverList(
@@ -76,7 +69,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                 onTap: () {
                   Navigator.of(context).push(
-                    SlideRightToLeftRoute(page: const UpdateProfilePage()),
+                    SlideRightToLeftRoute(
+                      page: UpdateProfilePage(userRepository: sl()),
+                    ),
                   );
                 },
               ),
@@ -93,12 +88,25 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                 onTap: () {},
               ),
+              Divider(
+                height: 0,
+                thickness: 1,
+                indent: 16,
+                endIndent: 16,
+                color: colorScheme.surfaceContainerHighest,
+              ),
+              SettingsItem(
+                icon: Icons.private_connectivity,
+                title: 'Privacy settings',
+                trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+                onTap: () {},
+              ),
 
               // --- Subscription Section (NEW) ---
               _buildSectionHeader('Subscription', colorScheme.onSurface),
               SettingsItem(
                 icon: Icons.workspace_premium_outlined,
-                title: 'Duolingo Super',
+                title: 'EzDu Super',
                 subtitle: _isProActive
                     ? 'Active until Oct 2026'
                     : 'Upgrade now for unlimited hearts',
@@ -113,74 +121,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     : const Icon(Icons.chevron_right, color: Colors.grey),
                 onTap: () {
                   setState(() {
-                    _isProActive = !_isProActive; // Toggle for demo
+                    _isProActive = !_isProActive;
                   });
                 },
-              ),
-
-              // --- General Section ---
-              _buildSectionHeader('General', colorScheme.onSurface),
-              SettingsItem(
-                icon: Icons.volume_up_outlined,
-                title: 'Speaker',
-                subtitle: 'Enable speaking exercises',
-                trailing: _buildDuolingoSwitch(_isSpeakerOn, (value) {
-                  setState(() => _isSpeakerOn = value);
-                }, colorScheme.primary),
-              ),
-              Divider(
-                height: 0,
-                thickness: 1,
-                indent: 16,
-                endIndent: 16,
-                color: colorScheme.surfaceContainerHighest,
-              ),
-              SettingsItem(
-                icon: Icons.mic_none,
-                title: 'Microphone',
-                subtitle: 'Enable pronunciation exercises',
-                trailing: _buildDuolingoSwitch(_isMicrophoneOn, (value) {
-                  setState(() => _isMicrophoneOn = value);
-                }, colorScheme.primary),
-              ),
-              Divider(
-                height: 0,
-                thickness: 1,
-                indent: 16,
-                endIndent: 16,
-                color: colorScheme.surfaceContainerHighest,
-              ),
-              SettingsItem(
-                icon: Icons.offline_bolt_outlined,
-                title: 'Offline Mode',
-                subtitle: 'Download lessons for offline use',
-                trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-                onTap: () {},
-              ),
-
-              // --- Notifications Section ---
-              _buildSectionHeader('Notifications', colorScheme.onSurface),
-              SettingsItem(
-                icon: Icons.notifications_none,
-                title: 'Daily Reminder',
-                subtitle: 'Reminders to practice your lessons',
-                trailing: _buildDuolingoSwitch(_isDailyReminderOn, (value) {
-                  setState(() => _isDailyReminderOn = value);
-                }, colorScheme.primary),
-              ),
-              Divider(
-                height: 0,
-                thickness: 1,
-                indent: 16,
-                endIndent: 16,
-                color: colorScheme.surfaceContainerHighest,
-              ),
-              SettingsItem(
-                icon: Icons.access_time_outlined,
-                title: 'Reminder Time',
-                subtitle: '7:00 PM',
-                trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-                onTap: () {},
               ),
 
               // --- Support Section (NEW) ---
@@ -188,7 +131,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               SettingsItem(
                 icon: Icons.help_outline,
                 title: 'Help Center',
-                subtitle: 'Find answers to frequently asked questions',
                 trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                 onTap: () {},
               ),
@@ -201,8 +143,20 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               ),
               SettingsItem(
                 icon: Icons.policy_outlined,
+                title: 'Feedback',
+                trailing: const Icon(Icons.feedback, color: Colors.grey),
+                onTap: () {},
+              ),
+              Divider(
+                height: 0,
+                thickness: 1,
+                indent: 16,
+                endIndent: 16,
+                color: colorScheme.surfaceContainerHighest,
+              ),
+              SettingsItem(
+                icon: Icons.chevron_right,
                 title: 'Terms and Privacy',
-                subtitle: 'View legal information',
                 trailing: const Icon(Icons.chevron_right, color: Colors.grey),
                 onTap: () {},
               ),
@@ -246,14 +200,11 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     );
   }
 
-
-
-
   Widget _buildDuolingoSwitch(
-      bool value,
-      ValueChanged<bool> onChanged,
-      Color primaryColor,
-      ) {
+    bool value,
+    ValueChanged<bool> onChanged,
+    Color primaryColor,
+  ) {
     return Switch(
       value: value,
       onChanged: onChanged,

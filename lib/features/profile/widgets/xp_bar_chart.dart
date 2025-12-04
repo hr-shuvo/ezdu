@@ -17,7 +17,6 @@ class XPBarChart extends StatelessWidget {
       height: 200,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade200),
       ),
@@ -45,7 +44,7 @@ class XPBarChart extends StatelessWidget {
                   backDrawRodData: BackgroundBarChartRodData(
                     show: true,
                     toY: maxXP.toDouble(),
-                    color: Colors.grey.shade200,
+                    // color: Colors.grey.shade200,
                   ),
                 ),
               ],
