@@ -1,19 +1,20 @@
 import 'package:ezdu/app/di/injector.dart';
 import 'package:ezdu/data/repositories/user_progress_repository.dart';
 import 'package:ezdu/data/repositories/user_repository.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 class UserState {
   final int streak;
-  final int xp;
+  final int totalXp;
+  final int weekXp;
   final int coin;
   final bool isPremium;
   final String? error;
 
   UserState({
     required this.streak,
-    required this.xp,
+    required this.totalXp,
+    required this.weekXp,
     required this.coin,
     required this.isPremium,
     required this.error,
@@ -21,7 +22,8 @@ class UserState {
 
   const UserState.initial()
     : streak = 0,
-      xp = 0,
+      totalXp = 0,
+        weekXp = 0,
       coin = 0,
       isPremium = false,
       error = null;
@@ -29,7 +31,8 @@ class UserState {
   UserState copyWithError(String errorMsg) {
     return UserState(
       streak: 0,
-      xp: 0,
+      totalXp: 0,
+      weekXp: 0,
       coin: 0,
       isPremium: false,
       error: errorMsg,
@@ -38,14 +41,16 @@ class UserState {
 
   UserState copyWith({
     int? streak,
-    int? xp,
+    int? totalXp,
+    int? weekXp,
     int? coin,
     bool? isPremium,
     String? error,
   }) {
     return UserState(
       streak: streak ?? this.streak,
-      xp: xp ?? this.xp,
+      totalXp: totalXp ?? this.totalXp,
+      weekXp: weekXp ?? this.weekXp,
       coin: coin ?? this.coin,
       isPremium: isPremium ?? this.isPremium,
       error: error ?? this.error,
@@ -66,8 +71,9 @@ class UserNotifier extends StateNotifier<UserState> {
     if (result.success && result.data != null) {
       state = state.copyWith(
         streak: result.data!.streakCount,
-        xp: result.data!.totalXp,
+        totalXp: result.data!.totalXp,
         coin: result.data!.coin,
+        weekXp: result.data!.weekXp
       );
     } else {
       state = state.copyWithError(result.message ?? "Failed to load progress");

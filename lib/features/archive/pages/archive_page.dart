@@ -6,6 +6,7 @@ import 'package:ezdu/data/repositories/subject_repository.dart';
 import 'package:ezdu/features/archive/pages/exams_page.dart';
 import 'package:ezdu/features/archive/widgets/archive_stat_card.dart';
 import 'package:ezdu/features/archive/widgets/archive_subject_card.dart';
+import 'package:ezdu/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -37,6 +38,8 @@ class _ArchivePageState extends ConsumerState<ArchivePage> {
 
   @override
   Widget build(BuildContext context) {
+    final userState = ref.read(userProvider);
+
     return Scaffold(
       body: SafeArea(
         child: GestureDetector(
@@ -101,7 +104,7 @@ class _ArchivePageState extends ConsumerState<ArchivePage> {
                       Expanded(
                         child: StatCard(
                           label: 'Streak',
-                          value: '79',
+                          value: userState.streak.toString(),
                           icon: '🔥',
                           backgroundColor: const Color(0xFFD4765F),
                         ),
@@ -110,7 +113,7 @@ class _ArchivePageState extends ConsumerState<ArchivePage> {
                       Expanded(
                         child: StatCard(
                           label: 'Points',
-                          value: '2.5K',
+                          value: userState.totalXp.toString(),
                           icon: '⭐',
                           backgroundColor: const Color(0xFFD4B84E),
                         ),
@@ -118,9 +121,9 @@ class _ArchivePageState extends ConsumerState<ArchivePage> {
                       const SizedBox(width: 12),
                       Expanded(
                         child: StatCard(
-                          icon: '✅',
-                          label: 'Answered',
-                          value: '145',
+                          icon: '🪙',
+                          label: 'Coin',
+                          value: userState.coin.toString(),
                           backgroundColor: const Color(0xFF70AD47),
                         ),
                       ),

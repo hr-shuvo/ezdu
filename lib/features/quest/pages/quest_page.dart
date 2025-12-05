@@ -1,14 +1,16 @@
 import 'package:ezdu/data/repositories/user_quest_repository.dart';
 import 'package:ezdu/features/quest/widgets/quest_card.dart';
+import 'package:ezdu/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class QuestPage extends StatelessWidget {
+class QuestPage extends ConsumerWidget {
   final UserQuestRepository userQuestRepository;
 
   const QuestPage({super.key, required this.userQuestRepository});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quests & Challenges'),
@@ -20,7 +22,7 @@ class QuestPage extends StatelessWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: _buildXPCard(context),
+              child: _buildXPCard(context, ref),
             ),
           ),
           SliverToBoxAdapter(
@@ -74,9 +76,8 @@ class QuestPage extends StatelessWidget {
     );
   }
 
-  Widget _buildXPCard(BuildContext context) {
-    int totalDailyXP = 0;
-    int totalWeeklyXP = 0;
+  Widget _buildXPCard(BuildContext context, WidgetRef ref) {
+    final userState = ref.read(userProvider);
 
     return Container(
       decoration: BoxDecoration(
@@ -100,14 +101,14 @@ class QuestPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Today's XP",
+                "This Week",
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
               ),
               SizedBox(height: 4),
               Text(
-                "$totalDailyXP XP",
+                "${userState.weekXp} XP",
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -120,14 +121,14 @@ class QuestPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                "This Week",
+                "Total Xp",
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
               ),
               SizedBox(height: 4),
               Text(
-                "$totalWeeklyXP XP",
+                "${userState.totalXp} XP",
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

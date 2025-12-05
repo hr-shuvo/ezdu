@@ -45,7 +45,7 @@ class HomePage extends ConsumerWidget {
                   Image.asset('assets/icons/storm.png', height: 24, width: 24),
                   SizedBox(width: 4),
                   Text(
-                    isLoggedIn ? userState.xp.toString() : '10',
+                    isLoggedIn ? userState.totalXp.toString() : '10',
                     style: TextStyle(fontSize: 14),
                   ),
                 ],

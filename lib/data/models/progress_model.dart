@@ -7,6 +7,7 @@ class ProgressModel extends Equatable {
   final String name;
   final String? userImageUrl;
   final int totalXp;
+  final int weekXp;
   final int streakCount;
   final int coin;
 
@@ -19,6 +20,7 @@ class ProgressModel extends Equatable {
     required this.name,
     required this.userImageUrl,
     required this.totalXp,
+    required this.weekXp,
     required this.streakCount,
     required this.coin,
   });
@@ -31,6 +33,7 @@ class ProgressModel extends Equatable {
       name: json['name'] ?? '',
       userImageUrl: json['userImageUrl'] ?? '',
       totalXp: json['totalXp'] ?? 0,
+      weekXp: json['weekXp'] ?? 0,
       streakCount: json['streakCount'] ?? 0,
       coin: json['coin'] ?? 0,
     );
