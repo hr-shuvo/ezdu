@@ -14,7 +14,13 @@ class UserProgressRepository {
   );
 
   Future<ApiResponse<ProgressModel>> getMyProgress() async {
-    return ApiResponse(success: false);
+    try {
+      final result = await _userProgressDataSource.getMyProgress();
+
+      return ApiResponse.success(result);
+    } catch (e) {
+      return ApiResponse.error(e.toString());
+    }
   }
 
   Future<ApiResponse<ProgressModel>> getProgress(int userId) async {

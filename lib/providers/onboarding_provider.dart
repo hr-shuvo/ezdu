@@ -72,7 +72,7 @@ class OnboardingState {
       classId: classId ?? this.classId,
       className: className ?? this.className,
       classList: classList ?? this.classList,
-      group: selectedGroup ?? this.group,
+      group: selectedGroup ?? group,
       error: error ?? this.error,
     );
   }

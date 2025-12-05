@@ -6,6 +6,7 @@ import 'package:ezdu/features/home/widgets/quic_challenge_card.dart';
 import 'package:ezdu/features/home/widgets/recommended_section.dart';
 import 'package:ezdu/features/home/widgets/upcoming_quiz_card.dart';
 import 'package:ezdu/providers/auth_provider.dart';
+import 'package:ezdu/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,6 +18,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoggedIn = ref.watch(authProvider).isLoggedIn;
+    final userState = ref.watch(userProvider);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -33,7 +35,7 @@ class HomePage extends ConsumerWidget {
                 children: [
                   Image.asset('assets/icons/fire.png', height: 24, width: 24),
                   SizedBox(width: 4),
-                  Text(isLoggedIn ? '75' : '1', style: TextStyle(fontSize: 14)),
+                  Text(isLoggedIn ? userState.streak.toString() : '1', style: TextStyle(fontSize: 14)),
                 ],
               ),
 
@@ -43,7 +45,7 @@ class HomePage extends ConsumerWidget {
                   Image.asset('assets/icons/storm.png', height: 24, width: 24),
                   SizedBox(width: 4),
                   Text(
-                    isLoggedIn ? '20' : '10',
+                    isLoggedIn ? userState.xp.toString() : '10',
                     style: TextStyle(fontSize: 14),
                   ),
                 ],
@@ -57,7 +59,7 @@ class HomePage extends ConsumerWidget {
                   ),
                   SizedBox(width: 4),
                   Text(
-                    isLoggedIn ? '12' : '50',
+                    isLoggedIn ? userState.coin.toString() : '50',
                     style: TextStyle(fontSize: 14),
                   ),
                 ],

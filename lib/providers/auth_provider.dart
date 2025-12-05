@@ -102,7 +102,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       dioClient.setAuthToken(token);
       state = state.copyWithSuccess(authData);
 
-      print('->->->->->->->->->-> Authenticated');
+      // print('->->->->->->->->->-> Authenticated');
     }
   }
 

@@ -8,6 +8,7 @@ class ProgressModel extends Equatable {
   final String? userImageUrl;
   final int totalXp;
   final int streakCount;
+  final int coin;
 
   // final List<dynamic> dailyXps;
 
@@ -19,6 +20,7 @@ class ProgressModel extends Equatable {
     required this.userImageUrl,
     required this.totalXp,
     required this.streakCount,
+    required this.coin,
   });
 
   factory ProgressModel.toModel(Map<String, dynamic> json) {
@@ -30,6 +32,7 @@ class ProgressModel extends Equatable {
       userImageUrl: json['userImageUrl'] ?? '',
       totalXp: json['totalXp'] ?? 0,
       streakCount: json['streakCount'] ?? 0,
+      coin: json['coin'] ?? 0,
     );
   }
 

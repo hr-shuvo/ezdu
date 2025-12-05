@@ -74,7 +74,7 @@ class HomeGridSection extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: gridItems.length,
-      padding: const EdgeInsets.only(top: 16),
+      // padding: const EdgeInsets.only(top: 16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 16,

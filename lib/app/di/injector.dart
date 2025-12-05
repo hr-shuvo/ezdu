@@ -109,7 +109,7 @@ Future<void> initializeDependencies() async {
     () => PlayQuizRemoteDataSource(sl()),
   );
   sl.registerLazySingleton<UserProgressRemoteDataSource>(
-    () => UserProgressRemoteDataSource(),
+    () => UserProgressRemoteDataSource(sl()),
   );
 
   // quiz

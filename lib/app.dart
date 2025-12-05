@@ -3,6 +3,7 @@ import 'package:ezdu/app/theme/app_themes.dart';
 import 'package:ezdu/providers/auth_provider.dart';
 import 'package:ezdu/providers/notification_provider.dart';
 import 'package:ezdu/providers/onboarding_provider.dart';
+import 'package:ezdu/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,12 +21,13 @@ class MyApp extends StatelessWidget {
 
           final authState = ref.watch(authProvider);
           WidgetsBinding.instance.addPostFrameCallback((_) async {
-            // ref.read(notificationInitProvider);
             final notifier = ref.read(notificationProvider.notifier);
+            final userNotifier = ref.read(userProvider.notifier);
 
             await notifier.initialize();
             if (authState.isLoggedIn) {
               await notifier.syncToken();
+              await userNotifier.init();
             }
           });
 
